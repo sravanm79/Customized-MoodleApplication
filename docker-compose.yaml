@@ -1,0 +1,65 @@
+services:
+  mariadb:
+    image: bitnami/mariadb:latest
+    container_name: moodle_db
+    restart: unless-stopped
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_USER=bn_moodle
+      - MARIADB_PASSWORD=${MOODLE_DB_PASSWORD}
+      - MARIADB_DATABASE=bitnami_moodle
+      - MARIADB_CHARACTER_SET=utf8mb4
+      - MARIADB_COLLATE=utf8mb4_unicode_ci
+    volumes:
+      - mariadb_data:/bitnami/mariadb
+
+  moodle:
+    image: bitnamilegacy/moodle:latest
+    container_name: moodle_app
+    restart: unless-stopped
+    ports:
+      - "9999:8080"
+      - "8443:8443"
+    environment:
+      - MARIADB_HOST=mariadb
+      - MARIADB_PORT_NUMBER=3306
+      - MOODLE_DATABASE_USER=bn_moodle
+      - MOODLE_DATABASE_PASSWORD=${MOODLE_DB_PASSWORD}
+      - MOODLE_DATABASE_NAME=bitnami_moodle
+      - MOODLE_USERNAME=admin
+      - MOODLE_PASSWORD=${MOODLE_ADMIN_PASSWORD}
+      - MOODLE_EMAIL=admin@example.com
+      - MOODLE_SITE_URL=http://localhost:9999
+    volumes:
+      - moodle_data:/bitnami/moodle
+      - moodledata_data:/bitnami/moodledata
+      # Apache event MPM + PHP-FPM tuning (see moodle-tuning/start.sh)
+      - ./moodle-tuning:/opt/moodle-tuning:ro
+      - ./moodle-tuning/start.sh:/opt/bitnami/scripts/moodle/run.sh:ro
+    depends_on:
+      - mariadb
+
+  jobe:
+    image: trampgeek/jobeinabox:latest
+    container_name: moodle_jobe
+    restart: unless-stopped
+
+  jupyterhub:
+    build: ./jupyterhub
+    container_name: moodle_jupyterhub
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - MOODLE_SERVICE_TOKEN=${MOODLE_SERVICE_TOKEN}
+      - MOODLE_ORIGIN=http://localhost:9999
+    volumes:
+      - jupyterhub_data:/srv/jupyterhub/data
+      - jupyterhub_home:/srv/jupyterhub/home
+
+volumes:
+  mariadb_data:
+  moodle_data:
+  moodledata_data:
+  jupyterhub_data:
+  jupyterhub_home:

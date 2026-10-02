@@ -1,0 +1,422 @@
+[
+  {
+    "users": 10,
+    "window_s": 120,
+    "requests": 52,
+    "rps": 0.4,
+    "errors": 0,
+    "pass": true,
+    "checks": [
+      {
+        "check": "jupyter cell p95",
+        "value": 50,
+        "limit": 5000,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 0.5,
+        "limit": 90,
+        "pass": true
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 0.5,
+      "host_cpu_max": 0.6,
+      "mem_avail_min_gb": 30.4,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 1,
+      "fpm_max": 64,
+      "db_conn_max": 4,
+      "jupyter_servers": 10,
+      "moodle_app_cpu_avg": 0.0,
+      "moodle_db_cpu_avg": 0.0,
+      "jobe_cpu_max": 0.0,
+      "jupyterhub_mib_max": 1860,
+      "moodle_app_mib_max": 1226,
+      "locust_cpu_avg": 0
+    },
+    "per_request": {
+      "jupyter: run cell": {
+        "count": 52,
+        "p50": 48,
+        "p95": 50,
+        "p99": 50,
+        "max": 50
+      }
+    }
+  },
+  {
+    "users": 25,
+    "window_s": 120,
+    "requests": 135,
+    "rps": 1.1,
+    "errors": 0,
+    "pass": true,
+    "checks": [
+      {
+        "check": "jupyter cell p95",
+        "value": 61,
+        "limit": 5000,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 0.5,
+        "limit": 90,
+        "pass": true
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 0.5,
+      "host_cpu_max": 0.8,
+      "mem_avail_min_gb": 27.9,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 1,
+      "fpm_max": 64,
+      "db_conn_max": 4,
+      "jupyter_servers": 25,
+      "moodle_app_cpu_avg": 1.0,
+      "moodle_db_cpu_avg": 1.0,
+      "jobe_cpu_max": 0.0,
+      "jupyterhub_mib_max": 4523,
+      "moodle_app_mib_max": 1191,
+      "locust_cpu_avg": 0
+    },
+    "per_request": {
+      "jupyter: run cell": {
+        "count": 135,
+        "p50": 48,
+        "p95": 61,
+        "p99": 66,
+        "max": 67
+      }
+    }
+  },
+  {
+    "users": 50,
+    "window_s": 120,
+    "requests": 268,
+    "rps": 2.2,
+    "errors": 0,
+    "pass": true,
+    "checks": [
+      {
+        "check": "jupyter cell p95",
+        "value": 57,
+        "limit": 5000,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 0.6,
+        "limit": 90,
+        "pass": true
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 0.6,
+      "host_cpu_max": 0.9,
+      "mem_avail_min_gb": 23.6,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 1,
+      "fpm_max": 64,
+      "db_conn_max": 4,
+      "jupyter_servers": 50,
+      "moodle_app_cpu_avg": 0.0,
+      "moodle_db_cpu_avg": 0.0,
+      "jobe_cpu_max": 0.0,
+      "jupyterhub_mib_max": 8969,
+      "moodle_app_mib_max": 1241,
+      "locust_cpu_avg": 1
+    },
+    "per_request": {
+      "jupyter: run cell": {
+        "count": 268,
+        "p50": 48,
+        "p95": 57,
+        "p99": 60,
+        "max": 61
+      }
+    }
+  },
+  {
+    "users": 75,
+    "window_s": 120,
+    "requests": 405,
+    "rps": 3.4,
+    "errors": 0,
+    "pass": true,
+    "checks": [
+      {
+        "check": "jupyter cell p95",
+        "value": 57,
+        "limit": 5000,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 0.7,
+        "limit": 90,
+        "pass": true
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 0.7,
+      "host_cpu_max": 0.9,
+      "mem_avail_min_gb": 19.6,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 1,
+      "fpm_max": 64,
+      "db_conn_max": 4,
+      "jupyter_servers": 75,
+      "moodle_app_cpu_avg": 0.0,
+      "moodle_db_cpu_avg": 1.0,
+      "jobe_cpu_max": 0.0,
+      "jupyterhub_mib_max": 13425,
+      "moodle_app_mib_max": 1193,
+      "locust_cpu_avg": 1
+    },
+    "per_request": {
+      "jupyter: run cell": {
+        "count": 405,
+        "p50": 47,
+        "p95": 57,
+        "p99": 60,
+        "max": 61
+      }
+    }
+  },
+  {
+    "users": 100,
+    "window_s": 119,
+    "requests": 525,
+    "rps": 4.4,
+    "errors": 0,
+    "pass": true,
+    "checks": [
+      {
+        "check": "jupyter cell p95",
+        "value": 54,
+        "limit": 5000,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 0.9,
+        "limit": 90,
+        "pass": true
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 0.9,
+      "host_cpu_max": 2.9,
+      "mem_avail_min_gb": 14.9,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 1,
+      "fpm_max": 64,
+      "db_conn_max": 4,
+      "jupyter_servers": 100,
+      "moodle_app_cpu_avg": 1.0,
+      "moodle_db_cpu_avg": 1.0,
+      "jobe_cpu_max": 0.0,
+      "jupyterhub_mib_max": 18196,
+      "moodle_app_mib_max": 1187,
+      "locust_cpu_avg": 1
+    },
+    "per_request": {
+      "jupyter: run cell": {
+        "count": 525,
+        "p50": 47,
+        "p95": 54,
+        "p99": 59,
+        "max": 62
+      }
+    }
+  },
+  {
+    "users": 125,
+    "window_s": 120,
+    "requests": 671,
+    "rps": 5.6,
+    "errors": 0,
+    "pass": true,
+    "checks": [
+      {
+        "check": "jupyter cell p95",
+        "value": 52,
+        "limit": 5000,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 1.1,
+        "limit": 90,
+        "pass": true
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 1.1,
+      "host_cpu_max": 5.5,
+      "mem_avail_min_gb": 10.5,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 2,
+      "fpm_max": 64,
+      "db_conn_max": 4,
+      "jupyter_servers": 125,
+      "moodle_app_cpu_avg": 1.0,
+      "moodle_db_cpu_avg": 1.0,
+      "jobe_cpu_max": 0.0,
+      "jupyterhub_mib_max": 22774,
+      "moodle_app_mib_max": 1041,
+      "locust_cpu_avg": 1
+    },
+    "per_request": {
+      "jupyter: run cell": {
+        "count": 671,
+        "p50": 47,
+        "p95": 52,
+        "p99": 59,
+        "max": 64
+      }
+    }
+  },
+  {
+    "users": 150,
+    "window_s": 123,
+    "requests": 943,
+    "rps": 7.7,
+    "errors": 0,
+    "pass": true,
+    "checks": [
+      {
+        "check": "jupyter cell p95",
+        "value": 53,
+        "limit": 5000,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 0.9,
+        "limit": 90,
+        "pass": true
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 0.9,
+      "host_cpu_max": 1.0,
+      "mem_avail_min_gb": 6.0,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 1,
+      "fpm_max": 64,
+      "db_conn_max": 4,
+      "jupyter_servers": 150,
+      "moodle_app_cpu_avg": 1.0,
+      "moodle_db_cpu_avg": 0.0,
+      "jobe_cpu_max": 0.0,
+      "jupyterhub_mib_max": 26798,
+      "moodle_app_mib_max": 856,
+      "locust_cpu_avg": 1
+    },
+    "per_request": {
+      "jupyter: run cell": {
+        "count": 794,
+        "p50": 47,
+        "p95": 53,
+        "p99": 59,
+        "max": 62
+      },
+      "jupyter: stop kernel": {
+        "count": 149,
+        "p50": 1736,
+        "p95": 1925,
+        "p99": 1962,
+        "max": 2044
+      }
+    }
+  }
+]

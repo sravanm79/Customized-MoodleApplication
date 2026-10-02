@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/jupyter/db" VERSION="20260930" COMMENT="XMLDB file for Moodle mod/jupyter"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="jupyter" COMMENT="Jupyter notebook assignment instances">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="intro" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="grade" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="100" SEQUENCE="false" COMMENT="Max grade (positive) or scale id (negative)"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="course" TYPE="foreign" FIELDS="course" REFTABLE="course" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="jupyter_submissions" COMMENT="Submitted notebooks, one per user per activity">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="jupyter" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="grade" TYPE="number" LENGTH="10" DECIMALS="5" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="feedback" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="grader" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timegraded" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Time of the latest submission"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="jupyter" TYPE="foreign" FIELDS="jupyter" REFTABLE="jupyter" REFFIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="jupyter_user" UNIQUE="true" FIELDS="jupyter, userid"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>

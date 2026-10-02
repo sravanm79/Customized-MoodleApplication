@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/llmgrader/db" VERSION="20260930" COMMENT="XMLDB file for Moodle local/llmgrader"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="local_llmgrader_job" COMMENT="One LLM evaluation of one submitted notebook">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="idempotencykey" TYPE="char" LENGTH="40" NOTNULL="true" SEQUENCE="false" COMMENT="sha1(submissionid|attemptnumber|contenthash)"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="assignid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="submissionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="attemptnumber" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="fileid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="contenthash" TYPE="char" LENGTH="40" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="filename" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="30" NOTNULL="true" DEFAULT="queued" SEQUENCE="false" COMMENT="queued, applied, evaluated, stale, superseded, failed, skipped_human_graded"/>
+        <FIELD NAME="score" TYPE="number" LENGTH="10" DECIMALS="5" NOTNULL="false" SEQUENCE="false" COMMENT="Marks awarded, in the notebook's own marks"/>
+        <FIELD NAME="maxscore" TYPE="number" LENGTH="10" DECIMALS="5" NOTNULL="false" SEQUENCE="false" COMMENT="Total marks in the notebook"/>
+        <FIELD NAME="appliedgrade" TYPE="number" LENGTH="10" DECIMALS="5" NOTNULL="false" SEQUENCE="false" COMMENT="Grade rescaled to the assignment's maximum"/>
+        <FIELD NAME="feedback" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="resultjson" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Parsed LLM result (tasks + feedback)"/>
+        <FIELD NAME="metadatajson" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Model, tokens, latency"/>
+        <FIELD NAME="error" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="tries" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timeevaluated" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="assignid" TYPE="foreign" FIELDS="assignid" REFTABLE="assign" REFFIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="idempotencykey" UNIQUE="true" FIELDS="idempotencykey"/>
+        <INDEX NAME="submissionid" UNIQUE="false" FIELDS="submissionid"/>
+        <INDEX NAME="cmid" UNIQUE="false" FIELDS="cmid"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>

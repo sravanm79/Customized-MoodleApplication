@@ -1,0 +1,18 @@
+moodledata_bytes 47570624
+filedir_bytes 216790
+filedir_files 10
+sessions_bytes 4915752
+db_bytes	60268544
+db_mariadb_datadir_note	see du below
+tbl_mdl_assign_grades	40960	1
+tbl_mdl_assign_submission	229376	1002
+tbl_mdl_event	106496	2
+tbl_mdl_files	73728	23
+tbl_mdl_grade_grades	57344	6
+tbl_mdl_logstore_standard_log	31318016	134801
+tbl_mdl_sessions	401408	2306
+tbl_mdl_task_adhoc	32768	0
+tbl_mdl_user	1048576	958
+files_rows_assign	2	85104
+files_rows_draft	5	204327
+mariadb_dir_bytes 273654777
