@@ -1,0 +1,604 @@
+[
+  {
+    "users": 100,
+    "window_s": 120,
+    "requests": 984,
+    "rps": 8.2,
+    "errors": 0,
+    "pass": true,
+    "checks": [
+      {
+        "check": "page loads p95",
+        "value": 45,
+        "limit": 2500,
+        "pass": true
+      },
+      {
+        "check": "graded submit p95",
+        "value": 145,
+        "limit": 5000,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 2.1,
+        "limit": 90,
+        "pass": true
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 2.1,
+      "host_cpu_max": 2.9,
+      "mem_avail_min_gb": 32.0,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 4,
+      "fpm_max": 64,
+      "db_conn_max": 6,
+      "jupyter_servers": 0,
+      "moodle_app_cpu_avg": 19.0,
+      "moodle_db_cpu_avg": 5.0,
+      "jobe_cpu_max": 42.0,
+      "jupyterhub_mib_max": 117,
+      "moodle_app_mib_max": 1213,
+      "locust_cpu_avg": 2
+    },
+    "per_request": {
+      "coding quiz: start attempt": {
+        "count": 250,
+        "p50": 41,
+        "p95": 48,
+        "p99": 54,
+        "max": 56
+      },
+      "coding quiz: submit & grade": {
+        "count": 235,
+        "p50": 134,
+        "p95": 145,
+        "p99": 149,
+        "max": 160
+      },
+      "coding quiz: view": {
+        "count": 250,
+        "p50": 26,
+        "p95": 34,
+        "p99": 38,
+        "max": 42
+      },
+      "page: course": {
+        "count": 249,
+        "p50": 30,
+        "p95": 37,
+        "p99": 43,
+        "max": 47
+      }
+    }
+  },
+  {
+    "users": 250,
+    "window_s": 120,
+    "requests": 2421,
+    "rps": 20.1,
+    "errors": 0,
+    "pass": true,
+    "checks": [
+      {
+        "check": "page loads p95",
+        "value": 46,
+        "limit": 2500,
+        "pass": true
+      },
+      {
+        "check": "graded submit p95",
+        "value": 146,
+        "limit": 5000,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 4.8,
+        "limit": 90,
+        "pass": true
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 4.8,
+      "host_cpu_max": 5.8,
+      "mem_avail_min_gb": 31.9,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 6,
+      "fpm_max": 64,
+      "db_conn_max": 10,
+      "jupyter_servers": 0,
+      "moodle_app_cpu_avg": 57.0,
+      "moodle_db_cpu_avg": 13.0,
+      "jobe_cpu_max": 68.0,
+      "jupyterhub_mib_max": 117,
+      "moodle_app_mib_max": 1213,
+      "locust_cpu_avg": 4
+    },
+    "per_request": {
+      "coding quiz: start attempt": {
+        "count": 614,
+        "p50": 41,
+        "p95": 52,
+        "p99": 58,
+        "max": 66
+      },
+      "coding quiz: submit & grade": {
+        "count": 581,
+        "p50": 133,
+        "p95": 146,
+        "p99": 154,
+        "max": 160
+      },
+      "coding quiz: view": {
+        "count": 613,
+        "p50": 27,
+        "p95": 37,
+        "p99": 42,
+        "max": 48
+      },
+      "page: course": {
+        "count": 613,
+        "p50": 28,
+        "p95": 38,
+        "p99": 43,
+        "max": 50
+      }
+    }
+  },
+  {
+    "users": 500,
+    "window_s": 120,
+    "requests": 4869,
+    "rps": 40.5,
+    "errors": 0,
+    "pass": true,
+    "checks": [
+      {
+        "check": "page loads p95",
+        "value": 50,
+        "limit": 2500,
+        "pass": true
+      },
+      {
+        "check": "graded submit p95",
+        "value": 154,
+        "limit": 5000,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 9.5,
+        "limit": 90,
+        "pass": true
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 9.5,
+      "host_cpu_max": 10.9,
+      "mem_avail_min_gb": 31.7,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 6,
+      "fpm_max": 64,
+      "db_conn_max": 8,
+      "jupyter_servers": 0,
+      "moodle_app_cpu_avg": 112.0,
+      "moodle_db_cpu_avg": 24.0,
+      "jobe_cpu_max": 154.0,
+      "jupyterhub_mib_max": 117,
+      "moodle_app_mib_max": 1227,
+      "locust_cpu_avg": 8
+    },
+    "per_request": {
+      "coding quiz: start attempt": {
+        "count": 1227,
+        "p50": 43,
+        "p95": 57,
+        "p99": 64,
+        "max": 74
+      },
+      "coding quiz: submit & grade": {
+        "count": 1189,
+        "p50": 136,
+        "p95": 154,
+        "p99": 162,
+        "max": 175
+      },
+      "coding quiz: view": {
+        "count": 1227,
+        "p50": 28,
+        "p95": 43,
+        "p99": 49,
+        "max": 56
+      },
+      "page: course": {
+        "count": 1226,
+        "p50": 28,
+        "p95": 42,
+        "p99": 44,
+        "max": 50
+      }
+    }
+  },
+  {
+    "users": 1000,
+    "window_s": 120,
+    "requests": 9692,
+    "rps": 80.6,
+    "errors": 0,
+    "pass": true,
+    "checks": [
+      {
+        "check": "page loads p95",
+        "value": 65,
+        "limit": 2500,
+        "pass": true
+      },
+      {
+        "check": "graded submit p95",
+        "value": 183,
+        "limit": 5000,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 22.6,
+        "limit": 90,
+        "pass": true
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 22.6,
+      "host_cpu_max": 30.1,
+      "mem_avail_min_gb": 31.3,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 13,
+      "fpm_max": 64,
+      "db_conn_max": 15,
+      "jupyter_servers": 0,
+      "moodle_app_cpu_avg": 313.0,
+      "moodle_db_cpu_avg": 80.0,
+      "jobe_cpu_max": 287.0,
+      "jupyterhub_mib_max": 117,
+      "moodle_app_mib_max": 1239,
+      "locust_cpu_avg": 20
+    },
+    "per_request": {
+      "coding quiz: start attempt": {
+        "count": 2427,
+        "p50": 53,
+        "p95": 70,
+        "p99": 76,
+        "max": 201
+      },
+      "coding quiz: submit & grade": {
+        "count": 2413,
+        "p50": 158,
+        "p95": 183,
+        "p99": 192,
+        "max": 301
+      },
+      "coding quiz: view": {
+        "count": 2426,
+        "p50": 36,
+        "p95": 53,
+        "p99": 59,
+        "max": 123
+      },
+      "page: course": {
+        "count": 2426,
+        "p50": 34,
+        "p95": 49,
+        "p99": 52,
+        "max": 122
+      }
+    }
+  },
+  {
+    "users": 1500,
+    "window_s": 119,
+    "requests": 14324,
+    "rps": 120.0,
+    "errors": 0,
+    "pass": true,
+    "checks": [
+      {
+        "check": "page loads p95",
+        "value": 76,
+        "limit": 2500,
+        "pass": true
+      },
+      {
+        "check": "graded submit p95",
+        "value": 204,
+        "limit": 5000,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 38.3,
+        "limit": 90,
+        "pass": true
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 38.3,
+      "host_cpu_max": 43.0,
+      "mem_avail_min_gb": 31.1,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 15,
+      "fpm_max": 64,
+      "db_conn_max": 22,
+      "jupyter_servers": 0,
+      "moodle_app_cpu_avg": 545.0,
+      "moodle_db_cpu_avg": 126.0,
+      "jobe_cpu_max": 445.0,
+      "jupyterhub_mib_max": 117,
+      "moodle_app_mib_max": 1254,
+      "locust_cpu_avg": 32
+    },
+    "per_request": {
+      "coding quiz: start attempt": {
+        "count": 3579,
+        "p50": 65,
+        "p95": 82,
+        "p99": 88,
+        "max": 156
+      },
+      "coding quiz: submit & grade": {
+        "count": 3589,
+        "p50": 175,
+        "p95": 204,
+        "p99": 223,
+        "max": 265
+      },
+      "coding quiz: view": {
+        "count": 3579,
+        "p50": 47,
+        "p95": 63,
+        "p99": 71,
+        "max": 216
+      },
+      "page: course": {
+        "count": 3577,
+        "p50": 44,
+        "p95": 56,
+        "p99": 60,
+        "max": 86
+      }
+    }
+  },
+  {
+    "users": 2000,
+    "window_s": 120,
+    "requests": 19221,
+    "rps": 159.7,
+    "errors": 0,
+    "pass": true,
+    "checks": [
+      {
+        "check": "page loads p95",
+        "value": 97,
+        "limit": 2500,
+        "pass": true
+      },
+      {
+        "check": "graded submit p95",
+        "value": 266,
+        "limit": 5000,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 59.9,
+        "limit": 90,
+        "pass": true
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 59.9,
+      "host_cpu_max": 67.6,
+      "mem_avail_min_gb": 31.0,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 20,
+      "fpm_max": 66,
+      "db_conn_max": 32,
+      "jupyter_servers": 0,
+      "moodle_app_cpu_avg": 861.0,
+      "moodle_db_cpu_avg": 207.0,
+      "jobe_cpu_max": 617.0,
+      "jupyterhub_mib_max": 117,
+      "moodle_app_mib_max": 1323,
+      "locust_cpu_avg": 47
+    },
+    "per_request": {
+      "coding quiz: start attempt": {
+        "count": 4807,
+        "p50": 85,
+        "p95": 106,
+        "p99": 126,
+        "max": 244
+      },
+      "coding quiz: submit & grade": {
+        "count": 4787,
+        "p50": 208,
+        "p95": 266,
+        "p99": 304,
+        "max": 431
+      },
+      "coding quiz: view": {
+        "count": 4812,
+        "p50": 62,
+        "p95": 83,
+        "p99": 94,
+        "max": 160
+      },
+      "page: course": {
+        "count": 4815,
+        "p50": 56,
+        "p95": 71,
+        "p99": 84,
+        "max": 196
+      }
+    }
+  },
+  {
+    "users": 3000,
+    "window_s": 120,
+    "requests": 24527,
+    "rps": 204.9,
+    "errors": 0,
+    "pass": false,
+    "checks": [
+      {
+        "check": "page loads p95",
+        "value": 2944,
+        "limit": 2500,
+        "pass": false
+      },
+      {
+        "check": "graded submit p95",
+        "value": 8807,
+        "limit": 5000,
+        "pass": false
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 98.8,
+        "limit": 90,
+        "pass": false
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 98.8,
+      "host_cpu_max": 99.5,
+      "mem_avail_min_gb": 30.0,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 570,
+      "fpm_max": 112,
+      "db_conn_max": 116,
+      "jupyter_servers": 0,
+      "moodle_app_cpu_avg": 1382.0,
+      "moodle_db_cpu_avg": 364.0,
+      "jobe_cpu_max": 957.0,
+      "jupyterhub_mib_max": 117,
+      "moodle_app_mib_max": 1851,
+      "locust_cpu_avg": 70
+    },
+    "per_request": {
+      "coding quiz: start attempt": {
+        "count": 6093,
+        "p50": 2531,
+        "p95": 3142,
+        "p99": 3220,
+        "max": 3357
+      },
+      "coding quiz: submit & grade": {
+        "count": 6153,
+        "p50": 3264,
+        "p95": 8807,
+        "p99": 12414,
+        "max": 13505
+      },
+      "coding quiz: view": {
+        "count": 6128,
+        "p50": 1299,
+        "p95": 1626,
+        "p99": 1700,
+        "max": 1832
+      },
+      "page: course": {
+        "count": 6153,
+        "p50": 1281,
+        "p95": 1606,
+        "p99": 1670,
+        "max": 1787
+      }
+    }
+  }
+]

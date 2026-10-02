@@ -1,0 +1,9 @@
+Method,Name,Error,Occurrences,First Seen,Last Seen
+GET,page: dashboard,CatchResponseError('bounced to login page (session lost)'),2,2026-09-30T14:22:52Z,2026-09-30T14:22:57Z
+GET,login: form,"ConnectionResetError(104, 'Connection reset by peer')",134,2026-09-30T14:24:49Z,2026-09-30T14:25:06Z
+GET,page: forum,CatchResponseError('bounced to login page (session lost)'),3,2026-09-30T14:23:04Z,2026-09-30T14:23:28Z
+GET,login: form,RemoteDisconnected('Remote end closed connection without response'),243,2026-09-30T14:20:52Z,2026-09-30T14:25:46Z
+GET,mcq quiz: view,CatchResponseError('bounced to login page (session lost)'),1,2026-09-30T14:23:12Z,2026-09-30T14:23:12Z
+POST,mcq quiz: start attempt,CatchResponseError('HTTP 404'),1,2026-09-30T14:23:22Z,2026-09-30T14:23:22Z
+GET,page: reading page,CatchResponseError('bounced to login page (session lost)'),2,2026-09-30T14:22:52Z,2026-09-30T14:22:53Z
+GET,page: course,CatchResponseError('bounced to login page (session lost)'),7,2026-09-30T14:22:52Z,2026-09-30T14:23:12Z

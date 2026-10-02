@@ -1,0 +1,13 @@
+{
+    "name": "ui_ace_gapfiller",
+    "parameters": {
+        "ui_source": {
+            "type": "string",
+            "default": "globalextra"
+        },
+        "line_height": {
+            "type": "int",
+            "default": 19
+        }
+    }
+}

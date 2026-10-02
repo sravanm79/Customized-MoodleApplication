@@ -1,0 +1,40 @@
+
+[2026-09-30 21:10:13,848] vocab-server3/INFO/locust.runners: Shape test stopping
+[2026-09-30 21:10:13,848] vocab-server3/INFO/locust.runners: Got quit message from master, shutting down...
+[2026-09-30 21:10:13,849] vocab-server3/INFO/locust.runners: Got quit message from master, shutting down...
+[2026-09-30 21:10:13,849] vocab-server3/INFO/locust.runners: Got quit message from master, shutting down...
+[2026-09-30 21:10:13,849] vocab-server3/INFO/locust.runners: Got quit message from master, shutting down...
+[2026-09-30 21:10:13,956] vocab-server3/INFO/locust.main: Shutting down (exit code 0)
+[2026-09-30 21:10:13,957] vocab-server3/INFO/locust.runners: Worker 'vocab-server3_1da1dcbe35b8401c98ae196c330f316d' (index 2) quit. 0 workers ready.
+[2026-09-30 21:10:13,984] vocab-server3/INFO/locust.main: Shutting down (exit code 0)
+[2026-09-30 21:10:13,984] vocab-server3/INFO/locust.runners: Worker 'vocab-server3_dfba33556a9c451f8d12b6d5903efe93' (index 1) quit. 0 workers ready.
+[2026-09-30 21:10:13,998] vocab-server3/INFO/locust.main: Shutting down (exit code 0)
+[2026-09-30 21:10:13,999] vocab-server3/INFO/locust.runners: Worker 'vocab-server3_f0bfe36294044ad89eebba545d5b7f50' (index 0) quit. 0 workers ready.
+[2026-09-30 21:10:14,011] vocab-server3/INFO/locust.main: Shutting down (exit code 0)
+[2026-09-30 21:10:14,011] vocab-server3/INFO/locust.runners: Worker 'vocab-server3_528e69e2fd8a42ec9edb507cd6f34442' (index 3) quit. 0 workers ready.
+[2026-09-30 21:10:14,011] vocab-server3/INFO/locust.runners: The last worker quit, stopping test.
+[2026-09-30 21:10:14,350] vocab-server3/INFO/locust.main: Shape test completed, shutting down
+[2026-09-30 21:10:15,415] vocab-server3/INFO/locust.main: Shutting down (exit code 1)
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+POST     coding quiz: start attempt                                                     33711     0(0.00%) |    819      33    5071     83 |   22.93        0.00
+POST     coding quiz: submit & grade                                                    31914     0(0.00%) |   1361     116   14363    200 |   21.71        0.00
+GET      coding quiz: view                                                              33838     0(0.00%) |    438      22    2702     60 |   23.02        0.00
+GET      login: form                                                                     3015     0(0.00%) |    322       8    2033     19 |    2.05        0.00
+POST     login: submit                                                                   3000     0(0.00%) |   1251      78    7202    150 |    2.04        0.00
+GET      page: course                                                                   33908     0(0.00%) |    432      23    2634     55 |   23.06        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                    139386     0(0.00%) |    755       8   14363    110 |   94.80        0.00
+
+Response time percentiles (approximated)
+Type     Name                                                                                  50%    66%    75%    80%    90%    95%    98%    99%  99.9% 99.99%   100% # reqs
+--------|--------------------------------------------------------------------------------|--------|------|------|------|------|------|------|------|------|------|------|------
+POST     coding quiz: start attempt                                                             83    130   1500   2100   2900   3100   4300   4700   4900   5000   5100  33711
+POST     coding quiz: submit & grade                                                           200    270   2400   2900   4200   5700   7900   9800  13000  14000  14000  31914
+GET      coding quiz: view                                                                      60     96    840   1100   1500   1600   2200   2400   2500   2600   2700  33838
+GET      login: form                                                                            19     35    430    710   1300   1500   1800   1900   2000   2000   2000   3015
+POST     login: submit                                                                         150    260   1900   3100   4500   5600   6500   6700   7200   7200   7200   3000
+GET      page: course                                                                           55     97    820   1100   1500   1600   2100   2400   2500   2600   2600  33908
+--------|--------------------------------------------------------------------------------|--------|------|------|------|------|------|------|------|------|------|------|------
+         Aggregated                                                                            110    220   1100   1400   2500   3300   4800   6200  12000  13000  14000 139386
+

@@ -1,0 +1,40 @@
+[2026-09-30 21:21:07,432] vocab-server3/INFO/locust.runners: Shape test updating to 75 users at 2.00 spawn rate
+[2026-09-30 21:21:07,432] vocab-server3/INFO/locust.runners: Sending spawn jobs of 75 users at 2.00 spawn rate to 1 ready workers
+[2026-09-30 21:21:19,500] vocab-server3/INFO/locust.runners: All users spawned: {"JupyterStudent": 75} (75 total users)
+[2026-09-30 21:24:37,694] vocab-server3/INFO/locust.runners: Shape test updating to 100 users at 2.00 spawn rate
+[2026-09-30 21:24:37,694] vocab-server3/INFO/locust.runners: Sending spawn jobs of 100 users at 2.00 spawn rate to 1 ready workers
+[2026-09-30 21:24:49,758] vocab-server3/INFO/locust.runners: All users spawned: {"JupyterStudent": 100} (100 total users)
+[2026-09-30 21:28:06,948] vocab-server3/INFO/locust.runners: Shape test updating to 125 users at 2.00 spawn rate
+[2026-09-30 21:28:06,948] vocab-server3/INFO/locust.runners: Sending spawn jobs of 125 users at 2.00 spawn rate to 1 ready workers
+[2026-09-30 21:28:19,024] vocab-server3/INFO/locust.runners: All users spawned: {"JupyterStudent": 125} (125 total users)
+[2026-09-30 21:31:37,191] vocab-server3/INFO/locust.runners: Shape test updating to 150 users at 2.00 spawn rate
+[2026-09-30 21:31:37,191] vocab-server3/INFO/locust.runners: Sending spawn jobs of 150 users at 2.00 spawn rate to 1 ready workers
+[2026-09-30 21:31:49,276] vocab-server3/INFO/locust.runners: All users spawned: {"JupyterStudent": 150} (150 total users)
+[2026-09-30 21:35:07,416] vocab-server3/INFO/locust.runners: Shape test stopping
+[2026-09-30 21:35:07,417] vocab-server3/INFO/locust.runners: Got quit message from master, shutting down...
+[2026-09-30 21:35:08,014] vocab-server3/INFO/locust.main: Shape test completed, shutting down
+[2026-09-30 21:35:09,146] vocab-server3/INFO/locust.main: Shutting down (exit code 0)
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      jupyter: load JupyterLab                                                         150     0(0.00%) |     16       8     111     13 |    0.10        0.00
+GET      jupyter: open activity (spawn server)                                            150     0(0.00%) |   2434    1397    6064   2200 |    0.10        0.00
+WS       jupyter: run cell                                                               5150     0(0.00%) |     58      44     935     47 |    3.50        0.00
+POST     jupyter: start kernel                                                            150     0(0.00%) |     28      22      62     26 |    0.10        0.00
+GET      login: form                                                                      150     0(0.00%) |     15       8      33     15 |    0.10        0.00
+POST     login: submit                                                                    150     0(0.00%) |     75      55     139     73 |    0.10        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                      5900     0(0.00%) |    116       8    6064     47 |    4.02        0.00
+
+Response time percentiles (approximated)
+Type     Name                                                                                  50%    66%    75%    80%    90%    95%    98%    99%  99.9% 99.99%   100% # reqs
+--------|--------------------------------------------------------------------------------|--------|------|------|------|------|------|------|------|------|------|------|------
+GET      jupyter: load JupyterLab                                                               13     16     17     19     26     32     37     47    110    110    110    150
+GET      jupyter: open activity (spawn server)                                                2200   2600   2800   3000   3600   4100   4500   5700   6100   6100   6100    150
+WS       jupyter: run cell                                                                      47     48     48     49     50     59    360    390    890    940    940   5150
+POST     jupyter: start kernel                                                                  26     30     31     31     33     49     55     61     63     63     63    150
+GET      login: form                                                                            15     17     18     18     21     23     31     31     33     33     33    150
+POST     login: submit                                                                          73     79     86     88     97    100    130    130    140    140    140    150
+--------|--------------------------------------------------------------------------------|--------|------|------|------|------|------|------|------|------|------|------|------
+         Aggregated                                                                             47     48     49     49     58    300   1800   2400   4300   6100   6100   5900
+
+[2026-09-30 21:35:09,976] vocab-server3/INFO/locust.main: Shutting down (exit code 0)

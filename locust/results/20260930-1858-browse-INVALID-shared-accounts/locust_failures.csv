@@ -1,0 +1,11 @@
+Method,Name,Error,Occurrences,First Seen,Last Seen
+GET,page: dashboard,CatchResponseError('bounced to login page (session lost)'),4,2026-09-30T13:55:36Z,2026-09-30T13:56:14Z
+GET,login: form,"ConnectionResetError(104, 'Connection reset by peer')",59,2026-09-30T13:55:28Z,2026-09-30T13:55:44Z
+GET,page: forum,CatchResponseError('bounced to login page (session lost)'),1,2026-09-30T13:55:35Z,2026-09-30T13:55:35Z
+POST,mcq quiz: submit & grade,CatchResponseError('HTTP 404'),8954,2026-09-30T13:32:23Z,2026-09-30T13:56:41Z
+GET,login: form,RemoteDisconnected('Remote end closed connection without response'),300,2026-09-30T13:51:34Z,2026-09-30T13:56:21Z
+POST,mcq quiz: start attempt,"CatchResponseError('missing \'id=""responseform""\'')",640,2026-09-30T13:34:34Z,2026-09-30T13:56:40Z
+GET,mcq quiz: view,CatchResponseError('bounced to login page (session lost)'),2,2026-09-30T13:51:55Z,2026-09-30T13:55:25Z
+POST,mcq quiz: start attempt,CatchResponseError('HTTP 404'),17,2026-09-30T13:36:10Z,2026-09-30T13:56:36Z
+GET,page: reading page,CatchResponseError('bounced to login page (session lost)'),2,2026-09-30T13:51:49Z,2026-09-30T13:55:31Z
+GET,page: course,CatchResponseError('bounced to login page (session lost)'),1,2026-09-30T13:55:25Z,2026-09-30T13:55:25Z

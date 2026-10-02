@@ -1,0 +1,115 @@
+/* Proctored exam rendering. */
+body.quizaccess-examproctor {
+    padding-top: 2.5rem;
+}
+
+body.quizaccess-examproctor-noselect #responseform .qtext,
+body.quizaccess-examproctor-noselect #responseform .answer label {
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.examproctor-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1040;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .5rem 1rem;
+    background: #1d2125;
+    color: #fff;
+    font-size: .9rem;
+}
+
+.examproctor-bar-dot {
+    width: .6rem;
+    height: .6rem;
+    border-radius: 50%;
+    background: #3ec46d;
+    animation: examproctor-pulse 2s infinite;
+}
+
+.examproctor-bar-alert .examproctor-bar-dot {
+    background: #f0ad4e;
+}
+
+.examproctor-bar-title {
+    font-weight: 600;
+}
+
+.examproctor-bar-preview {
+    padding: 0 .4rem;
+    border-radius: .25rem;
+    background: #0f6cbf;
+    font-size: .75rem;
+}
+
+.examproctor-bar-count {
+    margin-left: auto;
+}
+
+.examproctor-bar-alert .examproctor-bar-count {
+    color: #ffc107;
+    font-weight: 600;
+}
+
+@keyframes examproctor-pulse {
+    50% {
+        opacity: .35;
+    }
+}
+
+.examproctor-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1060;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(15, 20, 25, .92);
+}
+
+.examproctor-dialog {
+    max-width: 32rem;
+    padding: 2rem;
+    border-radius: .5rem;
+    background: #fff;
+    color: #1d2125;
+    text-align: center;
+}
+
+.examproctor-overlay-warning .examproctor-dialog {
+    border-top: .4rem solid #ca3120;
+}
+
+.examproctor-dialog-title {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.examproctor-dialog .btn {
+    margin-top: 1rem;
+}
+
+.examproctor-toast {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    z-index: 1070;
+    padding: .5rem 1rem;
+    border-radius: .25rem;
+    background: #ca3120;
+    color: #fff;
+    opacity: 0;
+    transform: translateX(-50%);
+    transition: opacity .2s;
+    pointer-events: none;
+}
+
+.examproctor-toast-show {
+    opacity: 1;
+}

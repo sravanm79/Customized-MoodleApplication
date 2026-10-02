@@ -1,0 +1,86 @@
+Count,Message,Traceback,Nodes
+10,argument of type 'NoneType' is not iterable,"  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/.venv/lib/python3.13/site-packages/locust/user/task.py"", line 363, in run
+    self.execute_next_task()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/.venv/lib/python3.13/site-packages/locust/user/task.py"", line 396, in execute_next_task
+    self.execute_task(self._task_queue.popleft())
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/.venv/lib/python3.13/site-packages/locust/user/task.py"", line 513, in execute_task
+    task(self.user)
+    ~~~~^^^^^^^^^^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/locustfile.py"", line 225, in coding_quiz
+    self.quiz_attempt(COURSE[""code""], ""coding quiz"", answer_code=random.choice(SOLUTIONS))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/locustfile.py"", line 165, in quiz_attempt
+    r = self.post(""/mod/quiz/startattempt.php"", {""cmid"": cmid, ""sesskey"": self.sesskey}, f""{label}: start attempt"",
+                  expect='id=""responseform""')
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/locustfile.py"", line 122, in post
+    self._check(r, expect)
+    ~~~~~~~~~~~^^^^^^^^^^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/locustfile.py"", line 128, in _check
+    elif ""/login/index.php"" in r.url:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+","vocab-server3_dfba33556a9c451f8d12b6d5903efe93, vocab-server3_f0bfe36294044ad89eebba545d5b7f50, vocab-server3_1da1dcbe35b8401c98ae196c330f316d, vocab-server3_528e69e2fd8a42ec9edb507cd6f34442"
+7,argument of type 'NoneType' is not iterable,"  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/.venv/lib/python3.13/site-packages/locust/user/task.py"", line 363, in run
+    self.execute_next_task()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/.venv/lib/python3.13/site-packages/locust/user/task.py"", line 396, in execute_next_task
+    self.execute_task(self._task_queue.popleft())
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/.venv/lib/python3.13/site-packages/locust/user/task.py"", line 513, in execute_task
+    task(self.user)
+    ~~~~^^^^^^^^^^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/locustfile.py"", line 225, in coding_quiz
+    self.quiz_attempt(COURSE[""code""], ""coding quiz"", answer_code=random.choice(SOLUTIONS))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/locustfile.py"", line 164, in quiz_attempt
+    self.get(f""/mod/quiz/view.php?id={cmid}"", f""{label}: view"")
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/locustfile.py"", line 116, in get
+    self._check(r, expect)
+    ~~~~~~~~~~~^^^^^^^^^^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/locustfile.py"", line 128, in _check
+    elif ""/login/index.php"" in r.url:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+","vocab-server3_dfba33556a9c451f8d12b6d5903efe93, vocab-server3_f0bfe36294044ad89eebba545d5b7f50, vocab-server3_1da1dcbe35b8401c98ae196c330f316d"
+6,argument of type 'NoneType' is not iterable,"  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/.venv/lib/python3.13/site-packages/locust/user/task.py"", line 363, in run
+    self.execute_next_task()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/.venv/lib/python3.13/site-packages/locust/user/task.py"", line 396, in execute_next_task
+    self.execute_task(self._task_queue.popleft())
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/.venv/lib/python3.13/site-packages/locust/user/task.py"", line 513, in execute_task
+    task(self.user)
+    ~~~~^^^^^^^^^^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/locustfile.py"", line 225, in coding_quiz
+    self.quiz_attempt(COURSE[""code""], ""coding quiz"", answer_code=random.choice(SOLUTIONS))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/locustfile.py"", line 181, in quiz_attempt
+    self.post(""/mod/quiz/processattempt.php"", data, f""{label}: submit & grade"", expect=""review"")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/locustfile.py"", line 122, in post
+    self._check(r, expect)
+    ~~~~~~~~~~~^^^^^^^^^^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/locustfile.py"", line 128, in _check
+    elif ""/login/index.php"" in r.url:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+","vocab-server3_f0bfe36294044ad89eebba545d5b7f50, vocab-server3_1da1dcbe35b8401c98ae196c330f316d, vocab-server3_528e69e2fd8a42ec9edb507cd6f34442"
+1,argument of type 'NoneType' is not iterable,"  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/.venv/lib/python3.13/site-packages/locust/user/task.py"", line 363, in run
+    self.execute_next_task()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/.venv/lib/python3.13/site-packages/locust/user/task.py"", line 396, in execute_next_task
+    self.execute_task(self._task_queue.popleft())
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/.venv/lib/python3.13/site-packages/locust/user/task.py"", line 513, in execute_task
+    task(self.user)
+    ~~~~^^^^^^^^^^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/locustfile.py"", line 224, in coding_quiz
+    self.get(f""/course/view.php?id={COURSE['courseid']}"", ""page: course"")
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/locustfile.py"", line 116, in get
+    self._check(r, expect)
+    ~~~~~~~~~~~^^^^^^^^^^^
+  File ""/media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/locustfile.py"", line 128, in _check
+    elif ""/login/index.php"" in r.url:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+",vocab-server3_528e69e2fd8a42ec9edb507cd6f34442

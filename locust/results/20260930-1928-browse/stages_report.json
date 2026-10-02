@@ -1,0 +1,942 @@
+[
+  {
+    "users": 1000,
+    "window_s": 120,
+    "requests": 13498,
+    "rps": 112.2,
+    "errors": 0,
+    "pass": true,
+    "checks": [
+      {
+        "check": "page loads p95",
+        "value": 54,
+        "limit": 2500,
+        "pass": true
+      },
+      {
+        "check": "graded submit p95",
+        "value": 61,
+        "limit": 5000,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 15.9,
+        "limit": 90,
+        "pass": true
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 15.9,
+      "host_cpu_max": 17.3,
+      "mem_avail_min_gb": 32.1,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 7,
+      "fpm_max": 64,
+      "db_conn_max": 9,
+      "jupyter_servers": 0,
+      "moodle_app_cpu_avg": 342.0,
+      "moodle_db_cpu_avg": 66.0,
+      "jobe_cpu_max": 12.0,
+      "jupyterhub_mib_max": 117,
+      "moodle_app_mib_max": 1114,
+      "locust_cpu_avg": 22
+    },
+    "per_request": {
+      "mcq quiz: start attempt": {
+        "count": 1013,
+        "p50": 43,
+        "p95": 56,
+        "p99": 60,
+        "max": 68
+      },
+      "mcq quiz: submit & grade": {
+        "count": 1017,
+        "p50": 48,
+        "p95": 61,
+        "p99": 67,
+        "max": 72
+      },
+      "mcq quiz: view": {
+        "count": 1014,
+        "p50": 50,
+        "p95": 69,
+        "p99": 77,
+        "max": 94
+      },
+      "page: course": {
+        "count": 3209,
+        "p50": 30,
+        "p95": 42,
+        "p99": 45,
+        "max": 51
+      },
+      "page: dashboard": {
+        "count": 2067,
+        "p50": 36,
+        "p95": 53,
+        "p99": 58,
+        "max": 63
+      },
+      "page: forum": {
+        "count": 1046,
+        "p50": 41,
+        "p95": 57,
+        "p99": 61,
+        "max": 65
+      },
+      "page: forum thread": {
+        "count": 1046,
+        "p50": 30,
+        "p95": 42,
+        "p99": 46,
+        "max": 48
+      },
+      "page: reading page": {
+        "count": 3086,
+        "p50": 26,
+        "p95": 37,
+        "p99": 40,
+        "max": 44
+      }
+    }
+  },
+  {
+    "users": 2000,
+    "window_s": 120,
+    "requests": 26958,
+    "rps": 224.0,
+    "errors": 0,
+    "pass": true,
+    "checks": [
+      {
+        "check": "page loads p95",
+        "value": 70,
+        "limit": 2500,
+        "pass": true
+      },
+      {
+        "check": "graded submit p95",
+        "value": 81,
+        "limit": 5000,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 43.2,
+        "limit": 90,
+        "pass": true
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 43.2,
+      "host_cpu_max": 52.2,
+      "mem_avail_min_gb": 31.7,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 15,
+      "fpm_max": 65,
+      "db_conn_max": 17,
+      "jupyter_servers": 0,
+      "moodle_app_cpu_avg": 980.0,
+      "moodle_db_cpu_avg": 176.0,
+      "jobe_cpu_max": 16.0,
+      "jupyterhub_mib_max": 117,
+      "moodle_app_mib_max": 1179,
+      "locust_cpu_avg": 54
+    },
+    "per_request": {
+      "mcq quiz: start attempt": {
+        "count": 2071,
+        "p50": 60,
+        "p95": 74,
+        "p99": 81,
+        "max": 89
+      },
+      "mcq quiz: submit & grade": {
+        "count": 2077,
+        "p50": 66,
+        "p95": 81,
+        "p99": 89,
+        "max": 102
+      },
+      "mcq quiz: view": {
+        "count": 2072,
+        "p50": 58,
+        "p95": 91,
+        "p99": 102,
+        "max": 127
+      },
+      "page: course": {
+        "count": 6296,
+        "p50": 42,
+        "p95": 53,
+        "p99": 57,
+        "max": 127
+      },
+      "page: dashboard": {
+        "count": 4112,
+        "p50": 53,
+        "p95": 67,
+        "p99": 72,
+        "max": 93
+      },
+      "page: forum": {
+        "count": 2037,
+        "p50": 60,
+        "p95": 73,
+        "p99": 79,
+        "max": 98
+      },
+      "page: forum thread": {
+        "count": 2035,
+        "p50": 43,
+        "p95": 53,
+        "p99": 58,
+        "max": 97
+      },
+      "page: reading page": {
+        "count": 6258,
+        "p50": 38,
+        "p95": 47,
+        "p99": 51,
+        "max": 102
+      }
+    }
+  },
+  {
+    "users": 3000,
+    "window_s": 120,
+    "requests": 40139,
+    "rps": 335.6,
+    "errors": 0,
+    "pass": true,
+    "checks": [
+      {
+        "check": "page loads p95",
+        "value": 168,
+        "limit": 2500,
+        "pass": true
+      },
+      {
+        "check": "graded submit p95",
+        "value": 226,
+        "limit": 5000,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 85.5,
+        "limit": 90,
+        "pass": true
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 85.5,
+      "host_cpu_max": 91.9,
+      "mem_avail_min_gb": 31.4,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 55,
+      "fpm_max": 80,
+      "db_conn_max": 56,
+      "jupyter_servers": 0,
+      "moodle_app_cpu_avg": 1845.0,
+      "moodle_db_cpu_avg": 356.0,
+      "jobe_cpu_max": 0.0,
+      "jupyterhub_mib_max": 117,
+      "moodle_app_mib_max": 1349,
+      "locust_cpu_avg": 96
+    },
+    "per_request": {
+      "mcq quiz: start attempt": {
+        "count": 2991,
+        "p50": 99,
+        "p95": 222,
+        "p99": 324,
+        "max": 473
+      },
+      "mcq quiz: submit & grade": {
+        "count": 3008,
+        "p50": 108,
+        "p95": 226,
+        "p99": 351,
+        "max": 484
+      },
+      "mcq quiz: view": {
+        "count": 2996,
+        "p50": 91,
+        "p95": 199,
+        "p99": 331,
+        "max": 609
+      },
+      "page: course": {
+        "count": 9319,
+        "p50": 66,
+        "p95": 144,
+        "p99": 229,
+        "max": 412
+      },
+      "page: dashboard": {
+        "count": 6263,
+        "p50": 82,
+        "p95": 175,
+        "p99": 282,
+        "max": 531
+      },
+      "page: forum": {
+        "count": 3107,
+        "p50": 93,
+        "p95": 193,
+        "p99": 284,
+        "max": 463
+      },
+      "page: forum thread": {
+        "count": 3105,
+        "p50": 64,
+        "p95": 140,
+        "p99": 232,
+        "max": 343
+      },
+      "page: reading page": {
+        "count": 9350,
+        "p50": 61,
+        "p95": 138,
+        "p99": 217,
+        "max": 379
+      }
+    }
+  },
+  {
+    "users": 3500,
+    "window_s": 121,
+    "requests": 42495,
+    "rps": 352.2,
+    "errors": 0,
+    "pass": false,
+    "checks": [
+      {
+        "check": "page loads p95",
+        "value": 1492,
+        "limit": 2500,
+        "pass": true
+      },
+      {
+        "check": "graded submit p95",
+        "value": 1843,
+        "limit": 5000,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 100.0,
+        "limit": 90,
+        "pass": false
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 100.0,
+      "host_cpu_max": 100.0,
+      "mem_avail_min_gb": 30.9,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 406,
+      "fpm_max": 112,
+      "db_conn_max": 115,
+      "jupyter_servers": 0,
+      "moodle_app_cpu_avg": 2180.0,
+      "moodle_db_cpu_avg": 431.0,
+      "jobe_cpu_max": 0.0,
+      "jupyterhub_mib_max": 117,
+      "moodle_app_mib_max": 1781,
+      "locust_cpu_avg": 108
+    },
+    "per_request": {
+      "mcq quiz: start attempt": {
+        "count": 3337,
+        "p50": 1528,
+        "p95": 1822,
+        "p99": 1920,
+        "max": 2042
+      },
+      "mcq quiz: submit & grade": {
+        "count": 3345,
+        "p50": 1544,
+        "p95": 1843,
+        "p99": 1947,
+        "max": 2048
+      },
+      "mcq quiz: view": {
+        "count": 3335,
+        "p50": 930,
+        "p95": 1275,
+        "p99": 1409,
+        "max": 1767
+      },
+      "page: course": {
+        "count": 9816,
+        "p50": 863,
+        "p95": 1064,
+        "p99": 1144,
+        "max": 1319
+      },
+      "page: dashboard": {
+        "count": 6488,
+        "p50": 949,
+        "p95": 1178,
+        "p99": 1268,
+        "max": 1477
+      },
+      "page: forum": {
+        "count": 3201,
+        "p50": 962,
+        "p95": 1192,
+        "p99": 1284,
+        "max": 1422
+      },
+      "page: forum thread": {
+        "count": 3198,
+        "p50": 856,
+        "p95": 1065,
+        "p99": 1141,
+        "max": 1260
+      },
+      "page: reading page": {
+        "count": 9775,
+        "p50": 824,
+        "p95": 1005,
+        "p99": 1077,
+        "max": 1251
+      }
+    }
+  },
+  {
+    "users": 4000,
+    "window_s": 120,
+    "requests": 42120,
+    "rps": 352.0,
+    "errors": 0,
+    "pass": false,
+    "checks": [
+      {
+        "check": "page loads p95",
+        "value": 4046,
+        "limit": 2500,
+        "pass": false
+      },
+      {
+        "check": "graded submit p95",
+        "value": 4368,
+        "limit": 5000,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 100.0,
+        "limit": 90,
+        "pass": false
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 100.0,
+      "host_cpu_max": 100.0,
+      "mem_avail_min_gb": 30.5,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 906,
+      "fpm_max": 112,
+      "db_conn_max": 116,
+      "jupyter_servers": 0,
+      "moodle_app_cpu_avg": 2179.0,
+      "moodle_db_cpu_avg": 434.0,
+      "jobe_cpu_max": 0.0,
+      "jupyterhub_mib_max": 117,
+      "moodle_app_mib_max": 2042,
+      "locust_cpu_avg": 108
+    },
+    "per_request": {
+      "mcq quiz: start attempt": {
+        "count": 3236,
+        "p50": 4087,
+        "p95": 4326,
+        "p99": 4416,
+        "max": 4531
+      },
+      "mcq quiz: submit & grade": {
+        "count": 3241,
+        "p50": 4108,
+        "p95": 4368,
+        "p99": 4465,
+        "max": 4634
+      },
+      "mcq quiz: view": {
+        "count": 3246,
+        "p50": 2203,
+        "p95": 2545,
+        "p99": 2715,
+        "max": 2979
+      },
+      "page: course": {
+        "count": 9760,
+        "p50": 2141,
+        "p95": 2334,
+        "p99": 2424,
+        "max": 2619
+      },
+      "page: dashboard": {
+        "count": 6461,
+        "p50": 2225,
+        "p95": 2452,
+        "p99": 2558,
+        "max": 2752
+      },
+      "page: forum": {
+        "count": 3257,
+        "p50": 2235,
+        "p95": 2462,
+        "p99": 2556,
+        "max": 2690
+      },
+      "page: forum thread": {
+        "count": 3261,
+        "p50": 2128,
+        "p95": 2320,
+        "p99": 2406,
+        "max": 2638
+      },
+      "page: reading page": {
+        "count": 9658,
+        "p50": 2101,
+        "p95": 2279,
+        "p99": 2351,
+        "max": 2539
+      }
+    }
+  },
+  {
+    "users": 4500,
+    "window_s": 120,
+    "requests": 42170,
+    "rps": 352.2,
+    "errors": 0,
+    "pass": false,
+    "checks": [
+      {
+        "check": "page loads p95",
+        "value": 4316,
+        "limit": 2500,
+        "pass": false
+      },
+      {
+        "check": "graded submit p95",
+        "value": 6143,
+        "limit": 5000,
+        "pass": false
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 100.0,
+        "limit": 90,
+        "pass": false
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 100.0,
+      "host_cpu_max": 100.0,
+      "mem_avail_min_gb": 30.4,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 918,
+      "fpm_max": 112,
+      "db_conn_max": 115,
+      "jupyter_servers": 0,
+      "moodle_app_cpu_avg": 2171.0,
+      "moodle_db_cpu_avg": 438.0,
+      "jobe_cpu_max": 0.0,
+      "jupyterhub_mib_max": 117,
+      "moodle_app_mib_max": 2050,
+      "locust_cpu_avg": 108
+    },
+    "per_request": {
+      "mcq quiz: start attempt": {
+        "count": 3212,
+        "p50": 4308,
+        "p95": 4474,
+        "p99": 4558,
+        "max": 4751
+      },
+      "mcq quiz: submit & grade": {
+        "count": 3259,
+        "p50": 5914,
+        "p95": 6143,
+        "p99": 6275,
+        "max": 8786
+      },
+      "mcq quiz: view": {
+        "count": 3215,
+        "p50": 3884,
+        "p95": 4268,
+        "p99": 4596,
+        "max": 5364
+      },
+      "page: course": {
+        "count": 9830,
+        "p50": 3825,
+        "p95": 4052,
+        "p99": 4767,
+        "max": 7247
+      },
+      "page: dashboard": {
+        "count": 6455,
+        "p50": 3908,
+        "p95": 4176,
+        "p99": 4330,
+        "max": 6385
+      },
+      "page: forum": {
+        "count": 3254,
+        "p50": 3926,
+        "p95": 4188,
+        "p99": 4874,
+        "max": 6240
+      },
+      "page: forum thread": {
+        "count": 3269,
+        "p50": 2244,
+        "p95": 2404,
+        "p99": 2474,
+        "max": 2594
+      },
+      "page: reading page": {
+        "count": 9676,
+        "p50": 3793,
+        "p95": 3993,
+        "p99": 4768,
+        "max": 6801
+      }
+    }
+  },
+  {
+    "users": 5000,
+    "window_s": 120,
+    "requests": 42234,
+    "rps": 352.6,
+    "errors": 89,
+    "pass": false,
+    "checks": [
+      {
+        "check": "page loads p95",
+        "value": 7857,
+        "limit": 2500,
+        "pass": false
+      },
+      {
+        "check": "graded submit p95",
+        "value": 10085,
+        "limit": 5000,
+        "pass": false
+      },
+      {
+        "check": "error rate %",
+        "value": 0.21,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 100.0,
+        "limit": 90,
+        "pass": false
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 100.0,
+      "host_cpu_max": 100.0,
+      "mem_avail_min_gb": 30.4,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 910,
+      "fpm_max": 112,
+      "db_conn_max": 114,
+      "jupyter_servers": 0,
+      "moodle_app_cpu_avg": 2170.0,
+      "moodle_db_cpu_avg": 438.0,
+      "jobe_cpu_max": 22.0,
+      "jupyterhub_mib_max": 117,
+      "moodle_app_mib_max": 2091,
+      "locust_cpu_avg": 109
+    },
+    "per_request": {
+      "login: form": {
+        "count": 156,
+        "p50": 107565,
+        "p95": 111637,
+        "p99": 111649,
+        "max": 112704
+      },
+      "login: submit": {
+        "count": 67,
+        "p50": 6382,
+        "p95": 6632,
+        "p99": 6701,
+        "max": 6708
+      },
+      "mcq quiz: start attempt": {
+        "count": 3182,
+        "p50": 4269,
+        "p95": 4451,
+        "p99": 4527,
+        "max": 4691
+      },
+      "mcq quiz: submit & grade": {
+        "count": 3173,
+        "p50": 6117,
+        "p95": 10085,
+        "p99": 20107,
+        "max": 61863
+      },
+      "mcq quiz: view": {
+        "count": 3209,
+        "p50": 4162,
+        "p95": 8332,
+        "p99": 18161,
+        "max": 58082
+      },
+      "page: course": {
+        "count": 9850,
+        "p50": 4051,
+        "p95": 8300,
+        "p99": 18368,
+        "max": 74375
+      },
+      "page: dashboard": {
+        "count": 6492,
+        "p50": 4164,
+        "p95": 8246,
+        "p99": 18153,
+        "max": 72197
+      },
+      "page: forum": {
+        "count": 3265,
+        "p50": 4174,
+        "p95": 8285,
+        "p99": 18188,
+        "max": 60865
+      },
+      "page: forum thread": {
+        "count": 3269,
+        "p50": 2220,
+        "p95": 2394,
+        "p99": 2470,
+        "max": 2583
+      },
+      "page: reading page": {
+        "count": 9571,
+        "p50": 3997,
+        "p95": 8118,
+        "p99": 18230,
+        "max": 59736
+      }
+    }
+  },
+  {
+    "users": 6000,
+    "window_s": 121,
+    "requests": 42678,
+    "rps": 352.6,
+    "errors": 266,
+    "pass": false,
+    "checks": [
+      {
+        "check": "page loads p95",
+        "value": 9638,
+        "limit": 2500,
+        "pass": false
+      },
+      {
+        "check": "graded submit p95",
+        "value": 13596,
+        "limit": 5000,
+        "pass": false
+      },
+      {
+        "check": "error rate %",
+        "value": 0.62,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 100.0,
+        "limit": 90,
+        "pass": false
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 100.0,
+      "host_cpu_max": 100.0,
+      "mem_avail_min_gb": 30.2,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 915,
+      "fpm_max": 112,
+      "db_conn_max": 115,
+      "jupyter_servers": 0,
+      "moodle_app_cpu_avg": 2166.0,
+      "moodle_db_cpu_avg": 440.0,
+      "jobe_cpu_max": 0.0,
+      "jupyterhub_mib_max": 117,
+      "moodle_app_mib_max": 2093,
+      "locust_cpu_avg": 112
+    },
+    "per_request": {
+      "login: form": {
+        "count": 520,
+        "p50": 106563,
+        "p95": 136392,
+        "p99": 173178,
+        "max": 176338
+      },
+      "login: submit": {
+        "count": 257,
+        "p50": 6438,
+        "p95": 6707,
+        "p99": 6771,
+        "max": 6922
+      },
+      "mcq quiz: start attempt": {
+        "count": 3270,
+        "p50": 4246,
+        "p95": 4419,
+        "p99": 4481,
+        "max": 4657
+      },
+      "mcq quiz: submit & grade": {
+        "count": 3172,
+        "p50": 6140,
+        "p95": 13596,
+        "p99": 42127,
+        "max": 75991
+      },
+      "mcq quiz: view": {
+        "count": 3263,
+        "p50": 4182,
+        "p95": 11482,
+        "p99": 31824,
+        "max": 85871
+      },
+      "page: course": {
+        "count": 9685,
+        "p50": 4073,
+        "p95": 10615,
+        "p99": 32900,
+        "max": 124537
+      },
+      "page: dashboard": {
+        "count": 6603,
+        "p50": 4173,
+        "p95": 10554,
+        "p99": 33587,
+        "max": 91219
+      },
+      "page: forum": {
+        "count": 3160,
+        "p50": 4198,
+        "p95": 10543,
+        "p99": 31805,
+        "max": 75688
+      },
+      "page: forum thread": {
+        "count": 3165,
+        "p50": 2212,
+        "p95": 2376,
+        "p99": 2438,
+        "max": 2552
+      },
+      "page: reading page": {
+        "count": 9583,
+        "p50": 4025,
+        "p95": 10736,
+        "p99": 31606,
+        "max": 78868
+      }
+    }
+  }
+]

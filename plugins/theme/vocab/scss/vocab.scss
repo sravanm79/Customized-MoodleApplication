@@ -1,0 +1,25 @@
+// Direct action link in the month calendar (see templates/core_calendar/month_detailed.mustache).
+// Only Zoom events show it; other activities' actions (e.g. "Add submission") stay hidden.
+.theme-vocab-event-action {
+    display: none;
+}
+
+[data-event-component="mod_zoom"] .theme-vocab-event-action {
+    display: inline-block;
+    margin: 2px 0 2px 1rem;
+    padding: 0 .4rem;
+    border-radius: .25rem;
+    font-size: .75rem;
+    line-height: 1.4;
+    white-space: nowrap;
+    color: #fff;
+    background-color: $primary;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+        color: #fff;
+        background-color: darken($primary, 10%);
+        text-decoration: none;
+    }
+}

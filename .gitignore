@@ -1,0 +1,13 @@
+# Secrets
+.env
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Downloaded k6 binary (62 MB) - get it from https://k6.io
+loadtest/k6
+
+# Upstream clones' own git metadata (plugins are vendored here)
+.git-upstream/

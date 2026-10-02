@@ -1,0 +1,40 @@
+[2026-09-30 17:30:55,997] vocab-server3/INFO/locust.runners: Shape test updating to 750 users at 10.00 spawn rate
+[2026-09-30 17:30:55,997] vocab-server3/INFO/locust.runners: Ramping to 750 users at a rate of 10.00 per second
+[2026-09-30 17:31:20,027] vocab-server3/INFO/locust.runners: All users spawned: {"BrowseStudent": 750} (750 total users)
+[2026-09-30 17:33:56,241] vocab-server3/INFO/locust.runners: Shape test updating to 1000 users at 10.00 spawn rate
+[2026-09-30 17:33:56,241] vocab-server3/INFO/locust.runners: Ramping to 1000 users at a rate of 10.00 per second
+[2026-09-30 17:34:20,276] vocab-server3/INFO/locust.runners: All users spawned: {"BrowseStudent": 1000} (1000 total users)
+[2026-09-30 17:36:56,552] vocab-server3/INFO/locust.runners: Shape test stopping
+[2026-09-30 17:36:56,606] vocab-server3/INFO/locust.main: Shape test completed, shutting down
+[2026-09-30 17:36:56,637] vocab-server3/INFO/locust.main: Shutting down (exit code 0)
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      login: form                                                                     1000     0(0.00%) |   1108       8    5386    350 |    0.79        0.00
+POST     login: submit                                                                   1000     0(0.00%) |     87      60     146     86 |    0.79        0.00
+POST     mcq quiz: start attempt                                                         3476     0(0.00%) |     42      29     151     41 |    2.76        0.00
+POST     mcq quiz: submit & grade                                                        3350     0(0.00%) |   1921      35    5787   1300 |    2.66        0.00
+GET      mcq quiz: view                                                                  3477     0(0.00%) |   1856      22    5779   1200 |    2.76        0.00
+GET      page: course                                                                   10694     0(0.00%) |   1843      24    5784   1200 |    8.48        0.00
+GET      page: dashboard                                                                 6863     0(0.00%) |   1888      29    5800   1300 |    5.44        0.00
+GET      page: forum                                                                     3435     0(0.00%) |   1874      33    5810   1300 |    2.72        0.00
+GET      page: forum thread                                                              3435     0(0.00%) |     29      23      56     28 |    2.72        0.00
+GET      page: reading page                                                             10547     0(0.00%) |   1857      21    5803   1200 |    8.37        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                     47277     0(0.00%) |   1545       8    5810    180 |   37.50        0.00
+
+Response time percentiles (approximated)
+Type     Name                                                                                  50%    66%    75%    80%    90%    95%    98%    99%  99.9% 99.99%   100% # reqs
+--------|--------------------------------------------------------------------------------|--------|------|------|------|------|------|------|------|------|------|------|------
+GET      login: form                                                                           350    990   1600   2300   3700   4500   4900   5200   5400   5400   5400   1000
+POST     login: submit                                                                          86     93     97     99    100    110    110    120    150    150    150   1000
+POST     mcq quiz: start attempt                                                                41     44     46     47     52     57     64     68    100    150    150   3476
+POST     mcq quiz: submit & grade                                                             1300   1600   5000   5200   5400   5400   5600   5600   5700   5800   5800   3350
+GET      mcq quiz: view                                                                       1200   1600   4900   5200   5400   5500   5600   5600   5700   5800   5800   3477
+GET      page: course                                                                         1200   1500   4600   5200   5400   5500   5600   5600   5700   5800   5800  10694
+GET      page: dashboard                                                                      1300   1600   5000   5200   5300   5500   5600   5600   5800   5800   5800   6863
+GET      page: forum                                                                          1300   1600   5000   5200   5400   5500   5600   5700   5800   5800   5800   3435
+GET      page: forum thread                                                                     28     30     32     33     37     40     44     47     55     56     56   3435
+GET      page: reading page                                                                   1200   1600   4900   5200   5300   5400   5600   5600   5700   5800   5800  10547
+--------|--------------------------------------------------------------------------------|--------|------|------|------|------|------|------|------|------|------|------|------
+         Aggregated                                                                            180   1400   1700   5000   5300   5400   5600   5600   5700   5800   5800  47277
+
