@@ -1,0 +1,55 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+{{!
+    @template local_studentportal/slips
+
+    One printable slip per student with their login details and first-login steps.
+
+    Example context (json):
+    {
+        "sitename": "IIIT Dharwad LMS", "loginurl": "https://lms/login/index.php", "certurl": "http://lms:9999/lms-ca.crt",
+        "rows": [{"fullname": "Asha Rao", "idnumber": "23BDS001", "username": "23bds001", "password": "Xk7#pQ2mzA",
+                  "haspassword": true, "coursestext": "Python Lesson"}],
+        "backurl": "#"
+    }
+}}
+<div class="local-studentportal-slips">
+    <div class="local-studentportal-slips-actions d-print-none mb-3 d-flex gap-2">
+        <button type="button" class="btn btn-primary" onclick="window.print()">{{#str}}print, local_studentportal{{/str}}</button>
+        <a class="btn btn-secondary" href="{{backurl}}">{{#str}}back{{/str}}</a>
+    </div>
+    {{#rows}}
+    <section class="local-studentportal-slip">
+        <header>
+            <strong>{{sitename}}</strong>
+            <span>{{#str}}slip_title, local_studentportal{{/str}}</span>
+        </header>
+        <p class="local-studentportal-slip-name">{{fullname}} {{#idnumber}}<span>· {{.}}</span>{{/idnumber}}</p>
+        <dl>
+            <dt>{{#str}}slip_address, local_studentportal{{/str}}</dt><dd><code>{{loginurl}}</code></dd>
+            <dt>{{#str}}username{{/str}}</dt><dd><code>{{username}}</code></dd>
+            <dt>{{#str}}slip_password, local_studentportal{{/str}}</dt>
+            <dd>{{#haspassword}}<code>{{password}}</code>{{/haspassword}}{{^haspassword}}{{#str}}passwordunchanged, local_studentportal{{/str}}{{/haspassword}}</dd>
+            <dt>{{#str}}courses, local_studentportal{{/str}}</dt><dd>{{coursestext}}</dd>
+        </dl>
+        <ol class="local-studentportal-slip-steps">
+            <li>{{#str}}slip_step1, local_studentportal, {{certurl}}{{/str}}</li>
+            <li>{{#str}}slip_step2, local_studentportal{{/str}}</li>
+            <li>{{#str}}slip_step3, local_studentportal{{/str}}</li>
+        </ol>
+    </section>
+    {{/rows}}
+</div>

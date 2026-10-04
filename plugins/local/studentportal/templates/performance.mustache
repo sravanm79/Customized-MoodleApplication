@@ -1,0 +1,117 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+{{!
+    @template local_studentportal/performance
+
+    The student's own performance: summary, activity, insights, and grades with feedback per course.
+
+    Example context (json):
+    {
+        "metrics": [{"label": "Courses", "value": 2, "variant": "blue", "icon": ""}],
+        "bars": [{"height": 50, "count": 4, "title": "1 Oct: 4 actions", "istoday": false}],
+        "activedays": 6,
+        "insights": [{"type": "good", "text": "Best result: Quiz 1 (92%)"}],
+        "hascourses": true,
+        "courses": [{"id": 2, "fullname": "Python Lesson", "shortname": "PY", "courseurl": "#", "gradesurl": "#",
+            "hasgrade": true, "grade": 78, "hascompletion": true, "completion": 40, "lastaccess": "4/10/26, 10:00",
+            "submissions": 1, "attempts": 2, "hasitems": true,
+            "items": [{"name": "BASICS-01", "module": "Assignment", "url": "#", "grade": "8.00", "haspercent": true,
+                       "percentround": 80, "level": "good", "hasfeedback": true, "feedback": "<p>Good work</p>", "date": "4/10/26"}]}],
+        "dashboardurl": "#"
+    }
+}}
+<div class="local-studentportal-page iiitdwd-tdash local-studentportal-perf">
+    <ul class="iiitdwd-tdash-metrics local-studentportal-metrics">
+        {{#metrics}}
+        <li class="iiitdwd-tdash-card iiitdwd-tdash-metric">
+            <span class="iiitdwd-tdash-badge iiitdwd-tdash-badge-{{variant}}" aria-hidden="true">{{{icon}}}</span>
+            <span class="iiitdwd-tdash-metric-text">
+                <span class="iiitdwd-tdash-metric-value">{{value}}</span>
+                <span class="iiitdwd-tdash-metric-label">{{label}}</span>
+            </span>
+        </li>
+        {{/metrics}}
+    </ul>
+
+    <div class="iiitdwd-tdash-top">
+        <div class="iiitdwd-tdash-card">
+            <h3 class="iiitdwd-tdash-card-title">{{#str}}activity30, local_studentportal{{/str}}</h3>
+            <ul class="iiitdwd-tdash-chart local-studentportal-chart" aria-label="{{#str}}activity30, local_studentportal{{/str}}">
+                {{#bars}}
+                <li class="iiitdwd-tdash-bar{{#istoday}} is-today{{/istoday}}" title="{{title}}">
+                    <span class="iiitdwd-tdash-bar-fill" style="height: {{height}}%"></span>
+                    <span class="visually-hidden">{{title}}</span>
+                </li>
+                {{/bars}}
+            </ul>
+            <p class="small mb-0 mt-2">{{#str}}activityhelp, local_studentportal{{/str}}</p>
+        </div>
+        <div class="iiitdwd-tdash-card">
+            <h3 class="iiitdwd-tdash-card-title">{{#str}}insights, local_studentportal{{/str}}</h3>
+            <ul class="local-studentportal-insights">
+                {{#insights}}<li class="is-{{type}}">{{text}}</li>{{/insights}}
+            </ul>
+        </div>
+    </div>
+
+    {{#hascourses}}
+    {{#courses}}
+    <section class="iiitdwd-tdash-card local-studentportal-course" aria-labelledby="sp-course-{{id}}">
+        <div class="local-studentportal-course-head">
+            <div>
+                <span class="iiitdwd-tdash-tag">{{shortname}}</span>
+                <h3 class="h5 mt-1 mb-0" id="sp-course-{{id}}"><a href="{{courseurl}}">{{fullname}}</a></h3>
+                <p class="small mb-0">{{#str}}lastvisit, local_studentportal, {{lastaccess}}{{/str}} ·
+                    {{#str}}workcount, local_studentportal, { "submissions": {{submissions}}, "attempts": {{attempts}} }{{/str}}</p>
+            </div>
+            <div class="local-studentportal-course-stats">
+                <div class="local-studentportal-ring">
+                    <span class="local-studentportal-ring-value">{{#hasgrade}}{{grade}}%{{/hasgrade}}{{^hasgrade}}–{{/hasgrade}}</span>
+                    <span class="local-studentportal-ring-label">{{#str}}coursegrade, local_studentportal{{/str}}</span>
+                </div>
+                <div class="local-studentportal-ring">
+                    <span class="local-studentportal-ring-value">{{#hascompletion}}{{completion}}%{{/hascompletion}}{{^hascompletion}}–{{/hascompletion}}</span>
+                    <span class="local-studentportal-ring-label">{{#str}}completion, local_studentportal{{/str}}</span>
+                </div>
+            </div>
+        </div>
+        {{#hasitems}}
+        <ul class="local-studentportal-items">
+            {{#items}}
+            <li>
+                <div class="local-studentportal-item-row">
+                    <span class="local-studentportal-item-name">{{#url}}<a href="{{url}}">{{name}}</a>{{/url}}{{^url}}{{name}}{{/url}}
+                        <span class="small"> · {{module}} · {{date}}</span></span>
+                    <span class="local-studentportal-item-grade">{{#haspercent}}{{grade}} <span class="small">({{percentround}}%)</span>{{/haspercent}}{{^haspercent}}–{{/haspercent}}</span>
+                </div>
+                {{#haspercent}}<div class="local-studentportal-bar is-{{level}}"><span style="width: {{percentround}}%"></span></div>{{/haspercent}}
+                {{#hasfeedback}}
+                <details class="local-studentportal-feedback">
+                    <summary>{{#str}}viewfeedback, local_studentportal{{/str}}</summary>
+                    <div>{{{feedback}}}</div>
+                </details>
+                {{/hasfeedback}}
+            </li>
+            {{/items}}
+        </ul>
+        {{/hasitems}}
+        {{^hasitems}}<p class="mb-0">{{#str}}nogradesyet, local_studentportal{{/str}}</p>{{/hasitems}}
+        <a class="iiitdwd-tdash-link d-inline-block mt-2" href="{{gradesurl}}">{{#str}}fullgradereport, local_studentportal{{/str}} →</a>
+    </section>
+    {{/courses}}
+    {{/hascourses}}
+    {{^hascourses}}<div class="alert alert-info">{{#str}}nocourses, local_studentportal{{/str}}</div>{{/hascourses}}
+</div>

@@ -18,6 +18,9 @@ Containers: `moodle_app`, `moodle_db`, `moodle_jobe`, `moodle_jupyterhub` (+ `ju
 `moodle_mailpit`. Secrets live only in `.env` (git-ignored; keys listed in `.env.example`), `tls/ca/`, `tls/server/`
 and `mailpit/secrets/` (all git-ignored).
 
+Student onboarding (register students, share logins) and the student dashboard / My performance:
+[plugins/local/studentportal/README.md](plugins/local/studentportal/README.md).
+
 Other guides: [Safe Exam Browser + proctoring](docs/seb-proctoring.md) ·
 [**Manual testing guide**](docs/MANUAL-TESTING.md) · load tests in `locust/` and `docs/`.
 

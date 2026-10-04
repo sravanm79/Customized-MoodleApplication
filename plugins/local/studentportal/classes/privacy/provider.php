@@ -14,18 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace local_studentportal\privacy;
+
 /**
- * Version details for theme_iiitdwd.
+ * Privacy provider: the plugin stores no personal data of its own. Accounts, enrolments and grades it creates or
+ * shows belong to core; issued passwords live only in the issuing admin's session for 15 minutes.
  *
- * @package    theme_iiitdwd
+ * @package    local_studentportal
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->component = 'theme_iiitdwd';
-$plugin->version = 2026101302;
-$plugin->requires = 2025041400;
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->release = '0.6.0';
-$plugin->dependencies = ['theme_boost' => 2025041400];
+class provider implements \core_privacy\local\metadata\null_provider {
+    /**
+     * @return string
+     */
+    public static function get_reason(): string {
+        return 'privacy:metadata';
+    }
+}

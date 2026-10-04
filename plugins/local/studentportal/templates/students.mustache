@@ -1,0 +1,80 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+{{!
+    @template local_studentportal/students
+
+    A course's students with login status; reset passwords to share them again.
+
+    Example context (json):
+    {
+        "coursename": "Python Lesson", "count": 1, "never": 1, "hasrows": true,
+        "rows": [{"id": 5, "fullname": "Asha Rao", "idnumber": "23BDS001", "email": "a@example.com", "username": "23bds001",
+                  "lastaccess": "Never", "neverloggedin": true, "canreset": true, "profileurl": "#"}],
+        "registerurl": "#", "participantsurl": "#", "actionurl": "#", "sesskey": "x"
+    }
+}}
+<div class="local-studentportal-page">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+        <h2 class="h4 mb-0">{{#str}}coursestudents, local_studentportal{{/str}}</h2>
+        <div class="d-flex gap-2">
+            <a class="btn btn-primary" href="{{registerurl}}">{{#str}}registerstudents, local_studentportal{{/str}}</a>
+            <a class="btn btn-secondary" href="{{participantsurl}}">{{#str}}participants{{/str}}</a>
+        </div>
+    </div>
+    <ul class="iiitdwd-tdash-metrics local-studentportal-metrics mb-3">
+        <li class="iiitdwd-tdash-card iiitdwd-tdash-metric"><span class="iiitdwd-tdash-metric-text">
+            <span class="iiitdwd-tdash-metric-value">{{count}}</span>
+            <span class="iiitdwd-tdash-metric-label">{{#str}}studentsenrolled, local_studentportal{{/str}}</span></span></li>
+        <li class="iiitdwd-tdash-card iiitdwd-tdash-metric"><span class="iiitdwd-tdash-metric-text">
+            <span class="iiitdwd-tdash-metric-value">{{never}}</span>
+            <span class="iiitdwd-tdash-metric-label">{{#str}}neverloggedin, local_studentportal{{/str}}</span></span></li>
+    </ul>
+    {{#hasrows}}
+    <form method="post" action="{{actionurl}}">
+        <input type="hidden" name="sesskey" value="{{sesskey}}">
+        <div class="iiitdwd-tdash-card mb-3 table-responsive">
+            <table class="table local-studentportal-table">
+                <thead><tr>
+                    <th><input type="checkbox" data-action="local-studentportal-all" aria-label="{{#str}}selectall{{/str}}"></th>
+                    <th>{{#str}}name{{/str}}</th><th>{{#str}}rollnumber, local_studentportal{{/str}}</th><th>{{#str}}email{{/str}}</th>
+                    <th>{{#str}}username{{/str}}</th><th>{{#str}}lastaccess{{/str}}</th><th></th>
+                </tr></thead>
+                <tbody>
+                {{#rows}}
+                    <tr>
+                        <td>{{#canreset}}<input type="checkbox" name="reset[]" value="{{id}}" aria-label="{{fullname}}">{{/canreset}}</td>
+                        <td><a href="{{profileurl}}">{{fullname}}</a></td><td>{{idnumber}}</td><td>{{email}}</td><td><code>{{username}}</code></td>
+                        <td>{{#neverloggedin}}<span class="local-studentportal-status is-error">{{lastaccess}}</span>{{/neverloggedin}}{{^neverloggedin}}{{lastaccess}}{{/neverloggedin}}</td>
+                        <td>{{#canreset}}<button type="submit" name="single" value="{{id}}" class="btn btn-sm btn-outline-secondary">{{#str}}resetshare, local_studentportal{{/str}}</button>{{/canreset}}</td>
+                    </tr>
+                {{/rows}}
+                </tbody>
+            </table>
+        </div>
+        <button type="submit" class="btn btn-secondary">{{#str}}resetselected, local_studentportal{{/str}}</button>
+        <p class="small mt-2">{{#str}}resethelp, local_studentportal{{/str}}</p>
+    </form>
+    {{/hasrows}}
+    {{^hasrows}}<div class="alert alert-info">{{#str}}nostudents, local_studentportal{{/str}}</div>{{/hasrows}}
+</div>
+{{#js}}
+    var all = document.querySelector('[data-action="local-studentportal-all"]');
+    if (all) {
+        all.addEventListener('change', function() {
+            document.querySelectorAll('input[name="reset[]"][type=checkbox]').forEach(function(c) { c.checked = all.checked; });
+        });
+    }
+{{/js}}

@@ -1,0 +1,116 @@
+// Student dashboard (templates/student_dashboard.mustache). Built on the teacher dashboard's cards, lists, chart and
+// course cards (teacher_dashboard.scss); only the student-specific pieces are here.
+
+// "Up next" and live class rows: like .iiitdwd-tdash-item, but not one big link, because they hold an action button.
+.iiitdwd-sdash-row {
+    display: flex;
+    align-items: center;
+    gap: .875rem;
+    padding: .75rem;
+    border: 1px solid var(--iiitdwd-border);
+    border-radius: var(--iiitdwd-radius);
+    background-color: var(--iiitdwd-overlay-1);
+    transition: background-color .15s ease, border-color .15s ease;
+
+    &:hover {
+        background-color: var(--iiitdwd-overlay-2);
+        border-color: rgba($iiitdwd-blue, .6);
+    }
+
+    & + & {
+        margin-top: .5rem;
+    }
+
+    a.iiitdwd-tdash-item-title {
+        color: var(--iiitdwd-text);
+    }
+}
+
+.iiitdwd-sdash-action {
+    flex-shrink: 0;
+    margin-left: auto;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.iiitdwd-sdash-overdue {
+    color: #ff6b6b !important;
+    font-weight: 600;
+}
+
+.iiitdwd-sdash-soon {
+    color: #f0ad4e !important;
+    font-weight: 600;
+}
+
+// Recent grades & feedback.
+.iiitdwd-sdash-feedback-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .75rem;
+
+    @include media-breakpoint-up(md) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    li {
+        display: flex;
+        align-items: flex-start;
+        gap: .875rem;
+        padding: .75rem;
+        border: 1px solid var(--iiitdwd-border);
+        border-radius: var(--iiitdwd-radius);
+        background-color: var(--iiitdwd-overlay-1);
+    }
+
+    a {
+        color: var(--iiitdwd-text);
+    }
+}
+
+.iiitdwd-sdash-grade {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 50%;
+    background-color: rgba(106, 115, 123, .2);
+    font-size: .9rem;
+    font-weight: 700;
+
+    &.is-good {
+        background-color: rgba($iiitdwd-green, .2);
+        color: #20c997;
+    }
+
+    &.is-ok {
+        background-color: rgba(240, 173, 78, .2);
+        color: #f0ad4e;
+    }
+
+    &.is-low {
+        background-color: rgba(220, 53, 69, .2);
+        color: #ff6b6b;
+    }
+}
+
+.iiitdwd-sdash-snippet {
+    display: block;
+    margin-top: .35rem;
+    color: var(--iiitdwd-text-secondary);
+    font-size: .8125rem;
+    font-style: italic;
+}
+
+@include media-breakpoint-down(sm) {
+    .iiitdwd-sdash-row {
+        flex-wrap: wrap;
+    }
+
+    .iiitdwd-sdash-action {
+        width: 100%;
+        margin-left: 0;
+    }
+}

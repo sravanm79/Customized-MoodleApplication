@@ -49,7 +49,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
         if ($this->page->pagetype === 'my-index' && isloggedin() && !isguestuser()) {
             $this->panelrendered = true;
-            $output .= $this->teacher_dashboard();
+            $teacher = $this->teacher_dashboard();
+            // Teachers get the teacher dashboard; students (local_studentportal) the student dashboard.
+            $output .= $teacher !== '' ? $teacher : $this->student_dashboard();
         } else if ($this->is_course_view_page()) {
             $this->panelrendered = true;
             $output .= $this->course_hero();
@@ -207,6 +209,10 @@ class core_renderer extends \theme_boost\output\core_renderer {
             ['calendar', get_string('calendar', 'calendar'), new \moodle_url('/calendar/view.php', ['view' => 'month']),
                 'i/calendar'],
         ];
+        if ($this->is_student()) {
+            $items[] = ['performance', get_string('myperformance', 'theme_iiitdwd'),
+                new \moodle_url('/local/studentportal/performance.php'), 'i/report'];
+        }
         $active = $this->active_app_section();
         $context = [
             'homeurl' => (new \moodle_url('/my/'))->out(false),
@@ -286,6 +292,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
             return null;
         }
         $url = $this->page->url;
+        if ($url->compare(new \moodle_url('/local/studentportal/performance.php'), URL_MATCH_BASE)) {
+            return 'performance';
+        }
         if ($url->compare(new \moodle_url('/my/courses.php'), URL_MATCH_BASE)) {
             return 'mycourses';
         }
@@ -320,6 +329,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
             ['managenotifications', new \moodle_url('/admin/index.php'), 'i/notifications'],
             ['managepurgecaches', new \moodle_url('/admin/purgecaches.php'), 'i/reload'],
         ];
+        if (student_dashboard::available()) {
+            array_unshift($shortcuts, ['manageregisterstudents', new \moodle_url('/local/studentportal/register.php'), 'i/enrolusers']);
+        }
         $context = [
             'icon' => $this->pix_icon('i/settings', ''),
             'siteadmin' => [
@@ -372,6 +384,38 @@ class core_renderer extends \theme_boost\output\core_renderer {
     protected function is_course_view_page(): bool {
         return $this->page->course->id != SITEID && strpos($this->page->pagetype, 'course-view-') === 0
             && $this->page->has_set_url() && $this->page->url->compare(new \moodle_url('/course/view.php'), URL_MATCH_BASE);
+    }
+
+    /**
+     * Whether the current user gets the student pages (dashboard, My performance): enrolled as a student somewhere,
+     * not shown as a teacher, and local_studentportal installed.
+     *
+     * @return bool
+     */
+    protected function is_student(): bool {
+        global $USER;
+        if (!isloggedin() || isguestuser() || !student_dashboard::available()) {
+            return false;
+        }
+        $badge = user_role::badge((int) $USER->id);
+        return $badge !== null && $badge['key'] === 'student';
+    }
+
+    /**
+     * The student dashboard for the current user, or '' if they are not a student anywhere.
+     *
+     * @return string
+     */
+    public function student_dashboard(): string {
+        global $USER;
+        if (!$this->is_student()) {
+            return '';
+        }
+        $dashboard = new student_dashboard(new \local_studentportal\local\student_data($USER));
+        if (!$dashboard->should_display()) {
+            return '';
+        }
+        return $this->render_from_template('theme_iiitdwd/student_dashboard', $dashboard->export_for_template($this));
     }
 
     /**

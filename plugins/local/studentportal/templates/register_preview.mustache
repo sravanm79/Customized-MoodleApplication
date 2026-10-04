@@ -1,0 +1,70 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_studentportal/register_preview
+
+    What registering will do to each row, before anything changes.
+
+    Example context (json):
+    {
+        "courses": [{"name": "Python Lesson (COURSE-01)"}],
+        "rows": [{"line": 2, "idnumber": "23BDS001", "name": "Asha Rao", "email": "asha@example.com", "username": "23bds001",
+                  "message": "New account 23bds001", "action": "create", "label": "New account"}],
+        "total": 1, "create": 1, "enrol": 0, "nothing": 0, "errors": 0,
+        "canconfirm": true, "confirmlabel": "Register 1 student", "confirmurl": "#", "planid": "x", "sesskey": "x", "backurl": "#"
+    }
+}}
+<div class="local-studentportal-page">
+    <div class="iiitdwd-tdash-card mb-3">
+        <h3 class="iiitdwd-tdash-card-title">{{#str}}previewtitle, local_studentportal{{/str}}</h3>
+        <p class="mb-2">{{#str}}previewcourses, local_studentportal{{/str}}
+            {{#courses}}<span class="local-studentportal-pill">{{name}}</span> {{/courses}}</p>
+        <ul class="local-studentportal-counts">
+            <li class="is-create"><strong>{{create}}</strong> {{#str}}count_create, local_studentportal{{/str}}</li>
+            <li class="is-enrol"><strong>{{enrol}}</strong> {{#str}}count_enrol, local_studentportal{{/str}}</li>
+            <li class="is-nothing"><strong>{{nothing}}</strong> {{#str}}count_nothing, local_studentportal{{/str}}</li>
+            <li class="is-error"><strong>{{errors}}</strong> {{#str}}count_error, local_studentportal{{/str}}</li>
+        </ul>
+    </div>
+
+    <div class="iiitdwd-tdash-card mb-3 table-responsive">
+        <table class="table local-studentportal-table">
+            <thead><tr>
+                <th>{{#str}}row, local_studentportal{{/str}}</th><th>{{#str}}rollnumber, local_studentportal{{/str}}</th>
+                <th>{{#str}}name{{/str}}</th><th>{{#str}}email{{/str}}</th><th>{{#str}}username{{/str}}</th>
+                <th>{{#str}}result, local_studentportal{{/str}}</th>
+            </tr></thead>
+            <tbody>
+            {{#rows}}
+                <tr class="is-{{action}}">
+                    <td>{{line}}</td><td>{{idnumber}}</td><td>{{name}}</td><td>{{email}}</td><td><code>{{username}}</code></td>
+                    <td><span class="local-studentportal-status is-{{action}}">{{label}}</span> <span class="small">{{message}}</span></td>
+                </tr>
+            {{/rows}}
+            </tbody>
+        </table>
+    </div>
+
+    <form method="post" action="{{confirmurl}}" class="d-flex flex-wrap gap-2">
+        <input type="hidden" name="plan" value="{{planid}}">
+        <input type="hidden" name="confirm" value="1">
+        <input type="hidden" name="sesskey" value="{{sesskey}}">
+        {{#canconfirm}}<button type="submit" class="btn btn-primary">{{confirmlabel}}</button>{{/canconfirm}}
+        {{^canconfirm}}<span class="btn btn-primary disabled" aria-disabled="true">{{#str}}nothingtodo, local_studentportal{{/str}}</span>{{/canconfirm}}
+        <a class="btn btn-secondary" href="{{backurl}}">{{#str}}back{{/str}}</a>
+    </form>
+</div>

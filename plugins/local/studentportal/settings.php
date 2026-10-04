@@ -15,17 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details for theme_iiitdwd.
+ * Admin menu: Site administration › Users › Accounts › Register students.
  *
- * @package    theme_iiitdwd
+ * @package    local_studentportal
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'theme_iiitdwd';
-$plugin->version = 2026101302;
-$plugin->requires = 2025041400;
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->release = '0.6.0';
-$plugin->dependencies = ['theme_boost' => 2025041400];
+$ADMIN->add('accounts', new admin_externalpage('local_studentportal_register',
+    new lang_string('registerstudents', 'local_studentportal'),
+    new moodle_url('/local/studentportal/register.php'), 'local/studentportal:register'));

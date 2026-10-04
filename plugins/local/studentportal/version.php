@@ -15,17 +15,16 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details for theme_iiitdwd.
+ * Student portal: register students into courses with shareable credentials, and the student "My performance" page.
  *
- * @package    theme_iiitdwd
+ * @package    local_studentportal
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'theme_iiitdwd';
-$plugin->version = 2026101302;
-$plugin->requires = 2025041400;
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->release = '0.6.0';
-$plugin->dependencies = ['theme_boost' => 2025041400];
+$plugin->component = 'local_studentportal';
+$plugin->version   = 2026100500;
+$plugin->requires  = 2025041400; // Moodle 5.0.
+$plugin->maturity  = MATURITY_BETA;
+$plugin->release   = '0.1.0';

@@ -592,9 +592,94 @@ Notes: ______________________________________________
 
 ---
 
+## 19. Student portal: registering students and the student view
+
+### 19.1 Register one student (admin)
+*Manage* (gear) › **Register students** (or PYTHON LESSON › course sub-sidebar **Students and logins** ›
+**Register students**).
+
+- [ ] Courses: choose PYTHON LESSON. Add: **One student**: roll number `TEST001`, your name, an email address you can
+      read in Mailpit (e.g. `test001@example.org`) › **Preview**.
+- [ ] Preview shows "New account … test001". **Register 1 student(s)**.
+- [ ] Credentials page: name, roll number, username `test001`, a temporary password, "New account"; a warning that the
+      password is shown only now (15 minutes).
+
+### 19.2 Share the logins
+- [ ] **Download CSV**: a file with the username and password opens in Excel.
+- [ ] **Print slips**: one slip per student with the address `https://192.168.30.239/login/index.php`, username,
+      temporary password and the 3 first-login steps (including the certificate link); **Print** gives a clean
+      black-on-white page.
+- [ ] **Email each student**: "1 email(s) sent"; Mailpit shows "Your login for …" to the student's address with the
+      same details. (Addresses ending in `.invalid` are never emailed by Moodle and are reported as such.)
+- [ ] **Copy all** copies a tab-separated list. **Done: forget these passwords** returns to the form; going back to
+      the credentials page says the logins are no longer available.
+
+### 19.3 A list of students
+Add: **A list of students**; paste:
+```
+Roll number,First name,Last name,Email
+TEST002,Asha,Rao,test002@example.org
+TEST003,Ravi,Kumar,test003@example.org
+,student,1,s1@gmail.com
+TEST004,Bad,Email,not-an-email
+TEST005,Dup,Row,test002@example.org
+```
+- [ ] Preview: 2 new accounts, s1 "No change" (already enrolled), 2 problems ("invalid email address", "Same email
+      or roll number as row …"). Confirm registers only the valid ones.
+- [ ] The same with a CSV file (save the lines above as `students.csv`).
+- [ ] Choose two courses at once: the students are enrolled in both.
+
+### 19.4 First login as the new student
+Private window › log in as `test001` with the temporary password.
+
+- [ ] You must choose a new password straight away; after that you land on the Dashboard.
+- [ ] Log out and log in with the new password: works. The temporary one no longer does.
+
+### 19.5 Students and logins (admin)
+PYTHON LESSON › **Students and logins**.
+
+- [ ] All students listed; students who never logged in show **Never** in red; the counters at the top match.
+- [ ] **Reset password & share** on one row (with another row ticked): only that student gets a new temporary
+      password, shown on the credentials page; their old password stops working; they must change it at next login.
+- [ ] Tick two rows › **Reset selected & share**: both get new passwords.
+
+### 19.6 Student dashboard (as a student, e.g. s1 or u2)
+- [ ] Greeting with your name, "Due this week · Live classes today · Courses", buttons **Continue <course>** and
+      **My performance**.
+- [ ] This week: bars for your own activity per day; "N / 7 active days".
+- [ ] Metrics: My courses, Average grade, Due this week, Average completion, each with an icon.
+- [ ] **Up next**: BASICS-01 (**Add submission**) and PYTHON TEST (**Attempt quiz now**); due soon in amber, overdue in
+      red; the buttons open the activity.
+- [ ] **Live classes**: add a Zoom meeting to PYTHON LESSON for later today (teacher) → it appears with **Join**,
+      "Upcoming", and "Live now" once it has started; Join opens Zoom.
+- [ ] **Recent grades & feedback**: u2 sees AUTO GRADER TEST 0% (red) with the start of the feedback; after the
+      teacher grades something new, it appears at the top.
+- [ ] Course card: course name, last visit, grade, progress, **Open** and **Grades**.
+- [ ] Sidebar: Dashboard, My courses, Calendar, **My performance**; role pill STUDENT. Teachers and admins see the
+      teacher dashboard and no My performance item.
+- [ ] Phone width: everything stacks; no sideways scrolling.
+
+### 19.7 My performance (student)
+Sidebar › **My performance**.
+
+- [ ] Six metrics (courses, average grade, completion, active days, assignments submitted, tests taken).
+- [ ] 30-day activity chart (today highlighted) and Insights ("Needs work: …" for a low grade, "Best result: …" only
+      for 60% or more, courses not opened for a week, active days).
+- [ ] Per course: course grade and completion, every graded item with its grade bar (green ≥ 75%, amber ≥ 50%, red
+      below), **Feedback** expands the teacher's / released LLM feedback; **Full grade report** opens Moodle's report.
+- [ ] Hide a grade item in the gradebook (teacher): it disappears from the student's page.
+- [ ] Only your own data; no other student's name or grade anywhere.
+
+### 19.8 Permissions
+- [ ] As a student, `/local/studentportal/register.php`, `/local/studentportal/students.php?id=2` and any
+      `/local/studentportal/credentials.php?key=…` are refused.
+- [ ] A teacher (not manager/admin) has no **Students and logins** link and cannot open those pages.
+
+Notes: ______________________________________________
+
 ## After testing
 
-- Remove test data you created: test grade sheets (Delete), test submissions (as teacher, *Remove submission*),
+- Remove test data you created: test student accounts from section 19 (*Site administration › Users › Browse list of users* › delete), test grade sheets (Delete), test submissions (as teacher, *Remove submission*),
   test forum posts, quiz preview attempts (Results › select › Delete), test messages.
 - Set any setting you changed for a test back (minimum class size 5, webcam proctoring off on the demo quiz, the
   Zoom test meeting).

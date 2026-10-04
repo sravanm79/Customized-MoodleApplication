@@ -15,17 +15,22 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details for theme_iiitdwd.
+ * Capabilities.
  *
- * @package    theme_iiitdwd
+ * Registering students creates site accounts, so it is a site-level permission (managers and admins), and also
+ * needs moodle/user:create and enrol/manual:enrol, which the pages check too.
+ *
+ * @package    local_studentportal
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'theme_iiitdwd';
-$plugin->version = 2026101302;
-$plugin->requires = 2025041400;
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->release = '0.6.0';
-$plugin->dependencies = ['theme_boost' => 2025041400];
+$capabilities = [
+    'local/studentportal:register' => [
+        'riskbitmask' => RISK_PERSONAL | RISK_SPAM | RISK_CONFIG,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => ['manager' => CAP_ALLOW],
+    ],
+];
