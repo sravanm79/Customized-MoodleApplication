@@ -1,0 +1,417 @@
+// Page-specific fixes: core and plugin pages whose own styles.css hardcodes light surfaces or dark text
+// (plain CSS, so the preset variables do not reach them), plus the login page and the course listing.
+
+//
+// Login page (/login/index.php, templates/core/loginform.mustache). Card colours come from the $login* preset
+// variables; everything uses the runtime tokens, so it follows the Day/Night mode (Night by default).
+//
+
+.pagelayout-login {
+    // Deep navy with a soft blue glow behind the card.
+    #page {
+        background: radial-gradient(ellipse at 50% 0%, rgba($iiitdwd-blue, .18), transparent 60%), var(--iiitdwd-bg);
+    }
+
+    .login-container {
+        width: 440px !important; // Boost sets 500px !important from md up.
+        max-width: 100%;
+        border: 1px solid var(--iiitdwd-border);
+        border-radius: var(--iiitdwd-radius-lg);
+    }
+
+    .login-divider {
+        margin: 1.5rem 0;
+        border-color: var(--iiitdwd-border);
+    }
+
+    @include media-breakpoint-down(md) {
+        .login-container {
+            margin: 0 1rem;
+            padding: 2rem 1.25rem;
+        }
+    }
+}
+
+.iiitdwd-login {
+    // Institution logo, centred above the form.
+    .iiitdwd-login-brand {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .iiitdwd-login-logo {
+        max-width: 100%;
+        max-height: 88px;
+        object-fit: contain;
+    }
+
+    // Fallback when no logo is set.
+    .iiitdwd-login-wordmark {
+        max-width: 18rem;
+        color: var(--iiitdwd-text);
+        font-size: .8125rem;
+        font-weight: 700;
+        line-height: 1.4;
+        letter-spacing: .08em;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    .iiitdwd-login-title {
+        margin: 0;
+        color: var(--iiitdwd-text);
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    .iiitdwd-login-subtitle {
+        margin: .25rem 0 1.5rem;
+        color: var(--iiitdwd-text-secondary);
+        font-size: .875rem;
+        text-align: center;
+    }
+
+    // Pill-shaped inputs (core keeps the labels visually hidden and shows placeholders).
+    .login-form .form-control {
+        height: 3.25rem;
+        padding: 0 1.25rem;
+        background-color: var(--iiitdwd-bg);
+        border: 1px solid var(--iiitdwd-border);
+        border-radius: 999px;
+        color: var(--iiitdwd-text);
+        font-size: 1rem;
+        transition: border-color .15s ease, box-shadow .15s ease;
+
+        &::placeholder {
+            color: var(--iiitdwd-text-muted);
+        }
+
+        &:hover {
+            border-color: color-mix(in srgb, var(--iiitdwd-border) 60%, var(--iiitdwd-text-muted));
+        }
+
+        &:focus {
+            border-color: var(--iiitdwd-blue);
+            box-shadow: 0 0 0 3px rgba($iiitdwd-blue, .3);
+        }
+
+        // Browser autofill paints its own (light) fill.
+        &:-webkit-autofill {
+            -webkit-text-fill-color: var(--iiitdwd-text);
+            box-shadow: 0 0 0 1000px var(--iiitdwd-bg) inset;
+            caret-color: var(--iiitdwd-text);
+        }
+    }
+
+    // core/togglesensitive wraps the password in an input group with a show/hide button, shown below 576px.
+    // Boost squares the input's corners for the group (with high specificity), so the pill needs !important.
+    .login-form-password .toggle-sensitive-wrapper {
+        > .form-control {
+            border-radius: 999px !important;
+        }
+
+        > .toggle-sensitive-btn {
+            padding: 0 1.1rem;
+            background-color: var(--iiitdwd-bg);
+            border: 1px solid var(--iiitdwd-border);
+            border-left: 0;
+            border-radius: 0 999px 999px 0;
+            color: var(--iiitdwd-text-secondary);
+        }
+
+        @include media-breakpoint-down(sm) {
+            > .form-control {
+                border-top-right-radius: 0 !important;
+                border-bottom-right-radius: 0 !important;
+                border-right: 0;
+            }
+        }
+    }
+
+    .login-form-submit {
+        margin-top: 1.5rem;
+
+        .btn {
+            height: 3.25rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+    }
+
+    .login-form-forgotpassword {
+        margin-top: 1rem;
+        font-size: .875rem;
+        text-align: center;
+    }
+
+    a:not(.btn) {
+        color: var(--iiitdwd-link);
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+            text-decoration: underline;
+        }
+    }
+
+    .iiitdwd-login-guest {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: .75rem;
+        color: var(--iiitdwd-text-secondary);
+        font-size: .875rem;
+    }
+
+    .iiitdwd-login-footer {
+        color: var(--iiitdwd-text-secondary);
+        font-size: .8125rem;
+        text-align: center;
+    }
+
+    .iiitdwd-login-support {
+        margin-bottom: .75rem;
+
+        a {
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+    }
+
+    .iiitdwd-login-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem 1rem;
+    }
+
+    .iiitdwd-login-cookies {
+        padding: 0;
+        color: var(--iiitdwd-text-muted);
+        font-size: .8125rem;
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+            color: var(--iiitdwd-text-secondary);
+            text-decoration: underline;
+        }
+    }
+}
+
+//
+// Activity pages
+//
+
+// Dates and description above an activity (e.g. a quiz's "Closes" and intro): Boost fills it with
+// $gray-100, which is light grey here and leaves the white text unreadable.
+.path-mod .activity-header:not(:empty) {
+    background-color: var(--iiitdwd-surface);
+    border: 1px solid var(--iiitdwd-border);
+    border-radius: var(--iiitdwd-radius-card);
+}
+
+// Quiz access rules (proctoring, password, Safe Exam Browser): mod/quiz/styles.css centres them, which scatters
+// bullet lists across the full-width page. Align them with the rest of the page.
+#page-mod-quiz-view .quizinfo {
+    text-align: start;
+}
+
+// Assignment submission status and grading table (mod/assign/styles.css): black text on pale fills.
+// Statuses become tinted fills with light text, in the alert palette.
+$assign-status-tones: (
+    "neutral": ($iiitdwd-text-secondary, "submissionstatus" "submissionreopened" "submissionnotgraded"),
+    "warning": ($orange, "submissionstatusdraft" "submissionlocked"),
+    "success": ($iiitdwd-green-alt, "submissionstatussubmitted" "submissiongraded" "earlysubmission"),
+    "danger": ($red, "latesubmission" "gradingreminder"),
+);
+
+@each $tone, $spec in $assign-status-tones {
+    $color: nth($spec, 1);
+
+    @each $class in nth($spec, 2) {
+        .path-mod-assign td.#{$class},
+        .path-mod-assign div.#{$class},
+        .path-mod-assign a:link.#{$class} {
+            @if $tone == "neutral" {
+                background-color: transparent;
+                color: var(--iiitdwd-text-secondary);
+            } @else {
+                background-color: rgba($color, .12);
+                color: color-mix(in srgb, #{$color} 55%, var(--iiitdwd-text));
+            }
+        }
+    }
+}
+
+.path-mod-assign {
+    .gradingtable thead th,
+    .gradingtable tr.unselectedrow td {
+        background-color: var(--iiitdwd-surface);
+    }
+
+    .gradingtable tr.selectedrow td {
+        background-color: rgba($iiitdwd-blue, .15);
+    }
+
+    [data-region="configure-filters"] {
+        background-color: var(--iiitdwd-surface);
+        border-color: var(--iiitdwd-border);
+    }
+}
+
+//
+// Grades: user report (grade/report/user/styles.css paints it #f8f9fa and white)
+//
+
+.path-grade-report-user,
+.grade-report-user {
+    .user-report-container {
+        padding: 0;
+        background-color: transparent;
+    }
+
+    .user-grade {
+        overflow: hidden;
+        border-radius: var(--iiitdwd-radius-card);
+
+        thead th {
+            background-color: var(--iiitdwd-sidebar);
+            color: var(--iiitdwd-text-secondary);
+            font-size: .8125rem;
+            font-weight: 600;
+        }
+
+        td,
+        tbody tr,
+        tbody tr:hover,
+        .baggt,
+        .baggb {
+            background-color: var(--iiitdwd-surface);
+        }
+
+        td.item,
+        th.column-itemname:not(.header, .category, .baggt, .baggb) {
+            background-color: var(--iiitdwd-surface);
+            border-color: var(--iiitdwd-border);
+        }
+
+        tbody tr:not(.spacer):hover > td.item,
+        tbody tr:not(.spacer):hover > th.column-itemname:not(.header, .category, .baggt, .baggb) {
+            background-color: color-mix(in srgb, var(--iiitdwd-border) 50%, var(--iiitdwd-surface));
+        }
+
+        th.category {
+            background-color: var(--iiitdwd-sidebar);
+            border-color: var(--iiitdwd-border);
+        }
+
+        th.category a.toggle-category i {
+            color: var(--iiitdwd-text-secondary);
+        }
+
+        // Course total and category totals.
+        .baggt,
+        .baggb {
+            color: var(--iiitdwd-text);
+            border-top: 1px solid var(--iiitdwd-border);
+        }
+
+        tbody tr.spacer,
+        tbody tr.spacer td {
+            background-color: transparent;
+        }
+    }
+}
+
+//
+// Notifications page (/message/output/popup/notifications.php) and the navbar notifications popover:
+// Boost marks unread items with #f4f4f4.
+//
+
+.content-item-container.unread {
+    background-color: rgba($iiitdwd-blue, .1);
+}
+
+.notification-area {
+    overflow: hidden;
+    border-radius: var(--iiitdwd-radius-card);
+    background-color: var(--iiitdwd-surface);
+
+    .content-item-container {
+        border-bottom: 1px solid var(--iiitdwd-border);
+    }
+
+    .content-area .header {
+        background-color: var(--iiitdwd-sidebar);
+    }
+}
+
+//
+// Course listing (/course/index.php, category pages, search results)
+//
+
+.course_category_tree .coursebox,
+#frontpage-course-list .coursebox,
+.course-search-result .coursebox {
+    margin-bottom: .75rem;
+    padding: 1rem 1.25rem;
+    background-color: var(--iiitdwd-surface);
+    border: 1px solid var(--iiitdwd-border);
+    border-radius: var(--iiitdwd-radius-card);
+    transition: border-color .15s ease;
+
+    &:hover {
+        border-color: rgba($iiitdwd-blue, .5);
+    }
+
+    .coursename {
+        margin-bottom: .25rem;
+        font-size: 1.0625rem;
+        font-weight: 600;
+    }
+
+    // Long course descriptions take over the listing; show about three lines, fading out (the summary holds
+    // block markup, so line-clamp does not apply).
+    .summary {
+        max-height: 4.75em;
+        overflow: hidden;
+        color: var(--iiitdwd-text-secondary);
+        mask-image: linear-gradient(to bottom, #000 55%, transparent);
+    }
+
+    .teachers {
+        margin-bottom: 0;
+        color: var(--iiitdwd-text-secondary);
+    }
+}
+
+//
+// Timeline block: activity icons of the "course" purpose are black SVGs with no Boost recolour.
+//
+
+.activityiconcontainer.courseicon:not(.isbranded) {
+    .activityicon,
+    .icon {
+        &:not(.nofilter) {
+            @include recolor-icon($iiitdwd-text-secondary, 1);
+        }
+    }
+}
+
+// Monochrome image icons outside an activity icon container (grade report item icons, the comments toggle,
+// tree arrows): core's t/ and i/ pix and the activity "monologo" images are black. File-type icons (f/) are in
+// colour and keep it.
+img.icon:not(.nofilter) {
+    &[src*="/t/"],
+    &[src*="/i/"],
+    &[src*="monologo"] {
+        // Inside .activityiconcontainer, Boost's purpose colours are more specific and win.
+        @include recolor-icon($iiitdwd-text-secondary, 1);
+    }
+}

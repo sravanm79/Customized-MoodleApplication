@@ -68,7 +68,7 @@ r = table(ws, r + 3, ['Item', 'Value', ''], [
     ['Moodle download', 'https://download.moodle.org/', ''],
     ['Installation guide', 'https://docs.moodle.org/502/en/Installing_Moodle', ''],
     ['Docker compose reference', 'https://github.com/bitnami/containers/blob/main/bitnami/moodle/docker-compose.yml', ''],
-    ['Admin credentials', 'admin / see MOODLE_ADMIN_PASSWORD in .env', ''],
+    ['Admin credentials', 'admin / password in .env (MOODLE_ADMIN_PASSWORD)', ''],
     ['Load-test students', 'loadtest0001 … loadtest1000 / LoadTest#2026, course id 2', ''],
 ])
 ws.cell(r + 2, 1, 'Server specs').font = BB

@@ -30,6 +30,17 @@ if ($hassiteconfig) {
     if ($ADMIN->fulltree) {
         $settings->add(new admin_setting_configcheckbox('local_llmgrader/enabled',
             get_string('enabled', 'local_llmgrader'), get_string('enabled_desc', 'local_llmgrader'), 1));
+        $settings->add(new admin_setting_configcheckbox('local_llmgrader/requirereview',
+            get_string('requirereviewdefault', 'local_llmgrader'), get_string('requirereviewdefault_desc', 'local_llmgrader'), 1));
+        $providers = [];
+        foreach (\local_llmgrader\provider\factory::available() as $name => $class) {
+            $providers[$name] = $class::get_name();
+        }
+        $settings->add(new admin_setting_configselect('local_llmgrader/provider',
+            get_string('provider', 'local_llmgrader'), get_string('provider_desc', 'local_llmgrader'),
+            'openai_compatible', $providers));
+        $settings->add(new admin_setting_configcheckbox('local_llmgrader/stream',
+            get_string('stream', 'local_llmgrader'), get_string('stream_desc', 'local_llmgrader'), 0));
         $settings->add(new admin_setting_configtext('local_llmgrader/llmurl',
             get_string('llmurl', 'local_llmgrader'), get_string('llmurl_desc', 'local_llmgrader'),
             'http://45.194.46.66:9010/v1', PARAM_URL));
@@ -43,6 +54,6 @@ if ($hassiteconfig) {
             get_string('maxchars', 'local_llmgrader'), get_string('maxchars_desc', 'local_llmgrader'), 16000, PARAM_INT));
         $settings->add(new admin_setting_configtextarea('local_llmgrader/systemprompt',
             get_string('systemprompt', 'local_llmgrader'), get_string('systemprompt_desc', 'local_llmgrader'),
-            \local_llmgrader\llm_client::DEFAULT_PROMPT, PARAM_RAW, 80, 20));
+            \local_llmgrader\prompt_builder::DEFAULT_PROMPT, PARAM_RAW, 80, 20));
     }
 }

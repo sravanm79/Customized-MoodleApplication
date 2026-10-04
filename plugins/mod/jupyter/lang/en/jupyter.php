@@ -35,9 +35,9 @@ $string['jupyter:submit'] = 'Submit a Jupyter notebook';
 $string['jupyter:grade'] = 'Grade Jupyter notebook submissions';
 
 $string['hubinternalurl'] = 'JupyterHub internal URL';
-$string['hubinternalurl_desc'] = 'URL the Moodle server uses to reach JupyterHub, e.g. http://jupyterhub:8000 inside Docker.';
+$string['hubinternalurl_desc'] = 'URL the Moodle server uses to reach JupyterHub, including its base URL, e.g. http://jupyterhub:8000/jupyter inside Docker.';
 $string['hubpublicurl'] = 'JupyterHub public URL';
-$string['hubpublicurl_desc'] = 'URL students\' browsers use to reach JupyterHub, e.g. http://localhost:8000.';
+$string['hubpublicurl_desc'] = 'URL students\' browsers use to reach JupyterHub. Use the same https origin as Moodle (e.g. https://192.168.30.239/jupyter, proxied by Apache) so the notebook iframe is not blocked as mixed content.';
 $string['hubtoken'] = 'JupyterHub service token';
 $string['hubtoken_desc'] = 'API token of the "moodle" service configured in jupyterhub_config.py.';
 

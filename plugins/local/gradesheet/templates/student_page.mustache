@@ -1,0 +1,41 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_gradesheet/student_page
+
+    Grade sheets page for students: their own result on each sheet (local_gradesheet/sheet_student).
+
+    Example context (json):
+    {
+        "hassheets": false,
+        "sheets": []
+    }
+}}
+<div class="local-gradesheet">
+    <div class="local-gradesheet-head">
+        <div>
+            <h2>{{#str}}gradesheets, local_gradesheet{{/str}}</h2>
+            <p class="text-muted">{{#str}}studentintro, local_gradesheet{{/str}}</p>
+        </div>
+    </div>
+    {{#sheets}}
+        {{> local_gradesheet/sheet_student }}
+    {{/sheets}}
+    {{^hassheets}}
+        <div class="local-gradesheet-empty card"><p>{{#str}}nosheetsstudent, local_gradesheet{{/str}}</p></div>
+    {{/hassheets}}
+</div>

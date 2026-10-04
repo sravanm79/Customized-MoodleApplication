@@ -1,0 +1,73 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_iiitdwd/course_nav
+
+    The course's secondary navigation as a vertical sub-sidebar, left of the content on course-level pages
+    (theme_iiitdwd\output\course_nav, output by the core/full_header override). Below the large breakpoint, or
+    while the course index is open on narrower desktops, the SCSS hides it and Boost's horizontal tabs show.
+
+    Context variables required for this template:
+    * arialabel
+    * main - items (theme_iiitdwd/course_nav_item) for Moodle's main tabs
+    * hasmore, more, moreid, moreopen - the items Moodle puts under "More", as a collapsible group
+
+    Example context (json):
+    {
+        "arialabel": "Course navigation",
+        "main": [
+            {"text": "Course", "url": "#", "icon": "", "isactive": true, "haschildren": false, "children": []},
+            {"text": "Participants", "url": "#", "icon": "", "isactive": false, "haschildren": true,
+             "isopen": false, "collapseid": "p1", "children": [{"text": "Groups", "url": "#", "isactive": false}]}
+        ],
+        "hasmore": true,
+        "more": [{"text": "Reports", "url": "#", "icon": "", "isactive": false, "haschildren": false, "children": []}],
+        "moreid": "more1",
+        "moreopen": false
+    }
+}}
+<nav class="iiitdwd-coursenav d-print-none" aria-label="{{arialabel}}">
+    <ul class="iiitdwd-coursenav-list">
+        {{#main}}
+            {{> theme_iiitdwd/course_nav_item }}
+        {{/main}}
+    </ul>
+    {{#hasmore}}
+        <button type="button" class="iiitdwd-coursenav-more{{^moreopen}} collapsed{{/moreopen}}" data-bs-toggle="collapse"
+                data-bs-target="#{{moreid}}" aria-controls="{{moreid}}"
+                aria-expanded="{{#moreopen}}true{{/moreopen}}{{^moreopen}}false{{/moreopen}}">
+            <span>{{#str}}moremenu, core{{/str}}</span>
+            {{> theme_iiitdwd/course_nav_chevron }}
+        </button>
+        <ul id="{{moreid}}" class="iiitdwd-coursenav-list collapse{{#moreopen}} show{{/moreopen}}">
+            {{#more}}
+                {{> theme_iiitdwd/course_nav_item }}
+            {{/more}}
+        </ul>
+    {{/hasmore}}
+</nav>
+{{#js}}
+(function() {
+    // The list can be taller than the screen: scroll the sidebar (not the page) so the current page shows.
+    var nav = document.querySelector('.iiitdwd-coursenav');
+    var active = nav && nav.querySelector('.active');
+    if (active && nav.scrollHeight > nav.clientHeight) {
+        var offset = active.getBoundingClientRect().top - nav.getBoundingClientRect().top;
+        nav.scrollTop = Math.max(0, offset - nav.clientHeight / 2);
+    }
+})();
+{{/js}}

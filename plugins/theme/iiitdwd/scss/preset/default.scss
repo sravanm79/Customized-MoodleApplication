@@ -1,0 +1,377 @@
+// IIIT Dharwad dark preset.
+//
+// Design tokens as Bootstrap 5.3 / Moodle SCSS variables. They are set before Bootstrap and
+// Moodle core are imported, so every component that reads a variable (cards, forms, dropdowns,
+// modals, drawers, tables) picks up the dark palette at compile time. Selectors that Boost
+// styles with fixed light colours are fixed in ../styles.scss.
+
+// Prefix for all CSS variables
+$prefix: bs- !default;
+
+// Design tokens ($iiitdwd-*), shared with editor.scss.
+@import "tokens";
+
+//
+// Bootstrap variables
+//
+
+// Colors
+$white:    #fff;
+$black:    #000;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #8f959e;
+$gray-600: #6a737b;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #1d2125;
+
+$blue:    $iiitdwd-blue-alt;
+$indigo:  #6610f2;
+$purple:  #613d7c;
+$pink:    #db1a74;
+$red:     #dc3545;
+$orange:  #f0ad4e;
+$yellow:  #ffc107;
+$green:   $iiitdwd-green;
+$teal:    $iiitdwd-green-alt;
+$cyan:    #0dcaf0;
+
+$primary:       $iiitdwd-blue;
+$secondary:     $iiitdwd-border;
+$success:       $iiitdwd-green;
+$info:          $iiitdwd-blue-alt;
+$warning:       $orange;
+$danger:        $red;
+$light:         $iiitdwd-surface;
+$dark:          $iiitdwd-bg;
+
+// stylelint-disable
+$theme-colors: () !default;
+$theme-colors: map-merge((
+    "primary":    $primary,
+    "secondary":  $secondary,
+    "success":    $success,
+    "info":       $info,
+    "warning":    $warning,
+    "danger":     $danger,
+    "light":      $light,
+    "dark":       $dark
+), $theme-colors);
+// stylelint-enable
+
+// White text on the accent colours is what the design uses; Bootstrap's default 4.5 ratio
+// would pick black text on #1976d2 and #198754.
+$min-contrast-ratio: 3;
+
+// Day/Night mode: component colours below use the runtime tokens (var(--iiitdwd-*), color_modes.scss), so they
+// follow <html data-theme>. Colours that Bootstrap or Moodle pass through colour functions or SVG data URIs ($body-*,
+// links, the subtle fills, the close button) stay compile-time dark values; color_modes.scss sets their --bs-*
+// properties per mode.
+
+// Body
+$body-bg:                 $iiitdwd-bg;
+$body-color:              $iiitdwd-text;
+$body-emphasis-color:     $iiitdwd-text;
+$body-secondary-color:    $iiitdwd-text-secondary;
+$body-secondary-bg:       $iiitdwd-surface;
+$body-tertiary-color:     $iiitdwd-text-muted;
+$body-tertiary-bg:        $iiitdwd-sidebar;
+$text-muted:              var(--iiitdwd-text-secondary);
+$border-color:            var(--iiitdwd-border);
+$border-color-translucent: rgba($white, .08); // Runtime value per mode: color_modes.scss.
+
+// Fonts
+$font-family-sans-serif: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$font-size-base: 0.9375rem;
+$headings-color: var(--iiitdwd-text);
+$headings-font-weight: 600;
+
+// Links: the accent blue is too dark for body-size text on #050c18, so links use a lighter tint.
+$link-color: mix($white, $iiitdwd-blue, 30%);
+$link-hover-color: mix($white, $iiitdwd-blue, 50%);
+$link-decoration: none;
+$link-hover-decoration: underline;
+
+// Border radius
+$border-radius:     $iiitdwd-radius;
+$border-radius-sm:  6px;
+$border-radius-lg:  $iiitdwd-radius-card;
+$border-radius-xl:  $iiitdwd-radius-lg;
+
+// Shadows
+$box-shadow-sm: 0 1px 2px rgba($black, .4);
+$box-shadow:    0 4px 16px rgba($black, .45);
+$box-shadow-lg: 0 12px 32px rgba($black, .55);
+
+// HR
+$hr-color:   var(--iiitdwd-border);
+$hr-opacity: 1;
+
+// Breadcrumbs
+$breadcrumb-padding-y:      .5rem;
+$breadcrumb-margin-bottom:  0;
+$breadcrumb-divider-color:  var(--iiitdwd-text-muted);
+$breadcrumb-active-color:   var(--iiitdwd-text-secondary);
+
+// Cards
+$card-bg:                 var(--iiitdwd-surface);
+$card-color:              var(--iiitdwd-text);
+$card-border-color:       var(--iiitdwd-border);
+$card-border-radius:      $iiitdwd-radius-card;
+$card-cap-bg:             var(--iiitdwd-overlay-1);
+$card-group-margin:       .25rem;
+
+// Buttons
+$btn-border-radius:       $iiitdwd-radius;
+$btn-border-radius-sm:    6px;
+$btn-border-radius-lg:    10px;
+$btn-font-weight:         500;
+
+// Inputs
+$input-bg:                    var(--iiitdwd-bg);
+$input-color:                 var(--iiitdwd-text);
+$input-border-color:          var(--iiitdwd-border);
+$input-border-radius:         $iiitdwd-radius;
+$input-placeholder-color:     var(--iiitdwd-text-muted);
+$input-disabled-bg:           var(--iiitdwd-surface);
+$input-disabled-border-color: var(--iiitdwd-border);
+$input-group-addon-bg:        var(--iiitdwd-surface);
+$input-group-addon-color:     var(--iiitdwd-text-secondary);
+$form-select-indicator-color: var(--iiitdwd-text-secondary);
+$form-check-input-bg:         var(--iiitdwd-bg);
+$form-check-input-border:     1px solid var(--iiitdwd-text-muted);
+$form-switch-color:           $iiitdwd-text-muted;
+$form-text-color:             var(--iiitdwd-text-secondary);
+$focus-ring-opacity:          .5;
+
+// Dropdowns
+$dropdown-bg:                 var(--iiitdwd-surface);
+$dropdown-color:              var(--iiitdwd-text);
+$dropdown-border-color:       var(--iiitdwd-border);
+$dropdown-border-radius:      $iiitdwd-radius;
+$dropdown-divider-bg:         var(--iiitdwd-border);
+$dropdown-link-color:         var(--iiitdwd-text);
+$dropdown-link-hover-color:   var(--iiitdwd-text);
+$dropdown-link-hover-bg:      var(--iiitdwd-border);
+$dropdown-link-active-bg:     $primary;
+$dropdown-header-color:       var(--iiitdwd-text-muted);
+
+// Modals
+$modal-content-bg:            var(--iiitdwd-surface);
+$modal-content-color:         var(--iiitdwd-text);
+$modal-content-border-color:  var(--iiitdwd-border);
+$modal-content-border-radius: $iiitdwd-radius-lg;
+$modal-header-border-color:   var(--iiitdwd-border);
+$modal-footer-border-color:   var(--iiitdwd-border);
+$modal-backdrop-opacity:      .7;
+
+// List groups
+$list-group-bg:               var(--iiitdwd-surface);
+$list-group-color:            var(--iiitdwd-text);
+$list-group-border-color:     var(--iiitdwd-border);
+$list-group-hover-bg:         var(--iiitdwd-border);
+$list-group-action-color:     var(--iiitdwd-text-secondary);
+$list-group-action-hover-color: var(--iiitdwd-text);
+$list-group-action-active-bg: var(--iiitdwd-border);
+$list-group-disabled-color:   var(--iiitdwd-text-muted);
+
+// Tables
+$table-color:                 var(--iiitdwd-text);
+$table-bg:                    transparent;
+$table-border-color:          var(--iiitdwd-border);
+$table-striped-bg-factor:     .03;
+$table-striped-bg:            var(--iiitdwd-overlay-1);
+$table-hover-bg:              var(--iiitdwd-overlay-2);
+$table-active-bg:             var(--iiitdwd-overlay-3);
+
+// Navs and tabs
+$nav-link-color:                    var(--iiitdwd-text-secondary);
+$nav-link-hover-color:              var(--iiitdwd-text);
+$nav-link-disabled-color:           var(--iiitdwd-text-muted);
+$nav-tabs-border-color:             var(--iiitdwd-border);
+$nav-tabs-link-hover-border-color:  var(--iiitdwd-border) var(--iiitdwd-border) var(--iiitdwd-border);
+$nav-tabs-link-active-color:        var(--iiitdwd-text);
+$nav-tabs-link-active-bg:           var(--iiitdwd-surface);
+$nav-tabs-link-active-border-color: var(--iiitdwd-border) var(--iiitdwd-border) var(--iiitdwd-surface);
+$nav-pills-border-radius:           $iiitdwd-radius;
+
+// Pagination
+$pagination-color:               var(--iiitdwd-text-secondary);
+$pagination-bg:                  var(--iiitdwd-surface);
+$pagination-border-color:        var(--iiitdwd-border);
+$pagination-hover-color:         var(--iiitdwd-text);
+$pagination-hover-bg:            var(--iiitdwd-border);
+$pagination-hover-border-color:  var(--iiitdwd-border);
+$pagination-disabled-color:      var(--iiitdwd-text-muted);
+$pagination-disabled-bg:         var(--iiitdwd-surface);
+$pagination-disabled-border-color: var(--iiitdwd-border);
+
+// Popovers and tooltips
+$popover-bg:              var(--iiitdwd-surface);
+$popover-border-color:    $iiitdwd-border;
+$popover-header-bg:       var(--iiitdwd-sidebar);
+$popover-body-color:      var(--iiitdwd-text);
+$popover-max-width:       300px;
+$tooltip-bg:              var(--iiitdwd-border);
+$tooltip-color:           var(--iiitdwd-text);
+
+// Toasts
+$toast-background-color:  var(--iiitdwd-surface);
+$toast-header-background-color: var(--iiitdwd-sidebar);
+$toast-header-color:      var(--iiitdwd-text-secondary);
+$toast-border-color:      var(--iiitdwd-border);
+
+// Badges
+$badge-border-radius:     6px;
+$badge-font-weight:       600;
+
+// Progress
+$progress-bg:             var(--iiitdwd-border);
+$progress-bar-bg:         $iiitdwd-green-alt;
+
+// Accordion
+$accordion-bg:            var(--iiitdwd-surface);
+$accordion-border-color:  var(--iiitdwd-border);
+$accordion-button-active-bg: var(--iiitdwd-border);
+$accordion-button-active-color: var(--iiitdwd-text);
+
+// Close button: Bootstrap's dark "x" is invisible on navy.
+$btn-close-color:         $iiitdwd-text;
+
+// Spacers
+$spacer: 1rem;
+$spacers: (
+    0: 0,
+    1: ($spacer * .25),
+    2: ($spacer * .5),
+    3: $spacer,
+    4: ($spacer * 1.5),
+    5: ($spacer * 2),
+    6: ($spacer * 3)
+);
+
+//
+// Moodle variables (defined with !default in Boost's scss/moodle/*.scss)
+//
+
+// "Light primary" fills (section chevrons, selected items, info blocks); Boost derives near-white tints.
+$primary-light-background: var(--iiitdwd-primary-light-bg);
+$primary-light-border:     var(--iiitdwd-primary-light-border);
+$primary-light-color:      var(--iiitdwd-text);
+$primary-light-hover:      var(--iiitdwd-primary-light-hover);
+
+// Navbar and drawers
+$drawer-bg-color:         var(--iiitdwd-sidebar);
+$drawer-bg:                var(--iiitdwd-sidebar);
+$drawer-scroll-bg-track:   var(--iiitdwd-sidebar);
+$drawer-shadow-color:      rgba($black, .6);
+
+// Page width: Boost caps standard and limited-width pages (dashboard, course, activities, profile, ...)
+// at 830px, a narrow column in the middle of the screen. Pages use the full width beside the sidebar.
+$course-content-maxwidth: 100%;
+
+// Course index (left drawer)
+$courseindex-link-color:          var(--iiitdwd-text-secondary);
+$courseindex-link-hover-color:    var(--iiitdwd-text);
+$courseindex-link-dimmed-color:   var(--iiitdwd-text-muted);
+$courseindex-link-color-selected: $white;
+$courseindex-item-active-bg:      var(--iiitdwd-border);
+$courseindex-item-active-border:  var(--iiitdwd-border);
+$courseindex-item-page-bg:        $primary;
+$courseindex-item-current:        $iiitdwd-green-alt;
+
+// Alerts and "subtle" colours. Bootstrap 5.3 derives pale tints for these (alerts, list-group and table
+// variants, .text-bg-*-subtle); on dark surfaces they become a deep tinted fill, a mid-tone border and
+// light text. The *-scale variables are Bootstrap's deprecated ones, still used by Moodle for alert links.
+$primary-bg-subtle:       mix($primary, $iiitdwd-surface, 16%);
+$primary-border-subtle:   mix($primary, $iiitdwd-surface, 50%);
+$primary-text-emphasis:   mix($white, $primary, 55%);
+$secondary-bg-subtle:     var(--iiitdwd-surface);
+$secondary-border-subtle: var(--iiitdwd-border);
+$secondary-text-emphasis: var(--iiitdwd-text-secondary);
+$success-bg-subtle:       mix($success, $iiitdwd-surface, 18%);
+$success-border-subtle:   mix($success, $iiitdwd-surface, 55%);
+$success-text-emphasis:   mix($white, $iiitdwd-green-alt, 35%);
+$info-bg-subtle:          mix($info, $iiitdwd-surface, 16%);
+$info-border-subtle:      mix($info, $iiitdwd-surface, 50%);
+$info-text-emphasis:      mix($white, $info, 55%);
+$warning-bg-subtle:       mix($warning, $iiitdwd-surface, 14%);
+$warning-border-subtle:   mix($warning, $iiitdwd-surface, 45%);
+$warning-text-emphasis:   mix($white, $warning, 40%);
+$danger-bg-subtle:        mix($danger, $iiitdwd-surface, 18%);
+$danger-border-subtle:    mix($danger, $iiitdwd-surface, 55%);
+$danger-text-emphasis:    mix($white, $danger, 50%);
+$light-bg-subtle:         var(--iiitdwd-surface);
+$light-border-subtle:     var(--iiitdwd-border);
+$light-text-emphasis:     var(--iiitdwd-text);
+$dark-bg-subtle:          var(--iiitdwd-bg);
+$dark-border-subtle:      var(--iiitdwd-border);
+$dark-text-emphasis:      var(--iiitdwd-text);
+$alert-bg-scale:          82%;
+$alert-border-scale:      45%;
+$alert-color-scale:       -55%;
+$alert-border-radius:     12px;
+
+// Autocomplete suggestions (Moodle default is white).
+$forms-autocomplete-bg:   $iiitdwd-surface;
+
+// Login page: Boost draws a white card on a light grey gradient.
+$loginbackground-gradient-from: $iiitdwd-bg;
+$loginbackground-gradient-to:   $iiitdwd-sidebar;
+$logincontainer-bg:             var(--iiitdwd-surface);
+$logincontainer-padding:        2.5rem;
+$logincontainer-shadow:         $box-shadow-lg;
+
+// Notifications page (/message/output/popup/notifications.php) frame and dividers.
+$message-notif-area-border-color: var(--iiitdwd-border);
+
+// Calendar event types: Boost's pale fills become strong accents (fill and border) on the dark grid.
+$calendarEventCourseColor:         $iiitdwd-blue;
+$calendarEventCourseBorderColor:   $iiitdwd-blue;
+$calendarEventGlobalColor:         $iiitdwd-green-alt;
+$calendarEventGlobalBorderColor:   $iiitdwd-green-alt;
+$calendarEventUserColor:           #0dcaf0;
+$calendarEventUserBorderColor:     #0dcaf0;
+$calendarEventGroupColor:          $orange;
+$calendarEventGroupBorderColor:    $orange;
+$calendarEventCategoryColor:       #a78bfa;
+$calendarEventCategoryBorderColor: #a78bfa;
+$calendarEventOtherColor:          var(--iiitdwd-text-muted);
+$calendarEventOtherBorderColor:    var(--iiitdwd-text-muted);
+$calendarEventColor:               mix($white, $iiitdwd-blue, 30%);
+
+// Behat site specific variable values.
+$behatsite: false !default;
+$enable-transitions: not $behatsite !default;
+$enable-smooth-scroll: not $behatsite !default;
+
+// Import FontAwesome.
+@import "fontawesome";
+
+// Import All of Bootstrap
+@import "bootstrap";
+
+// Import Core moodle CSS
+@import "moodle";
+
+//
+// Preset CSS
+//
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+// Rounded user pictures
+.userpicture {
+    border-radius: 50%;
+}
+
+.btn-outline-secondary {
+    @include button-outline-variant($iiitdwd-text-secondary);
+    border-color: $iiitdwd-border;
+}

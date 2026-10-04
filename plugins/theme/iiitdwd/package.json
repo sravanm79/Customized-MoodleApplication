@@ -1,0 +1,20 @@
+{
+  "name": "theme-iiitdwd",
+  "version": "0.1.0",
+  "private": true,
+  "description": "IIIT Dharwad dark Moodle theme (Boost child). Dev tooling only: the theme has no npm runtime dependencies.",
+  "license": "GPL-3.0-or-later",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "lint": "stylelint \"scss/**/*.scss\"",
+    "lint:fix": "stylelint \"scss/**/*.scss\" --fix",
+    "check": "bash tools/compile-check.sh",
+    "deploy": "bash tools/deploy.sh"
+  },
+  "devDependencies": {
+    "stylelint": "^17.16.0",
+    "stylelint-config-standard-scss": "^17.0.0"
+  }
+}

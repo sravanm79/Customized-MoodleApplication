@@ -1,0 +1,683 @@
+// Teacher dashboard (templates/teacher_dashboard.mustache), shown above the blocks on /my/.
+
+$tdash-gap: 1rem;
+
+.iiitdwd-tdash {
+    display: flex;
+    flex-direction: column;
+    gap: $tdash-gap;
+    margin-bottom: 1.5rem;
+
+    // The panel renders just outside div[role=main]; line it up with the blocks, which Boost pads at md and up.
+    @include media-breakpoint-up(md) {
+        #page.drawers & {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+    }
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    h2,
+    h3 {
+        margin: 0;
+    }
+}
+
+// Shared card surface.
+.iiitdwd-tdash-card {
+    background-color: var(--iiitdwd-surface);
+    border: 1px solid var(--iiitdwd-border);
+    border-radius: var(--iiitdwd-radius-card);
+    padding: 1.25rem;
+    min-width: 0;
+}
+
+.iiitdwd-tdash-card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: .5rem;
+    margin-bottom: 1rem;
+
+    .iiitdwd-tdash-card-title {
+        margin-bottom: 0;
+    }
+}
+
+.iiitdwd-tdash-card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem !important;
+}
+
+.iiitdwd-tdash-link {
+    font-size: .8125rem;
+    white-space: nowrap;
+}
+
+//
+// Top row: hero + this week
+//
+
+.iiitdwd-tdash-top {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $tdash-gap;
+
+    @include media-breakpoint-up(lg) {
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    }
+}
+
+.iiitdwd-tdash-hero {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--iiitdwd-border);
+    border-radius: var(--iiitdwd-radius-lg);
+    padding: 1.75rem;
+    background:
+        radial-gradient(circle at 100% 0%, rgba($iiitdwd-blue, .35), transparent 55%),
+        linear-gradient(135deg, mix($iiitdwd-blue, $iiitdwd-sidebar, 25%) 0%, var(--iiitdwd-surface) 70%);
+}
+
+.iiitdwd-tdash-date {
+    margin: 0 0 .5rem;
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--iiitdwd-text-secondary);
+}
+
+.iiitdwd-tdash-greeting {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.iiitdwd-tdash-summary {
+    margin: .75rem 0 1.25rem;
+    max-width: 42rem;
+    color: var(--iiitdwd-text-secondary);
+
+    strong {
+        color: var(--iiitdwd-text);
+    }
+}
+
+.iiitdwd-tdash-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+}
+
+// Dark pill outline button ("Message students", "Open calendar").
+.btn.iiitdwd-btn-pill {
+    border: 1px solid var(--iiitdwd-border);
+    border-radius: 999px;
+    background-color: var(--iiitdwd-overlay-2);
+    color: var(--iiitdwd-text);
+    padding-left: 1.1rem;
+    padding-right: 1.1rem;
+
+    &:hover,
+    &:focus {
+        background-color: var(--iiitdwd-border);
+        color: var(--iiitdwd-text);
+    }
+}
+
+// This week.
+.iiitdwd-tdash-week {
+    display: flex;
+    flex-direction: column;
+}
+
+.iiitdwd-tdash-tiles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+}
+
+.iiitdwd-tdash-tile {
+    display: flex;
+    flex-direction: column;
+    padding: .75rem;
+    border-radius: var(--iiitdwd-radius);
+    background-color: var(--iiitdwd-bg);
+    border: 1px solid var(--iiitdwd-border);
+}
+
+.iiitdwd-tdash-tile-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.iiitdwd-tdash-tile-label {
+    font-size: .75rem;
+    color: var(--iiitdwd-text-secondary);
+}
+
+// Mini bar chart: one <li> per day, bar height set inline as a percentage.
+.iiitdwd-tdash-chart {
+    display: flex;
+    align-items: stretch;
+    gap: .4rem;
+    height: 7rem;
+    margin-top: auto !important;
+    padding-top: 1rem !important;
+}
+
+.iiitdwd-tdash-bar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    gap: .35rem;
+    min-width: 0;
+}
+
+.iiitdwd-tdash-bar-fill {
+    display: block;
+    width: 100%;
+    max-width: 1.5rem;
+    min-height: 3px;
+    border-radius: 4px 4px 2px 2px;
+    background-color: var(--iiitdwd-blue);
+    transition: background-color .15s ease;
+
+    .iiitdwd-tdash-bar.is-today & {
+        background-color: var(--iiitdwd-green-alt);
+    }
+
+    .iiitdwd-tdash-bar.is-future & {
+        background-color: var(--iiitdwd-border);
+    }
+
+    .iiitdwd-tdash-bar:hover & {
+        background-color: mix($white, $iiitdwd-blue, 25%);
+    }
+}
+
+.iiitdwd-tdash-bar-label {
+    font-size: .6875rem;
+    color: var(--iiitdwd-text-muted);
+
+    .iiitdwd-tdash-bar.is-today & {
+        color: var(--iiitdwd-text);
+        font-weight: 600;
+    }
+}
+
+//
+// Metric counters
+//
+
+.iiitdwd-tdash-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: $tdash-gap;
+
+    @include media-breakpoint-up(xl) {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+.iiitdwd-tdash-metric {
+    display: flex;
+    align-items: center;
+    gap: .875rem;
+
+    // Two per row on phones: badge above the number.
+    @include media-breakpoint-down(sm) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: .5rem;
+    }
+}
+
+.iiitdwd-tdash-metric-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.iiitdwd-tdash-metric-value {
+    font-size: 1.625rem;
+    font-weight: 700;
+    line-height: 1.15;
+}
+
+.iiitdwd-tdash-metric-label {
+    font-size: .8125rem;
+    color: var(--iiitdwd-text-secondary);
+}
+
+// Coloured icon badge.
+$tdash-badge-colors: (
+    "blue": $iiitdwd-blue,
+    "green": $iiitdwd-green-alt,
+    "amber": $orange,
+    "teal": #0dcaf0,
+);
+
+.iiitdwd-tdash-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 10px;
+
+    .icon {
+        margin: 0;
+        width: auto;
+        height: auto;
+        font-size: 1.05rem;
+        color: inherit !important;
+    }
+}
+
+@each $name, $color in $tdash-badge-colors {
+    .iiitdwd-tdash-badge-#{$name} {
+        background-color: rgba($color, .15);
+        color: color-mix(in srgb, #{$color} 80%, var(--iiitdwd-text));
+    }
+}
+
+//
+// Lower grid: needs your attention + today's live classes
+//
+
+.iiitdwd-tdash-lower {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $tdash-gap;
+
+    @include media-breakpoint-up(lg) {
+        grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    }
+}
+
+.iiitdwd-tdash-list {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+a.iiitdwd-tdash-item {
+    display: flex;
+    align-items: center;
+    gap: .875rem;
+    padding: .75rem;
+    border: 1px solid var(--iiitdwd-border);
+    border-radius: var(--iiitdwd-radius);
+    background-color: var(--iiitdwd-overlay-1);
+    color: var(--iiitdwd-text) !important;
+    text-decoration: none;
+    transition: background-color .15s ease, border-color .15s ease;
+
+    &:hover,
+    &:focus {
+        background-color: var(--iiitdwd-overlay-2);
+        border-color: rgba($iiitdwd-blue, .6);
+        text-decoration: none;
+    }
+
+    &.is-ended {
+        opacity: .6;
+    }
+}
+
+.iiitdwd-tdash-item-body {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.iiitdwd-tdash-item-title {
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.iiitdwd-tdash-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .375rem;
+}
+
+.iiitdwd-tdash-tag {
+    display: inline-block;
+    padding: .1rem .5rem;
+    border-radius: 6px;
+    font-size: .6875rem;
+    font-weight: 600;
+    line-height: 1.5;
+    background-color: rgba($iiitdwd-blue, .15);
+    color: color-mix(in srgb, #{$iiitdwd-blue} 55%, var(--iiitdwd-text));
+    border: 1px solid rgba($iiitdwd-blue, .3);
+}
+
+.iiitdwd-tdash-tag-green {
+    background-color: rgba($iiitdwd-green-alt, .12);
+    color: var(--iiitdwd-green-alt);
+    border-color: rgba($iiitdwd-green-alt, .3);
+}
+
+.iiitdwd-tdash-tag-live {
+    background-color: rgba($red, .15);
+    color: color-mix(in srgb, #{$red} 65%, var(--iiitdwd-text));
+    border-color: rgba($red, .4);
+}
+
+.iiitdwd-tdash-item-meta {
+    font-size: .75rem;
+    color: var(--iiitdwd-text-muted);
+}
+
+.iiitdwd-tdash-arrow {
+    color: var(--iiitdwd-text-muted);
+
+    .icon {
+        margin: 0;
+    }
+
+    a.iiitdwd-tdash-item:hover & {
+        color: var(--iiitdwd-text);
+    }
+}
+
+.iiitdwd-tdash-time {
+    flex-shrink: 0;
+    min-width: 3.25rem;
+    padding: .4rem .5rem;
+    border-radius: var(--iiitdwd-radius);
+    background-color: var(--iiitdwd-bg);
+    font-size: .8125rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.iiitdwd-tdash-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .75rem;
+    padding: 1.5rem .5rem;
+    text-align: center;
+    color: var(--iiitdwd-text-secondary);
+
+    p {
+        margin: 0;
+    }
+}
+
+// "Needs your attention" (grading queue): red alert badge, title, course and type, an "X to grade" badge and an
+// arrow button; the whole row links to the grading page.
+.iiitdwd-attention-count {
+    min-width: 1.5rem;
+    padding: .05rem .5rem;
+    border-radius: 999px;
+    background-color: rgba($red, .15);
+    border: 1px solid rgba($red, .4);
+    color: color-mix(in srgb, #{$red} 65%, var(--iiitdwd-text));
+    font-size: .75rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.iiitdwd-attention-alert {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 10px;
+    background-color: rgba($red, .14);
+    color: color-mix(in srgb, #{$red} 80%, var(--iiitdwd-text));
+
+    .icon {
+        margin: 0;
+        color: inherit;
+    }
+}
+
+.iiitdwd-attention-action {
+    flex-shrink: 0;
+    padding: .2rem .6rem;
+    border-radius: 999px;
+    background-color: rgba($red, .15);
+    border: 1px solid rgba($red, .4);
+    color: color-mix(in srgb, #{$red} 65%, var(--iiitdwd-text));
+    font-size: .75rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+// Arrow "button": fills with the accent when the row is hovered or focused.
+.iiitdwd-attention-go {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--iiitdwd-border);
+    border-radius: 50%;
+    color: var(--iiitdwd-text-secondary);
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+
+    .icon {
+        margin: 0;
+        color: inherit;
+    }
+
+    a.iiitdwd-attention-item:hover &,
+    a.iiitdwd-attention-item:focus-visible & {
+        background-color: var(--iiitdwd-blue);
+        border-color: var(--iiitdwd-blue);
+        color: $white;
+    }
+}
+
+.iiitdwd-attention-more {
+    margin: .75rem 0 0;
+    color: var(--iiitdwd-text-muted);
+    font-size: .8125rem;
+    text-align: center;
+}
+
+.iiitdwd-tdash-empty .iiitdwd-attention-empty-title {
+    color: var(--iiitdwd-text);
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+// Phones: the badge moves under the title so the title keeps its width.
+@include media-breakpoint-down(sm) {
+    a.iiitdwd-attention-item {
+        flex-wrap: wrap;
+
+        .iiitdwd-tdash-item-body {
+            flex-basis: calc(100% - 3.25rem);
+        }
+
+        .iiitdwd-attention-action {
+            margin-left: 3.125rem;
+        }
+
+        .iiitdwd-attention-go {
+            margin-left: auto;
+        }
+    }
+}
+
+//
+// Your courses
+//
+
+.iiitdwd-tdash-courses-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: .5rem;
+
+    .iiitdwd-tdash-card-title {
+        margin-bottom: 0 !important;
+    }
+}
+
+.iiitdwd-tdash-courses {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $tdash-gap;
+
+    @include media-breakpoint-up(sm) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @include media-breakpoint-up(xl) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+$course-card-headers: (
+    "blue": ($iiitdwd-blue, mix($iiitdwd-blue, $iiitdwd-sidebar, 35%)),
+    "green": ($iiitdwd-green, mix($iiitdwd-green, $iiitdwd-bg, 45%)),
+);
+
+.iiitdwd-course-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+    background-color: var(--iiitdwd-surface);
+    border: 1px solid var(--iiitdwd-border);
+    border-radius: var(--iiitdwd-radius-card);
+    transition: border-color .15s ease;
+
+    &:hover {
+        border-color: rgba($iiitdwd-blue, .6);
+    }
+}
+
+.iiitdwd-course-card-banner {
+    position: relative;
+    height: 5.5rem;
+    padding: .875rem 1rem;
+    // Subtle diagonal pattern over the header colour.
+    background-image: repeating-linear-gradient(135deg, rgba($white, .04) 0 2px, transparent 2px 14px);
+}
+
+@each $name, $colors in $course-card-headers {
+    .iiitdwd-course-card-#{$name} .iiitdwd-course-card-banner {
+        background-color: nth($colors, 2);
+        border-bottom: 2px solid nth($colors, 1);
+    }
+}
+
+// Course code pill (also used in the course hero).
+.iiitdwd-course-card-code {
+    display: inline-block;
+    padding: .2rem .65rem;
+    border-radius: 999px;
+    background-color: rgba($black, .35);
+    border: 1px solid rgba($white, .18);
+    color: var(--iiitdwd-text);
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+}
+
+.iiitdwd-course-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+    flex: 1;
+    padding: 1rem;
+}
+
+.iiitdwd-course-card-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.35;
+
+    a {
+        color: var(--iiitdwd-text) !important;
+    }
+}
+
+.iiitdwd-course-card-students {
+    margin: 0;
+    font-size: .8125rem;
+    color: var(--iiitdwd-text-secondary);
+}
+
+.iiitdwd-course-card-progress {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    row-gap: .35rem;
+    margin-top: auto;
+    padding-top: .5rem;
+
+    .progress {
+        grid-column: 1 / -1;
+        height: .375rem;
+        border-radius: 999px;
+    }
+}
+
+.iiitdwd-course-card-progress-label {
+    font-size: .75rem;
+    color: var(--iiitdwd-text-muted);
+}
+
+.iiitdwd-course-card-progress-value {
+    font-size: .8125rem;
+    font-weight: 700;
+
+    &.is-empty {
+        font-weight: 400;
+        color: var(--iiitdwd-text-muted);
+    }
+}
+
+.iiitdwd-course-card-actions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--iiitdwd-border);
+
+    .btn {
+        border: 0;
+        border-radius: 0;
+        padding: .6rem .25rem;
+        color: var(--iiitdwd-text-secondary);
+        font-weight: 500;
+
+        &:hover,
+        &:focus {
+            background-color: var(--iiitdwd-overlay-2);
+            color: var(--iiitdwd-text);
+        }
+
+        & + .btn {
+            border-left: 1px solid var(--iiitdwd-border);
+        }
+    }
+}

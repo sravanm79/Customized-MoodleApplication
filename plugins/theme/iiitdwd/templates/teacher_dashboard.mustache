@@ -1,0 +1,255 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_iiitdwd/teacher_dashboard
+
+    Teacher dashboard panel, rendered above the blocks on /my/ by theme_iiitdwd\output\core_renderer.
+
+    Context variables required for this template:
+    * date - Today, formatted in the user's timezone
+    * greeting - "Good morning, Name 👋"
+    * summary - HTML sentence with the grading / live class / course counts
+    * gradeurl - Grading page of the top "Needs your attention" item, or null
+    * messageurl - Messaging page
+    * week - activelearners, submissions, bars (label, count, height, istoday, isfuture, title)
+    * metrics - label, value, icon (HTML), variant (blue|green|amber|teal)
+    * attention, hasattention - name, course, coursefullname, type, tag, since, url, arialabel
+    * attentioncount, attentionmore - number of items to grade, "+ N more" when the list is cut
+    * live, haslive - time, name, course, url, status, islive, isended
+    * calendarurl - Calendar day view
+    * courses - shortname, fullname, students, hascompletion, completion (int %), variant (blue|green),
+      gradeurl, contenturl, peopleurl
+    * morecourses, mycoursesurl - "View all" link when there are more teaching courses than cards
+    * icons - warning, arrow, calendar, check (HTML)
+
+    Example context (json):
+    {
+        "date": "Saturday, 3 October 2026",
+        "greeting": "Good morning, Asha 👋",
+        "summary": "You have <strong>12</strong> submissions to grade and <strong>2</strong> live classes today across your <strong>4</strong> courses.",
+        "gradeurl": "#",
+        "messageurl": "#",
+        "week": {
+            "activelearners": 86,
+            "submissions": 41,
+            "bars": [
+                {"label": "Mon", "count": 9, "height": 75, "title": "Mon: 9 submissions"},
+                {"label": "Tue", "count": 12, "height": 100, "title": "Tue: 12 submissions"},
+                {"label": "Wed", "count": 4, "height": 33, "title": "Wed: 4 submissions"},
+                {"label": "Thu", "count": 7, "height": 58, "title": "Thu: 7 submissions"},
+                {"label": "Fri", "count": 6, "height": 50, "title": "Fri: 6 submissions"},
+                {"label": "Sat", "count": 3, "height": 25, "istoday": true, "title": "Sat: 3 submissions"},
+                {"label": "Sun", "count": 0, "height": 4, "isfuture": true, "title": "Sun: 0 submissions"}
+            ]
+        },
+        "metrics": [
+            {"label": "Courses teaching", "value": 4, "icon": "", "variant": "blue"},
+            {"label": "Students enrolled", "value": 212, "icon": "", "variant": "green"},
+            {"label": "Awaiting grading", "value": 12, "icon": "", "variant": "amber"},
+            {"label": "Avg. completion", "value": "68%", "icon": "", "variant": "teal"}
+        ],
+        "hasattention": true,
+        "attention": [
+            {"name": "MLP Live Session Summary - 02/10/2026", "course": "MLPC04", "coursefullname": "Machine Learning",
+             "type": "Assignment", "tag": "8 to grade", "since": "Oldest: 2 days", "url": "#",
+             "arialabel": "Grade MLP Live Session Summary - 02/10/2026 (MLPC04): 8 to grade"}
+        ],
+        "attentioncount": 1,
+        "haslive": true,
+        "live": [
+            {"time": "10:00", "name": "Python Class", "course": "CS101", "url": "#", "status": "Live now", "islive": true}
+        ],
+        "calendarurl": "#",
+        "courses": [
+            {"shortname": "MLPC04", "fullname": "Machine Learning", "students": "64 students", "hascompletion": true,
+             "completion": 72, "variant": "blue", "gradeurl": "#", "contenturl": "#", "peopleurl": "#"},
+            {"shortname": "PESEM3C1", "fullname": "Professional Ethics", "students": "120 students", "hascompletion": false,
+             "completion": 0, "variant": "green", "gradeurl": "#", "contenturl": "#", "peopleurl": "#"}
+        ],
+        "mycoursesurl": "#",
+        "icons": {"warning": "", "arrow": "", "calendar": "", "check": ""}
+    }
+}}
+<section class="iiitdwd-tdash" aria-label="{{#str}}teacherdashboard, theme_iiitdwd{{/str}}">
+
+    <div class="iiitdwd-tdash-top">
+        {{! Hero banner. }}
+        <div class="iiitdwd-tdash-hero">
+            <p class="iiitdwd-tdash-date">{{date}}</p>
+            <h2 class="iiitdwd-tdash-greeting">{{greeting}}</h2>
+            <p class="iiitdwd-tdash-summary">{{{summary}}}</p>
+            <div class="iiitdwd-tdash-actions">
+                {{#gradeurl}}
+                    <a class="btn btn-primary" href="{{gradeurl}}">{{#str}}gradenow, theme_iiitdwd{{/str}}</a>
+                {{/gradeurl}}
+                {{^gradeurl}}
+                    <span class="btn btn-primary disabled" aria-disabled="true">{{#str}}gradenow, theme_iiitdwd{{/str}}</span>
+                {{/gradeurl}}
+                <a class="btn iiitdwd-btn-pill" href="{{messageurl}}">{{#str}}messagestudents, theme_iiitdwd{{/str}}</a>
+            </div>
+        </div>
+
+        {{! This week. }}
+        <div class="iiitdwd-tdash-card iiitdwd-tdash-week">
+            <h3 class="iiitdwd-tdash-card-title">{{#str}}thisweek, theme_iiitdwd{{/str}}</h3>
+            {{#week}}
+            <div class="iiitdwd-tdash-tiles">
+                <div class="iiitdwd-tdash-tile">
+                    <span class="iiitdwd-tdash-tile-value">{{activelearners}}</span>
+                    <span class="iiitdwd-tdash-tile-label">{{#str}}activelearners, theme_iiitdwd{{/str}}</span>
+                </div>
+                <div class="iiitdwd-tdash-tile">
+                    <span class="iiitdwd-tdash-tile-value">{{submissions}}</span>
+                    <span class="iiitdwd-tdash-tile-label">{{#str}}submissionsreceived, theme_iiitdwd{{/str}}</span>
+                </div>
+            </div>
+            <ul class="iiitdwd-tdash-chart" aria-label="{{#str}}submissionsperday, theme_iiitdwd{{/str}}">
+                {{#bars}}
+                <li class="iiitdwd-tdash-bar{{#istoday}} is-today{{/istoday}}{{#isfuture}} is-future{{/isfuture}}" title="{{title}}">
+                    <span class="iiitdwd-tdash-bar-fill" style="height: {{height}}%"></span>
+                    <span class="iiitdwd-tdash-bar-label" aria-hidden="true">{{label}}</span>
+                    <span class="visually-hidden">{{title}}</span>
+                </li>
+                {{/bars}}
+            </ul>
+            {{/week}}
+        </div>
+    </div>
+
+    {{! Metric counters. }}
+    <ul class="iiitdwd-tdash-metrics">
+        {{#metrics}}
+        <li class="iiitdwd-tdash-card iiitdwd-tdash-metric">
+            <span class="iiitdwd-tdash-badge iiitdwd-tdash-badge-{{variant}}">{{{icon}}}</span>
+            <span class="iiitdwd-tdash-metric-text">
+                <span class="iiitdwd-tdash-metric-value">{{value}}</span>
+                <span class="iiitdwd-tdash-metric-label">{{label}}</span>
+            </span>
+        </li>
+        {{/metrics}}
+    </ul>
+
+    <div class="iiitdwd-tdash-lower">
+        {{! Needs your attention: assignment submissions and quiz attempts waiting to be graded. }}
+        <div class="iiitdwd-tdash-card iiitdwd-attention">
+            <div class="iiitdwd-tdash-card-head">
+                <h3 class="iiitdwd-tdash-card-title">{{#str}}needsattention, theme_iiitdwd{{/str}}</h3>
+                {{#hasattention}}<span class="iiitdwd-attention-count">{{attentioncount}}</span>{{/hasattention}}
+            </div>
+            {{#hasattention}}
+            <ul class="iiitdwd-tdash-list">
+                {{#attention}}
+                <li>
+                    <a class="iiitdwd-tdash-item iiitdwd-attention-item" href="{{url}}" aria-label="{{arialabel}}">
+                        <span class="iiitdwd-attention-alert" aria-hidden="true">{{{icons.warning}}}</span>
+                        <span class="iiitdwd-tdash-item-body" aria-hidden="true">
+                            <span class="iiitdwd-tdash-item-title">{{name}}</span>
+                            <span class="iiitdwd-tdash-tags">
+                                <span class="iiitdwd-tdash-tag" title="{{coursefullname}}">{{course}}</span>
+                                <span class="iiitdwd-tdash-item-meta">{{type}} · {{since}}</span>
+                            </span>
+                        </span>
+                        <span class="iiitdwd-attention-action" aria-hidden="true">{{tag}}</span>
+                        <span class="iiitdwd-attention-go" aria-hidden="true">{{{icons.arrow}}}</span>
+                    </a>
+                </li>
+                {{/attention}}
+            </ul>
+            {{#attentionmore}}<p class="iiitdwd-attention-more">{{.}}</p>{{/attentionmore}}
+            {{/hasattention}}
+            {{^hasattention}}
+            <div class="iiitdwd-tdash-empty">
+                <span class="iiitdwd-tdash-badge iiitdwd-tdash-badge-green">{{{icons.check}}}</span>
+                <p class="iiitdwd-attention-empty-title">{{#str}}allcaughtup, theme_iiitdwd{{/str}}</p>
+                <p>{{#str}}nothingtograde, theme_iiitdwd{{/str}}</p>
+            </div>
+            {{/hasattention}}
+        </div>
+
+        {{! Today's live classes. }}
+        <div class="iiitdwd-tdash-card">
+            <div class="iiitdwd-tdash-card-head">
+                <h3 class="iiitdwd-tdash-card-title">{{#str}}liveclassestoday, theme_iiitdwd{{/str}}</h3>
+                <a class="iiitdwd-tdash-link" href="{{calendarurl}}">{{#str}}opencalendar, theme_iiitdwd{{/str}}</a>
+            </div>
+            {{#haslive}}
+            <ul class="iiitdwd-tdash-list">
+                {{#live}}
+                <li>
+                    <a class="iiitdwd-tdash-item{{#isended}} is-ended{{/isended}}" href="{{url}}">
+                        <span class="iiitdwd-tdash-time">{{time}}</span>
+                        <span class="iiitdwd-tdash-item-body">
+                            <span class="iiitdwd-tdash-item-title">{{name}}</span>
+                            <span class="iiitdwd-tdash-tags">
+                                <span class="iiitdwd-tdash-tag">{{course}}</span>
+                                <span class="iiitdwd-tdash-tag{{#islive}} iiitdwd-tdash-tag-live{{/islive}}">{{status}}</span>
+                            </span>
+                        </span>
+                        <span class="iiitdwd-tdash-arrow">{{{icons.arrow}}}</span>
+                    </a>
+                </li>
+                {{/live}}
+            </ul>
+            {{/haslive}}
+            {{^haslive}}
+            <div class="iiitdwd-tdash-empty">
+                <span class="iiitdwd-tdash-badge iiitdwd-tdash-badge-blue">{{{icons.calendar}}}</span>
+                <p>{{#str}}noliveclasses, theme_iiitdwd{{/str}}</p>
+                <a class="btn iiitdwd-btn-pill btn-sm" href="{{calendarurl}}">{{#str}}opencalendar, theme_iiitdwd{{/str}}</a>
+            </div>
+            {{/haslive}}
+        </div>
+    </div>
+    {{! Your courses. }}
+    <div class="iiitdwd-tdash-courses-head">
+        <h3 class="iiitdwd-tdash-card-title">{{#str}}yourcourses, theme_iiitdwd{{/str}}</h3>
+        {{#morecourses}}
+            <a class="iiitdwd-tdash-link" href="{{mycoursesurl}}">{{#str}}viewall, theme_iiitdwd{{/str}}</a>
+        {{/morecourses}}
+    </div>
+    <ul class="iiitdwd-tdash-courses">
+        {{#courses}}
+        <li class="iiitdwd-course-card iiitdwd-course-card-{{variant}}">
+            <div class="iiitdwd-course-card-banner">
+                <span class="iiitdwd-course-card-code">{{shortname}}</span>
+            </div>
+            <div class="iiitdwd-course-card-body">
+                <h4 class="iiitdwd-course-card-title"><a href="{{contenturl}}">{{fullname}}</a></h4>
+                <p class="iiitdwd-course-card-students">{{students}}</p>
+                <div class="iiitdwd-course-card-progress">
+                    <span class="iiitdwd-course-card-progress-label">{{#str}}avgcompletion, theme_iiitdwd{{/str}}</span>
+                    {{#hascompletion}}
+                        <span class="iiitdwd-course-card-progress-value">{{completion}}%</span>
+                        <div class="progress" role="progressbar" aria-label="{{#str}}avgcompletion, theme_iiitdwd{{/str}}"
+                             aria-valuenow="{{completion}}" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar" style="width: {{completion}}%"></div>
+                        </div>
+                    {{/hascompletion}}
+                    {{^hascompletion}}
+                        <span class="iiitdwd-course-card-progress-value is-empty">{{#str}}notracking, theme_iiitdwd{{/str}}</span>
+                    {{/hascompletion}}
+                </div>
+            </div>
+            <div class="iiitdwd-course-card-actions">
+                <a class="btn btn-sm" href="{{gradeurl}}">{{#str}}coursegrade, theme_iiitdwd{{/str}}</a>
+                <a class="btn btn-sm" href="{{contenturl}}">{{#str}}coursecontent, theme_iiitdwd{{/str}}</a>
+                <a class="btn btn-sm" href="{{peopleurl}}">{{#str}}coursepeople, theme_iiitdwd{{/str}}</a>
+            </div>
+        </li>
+        {{/courses}}
+    </ul>
+</section>

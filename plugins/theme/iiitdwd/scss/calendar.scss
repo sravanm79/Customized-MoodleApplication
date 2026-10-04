@@ -1,0 +1,455 @@
+// Calendar (/calendar/view.php): filter bar, dark month grid with time-stamped event pills, and the
+// Events key panel (moved beside the calendar by output\core_calendar_renderer).
+
+// Calendar + Events key side by side.
+.iiitdwd-cal-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    align-items: start;
+
+    @include media-breakpoint-up(lg) {
+        grid-template-columns: minmax(0, 1fr) 240px;
+    }
+
+    > .maincalendar {
+        min-width: 0;
+    }
+}
+
+.iiitdwd-cal-key {
+    @include media-breakpoint-up(lg) {
+        position: sticky;
+        top: calc(#{$navbar-height} + 1rem);
+    }
+
+    .calendar_filters {
+        margin: 0 !important;
+
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: .25rem;
+        }
+
+        a {
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+            padding: .4rem .5rem;
+            border-radius: var(--iiitdwd-radius);
+            color: var(--iiitdwd-text-secondary) !important;
+            font-size: .8125rem;
+            text-decoration: none;
+
+            &:hover,
+            &:focus {
+                background-color: var(--iiitdwd-overlay-2);
+                color: var(--iiitdwd-text) !important;
+            }
+
+            &[data-eventtype-hidden="true"] {
+                opacity: .55;
+            }
+        }
+
+        // Event type swatch.
+        [class^="calendar_event_"] {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.4rem;
+            height: 1.4rem;
+            border-radius: 6px;
+            border: 0 !important;
+
+            .icon {
+                margin: 0;
+                font-size: .7rem;
+                color: $black;
+            }
+        }
+
+        > ul > li > a > span:nth-child(2) {
+            display: none;
+        }
+    }
+}
+
+.maincalendar {
+    // Filter bar: view selector, course selector, "+ New event". Not the month grid's day names (th.header).
+    .header:not(th) {
+        align-items: center;
+        gap: .5rem;
+        padding: .75rem !important;
+        margin-bottom: 1rem;
+        background-color: var(--iiitdwd-surface);
+        border: 1px solid var(--iiitdwd-border);
+        border-radius: var(--iiitdwd-radius-card);
+
+        .form-select,
+        .btn {
+            margin: 0 !important;
+        }
+
+        .cal_courses_flt {
+            max-width: 16rem;
+            margin-right: auto !important;
+        }
+
+        [data-action="new-event-button"],
+        .btn-primary {
+            float: none !important;
+            margin-left: auto !important;
+
+            &::before {
+                content: "+";
+                margin-right: .4rem;
+                font-weight: 700;
+            }
+        }
+    }
+
+    .calendarwrapper {
+        padding: 1rem;
+        background-color: var(--iiitdwd-surface);
+        border: 1px solid var(--iiitdwd-border);
+        border-radius: var(--iiitdwd-radius-card);
+    }
+
+    // Month navigation.
+    .controls {
+        margin-bottom: .75rem;
+
+        .current {
+            color: var(--iiitdwd-text);
+            font-weight: 700;
+        }
+
+        .arrow_link {
+            color: var(--iiitdwd-text-secondary) !important;
+
+            &:hover {
+                color: var(--iiitdwd-text) !important;
+            }
+        }
+    }
+
+    // Month grid.
+    table.calendarmonth {
+        border-collapse: separate;
+        border-spacing: 0;
+        border: 1px solid var(--iiitdwd-border);
+        border-radius: var(--iiitdwd-radius);
+        overflow: hidden;
+
+        // th.header outranks Boost's ".maincalendar .calendartable.calendarmonth th { padding: 0 }" (Calendar block).
+        th.header {
+            border-radius: 0;
+            padding: .6rem .5rem;
+            background-color: var(--iiitdwd-sidebar);
+            border: 0;
+            border-bottom: 1px solid var(--iiitdwd-border);
+            color: var(--iiitdwd-text-secondary);
+            font-size: .75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+
+        td {
+            background-color: var(--iiitdwd-surface);
+            border: 0;
+            border-right: 1px solid var(--iiitdwd-border);
+            border-bottom: 1px solid var(--iiitdwd-border);
+
+            &:last-child {
+                border-right: 0;
+            }
+
+            &.dayblank {
+                background-color: var(--iiitdwd-bg);
+            }
+
+            &.weekend:not(.dayblank) {
+                background-color: color-mix(in srgb, var(--iiitdwd-surface) 60%, var(--iiitdwd-bg));
+            }
+
+            &.clickable:hover {
+                background-color: color-mix(in srgb, var(--iiitdwd-surface) 50%, var(--iiitdwd-border));
+            }
+
+            &.today {
+                background-color: rgba($iiitdwd-blue, .08);
+                box-shadow: inset 0 0 0 1px rgba($iiitdwd-blue, .7);
+            }
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .day-number-circle {
+            color: var(--iiitdwd-text-secondary);
+        }
+
+        td.today .day-number-circle {
+            background-color: var(--iiitdwd-blue);
+            box-shadow: 0 0 0 3px rgba($iiitdwd-blue, .25);
+            color: $white;
+            font-weight: 700;
+        }
+
+        // Event pills: time and session topic, the course below; tinted by event type.
+        ul li[data-region="event-item"] {
+            margin-bottom: 3px;
+        }
+
+        [data-region="event-item"] > a[data-action="view-event"] {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            column-gap: .3rem;
+            align-items: baseline;
+            text-align: start;
+            padding: .15rem .4rem;
+            border-radius: 6px;
+            background-color: rgba($iiitdwd-blue, .14);
+            border-left: 3px solid var(--iiitdwd-blue);
+            color: var(--iiitdwd-text) !important;
+            font-size: .75rem;
+            line-height: 1.4;
+            text-decoration: none;
+            overflow: hidden;
+
+            &:hover {
+                background-color: rgba($iiitdwd-blue, .26);
+            }
+
+            // The type is shown by the pill colour.
+            .calendar-circle {
+                display: none;
+            }
+
+            // Up to two lines of the topic (Boost keeps calendar links on one line).
+            .eventname {
+                display: -webkit-box;
+                white-space: normal;
+                overflow: hidden;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
+                overflow-wrap: anywhere;
+            }
+
+            .iiitdwd-event-course {
+                grid-column: 2;
+                overflow: hidden;
+                color: var(--iiitdwd-text-muted);
+                font-size: .625rem;
+                font-weight: 600;
+                letter-spacing: .04em;
+                text-overflow: ellipsis;
+                text-transform: uppercase;
+                white-space: nowrap;
+            }
+        }
+
+        .iiitdwd-event-time {
+            flex-shrink: 0;
+            color: var(--iiitdwd-text-secondary);
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
+    }
+}
+
+// Pill colour per event type (data-event-eventtype is on the <li>; normalised types as data-eventtype-*).
+$cal-pill-types: (
+    "course": $iiitdwd-blue,
+    "site": $iiitdwd-green-alt,
+    "user": #0dcaf0,
+    "group": $orange,
+    "category": #a78bfa,
+    "other": $iiitdwd-text-muted,
+);
+
+@each $type, $color in $cal-pill-types {
+    .maincalendar table.calendarmonth [data-region="event-item"][data-eventtype-#{$type}="1"] > a[data-action="view-event"] {
+        background-color: rgba($color, .14);
+        border-left-color: $color;
+
+        &:hover {
+            background-color: rgba($color, .26);
+        }
+    }
+}
+
+// Zoom "Join" link (templates/core_calendar/month_detailed.mustache); hidden for other activities.
+// Scoped to the month grid so it outranks Boost's calendar link rules (main calendar and Calendar block).
+.calendarmonth [data-region="event-item"] .iiitdwd-event-action {
+    display: none;
+}
+
+// Zoom sessions: the "live class" green, matching the Join link and the dashboard's live tags.
+.maincalendar table.calendarmonth [data-region="event-item"][data-event-component="mod_zoom"] > a[data-action="view-event"] {
+    background-color: rgba($iiitdwd-green-alt, .14);
+    border-left-color: var(--iiitdwd-green-alt);
+
+    &:hover {
+        background-color: rgba($iiitdwd-green-alt, .26);
+    }
+}
+
+.calendarmonth [data-region="event-item"][data-event-component="mod_zoom"] .iiitdwd-event-action {
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
+    margin: 2px 0 2px .5rem;
+    padding: 0 .45rem;
+    border-radius: 999px;
+    font-size: .6875rem;
+    font-weight: 600;
+    line-height: 1.6;
+    white-space: nowrap;
+    color: $white !important;
+    background-color: var(--iiitdwd-green);
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+        background-color: var(--iiitdwd-green-alt);
+        text-decoration: none;
+    }
+}
+
+//
+// Event popup (core_calendar/event_summary_modal, event_details overrides)
+//
+
+// Boost fills the header with the event type colour; keep the type as a stripe on the theme surface.
+.modal-header[class*="calendar_event_"] {
+    background-color: var(--iiitdwd-surface) !important;
+    border-top: 4px solid var(--iiitdwd-border);
+    color: var(--iiitdwd-text) !important;
+
+    .modal-title {
+        color: var(--iiitdwd-text);
+        font-size: 1.125rem;
+    }
+
+    .btn-close {
+        filter: none;
+    }
+}
+
+@each $type, $color in $cal-pill-types {
+    .modal-header.calendar_event_#{$type} {
+        border-top-color: $color;
+    }
+}
+
+.summary-modal-container {
+    font-size: .9375rem;
+
+    .row + .row {
+        margin-top: .6rem !important;
+    }
+
+    .col-1 .icon {
+        color: var(--iiitdwd-text-muted);
+    }
+
+    // When the time, in the theme's text colour.
+    .row:first-child .col-11 {
+        color: var(--iiitdwd-text);
+        font-weight: 600;
+
+        a {
+            color: inherit;
+        }
+    }
+
+    // mod_zoom adds its own "Join Meeting" button to the description; the footer has the join button.
+    .description-content p:has(> a[href*="/mod/zoom/loadmeeting.php"]) {
+        display: none;
+    }
+
+    .row:has(.description-content > p:only-child > a[href*="/mod/zoom/loadmeeting.php"]) {
+        display: none;
+    }
+}
+
+// Footer: the event's action as a button; Zoom sessions say "Join Zoom meeting", in the live green.
+.iiitdwd-event-join {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    font-weight: 600;
+
+    .iiitdwd-event-join-zoom {
+        display: none;
+        align-items: center;
+        gap: .4rem;
+    }
+
+    // Zoom sessions: mod_zoom's action is /mod/zoom/loadmeeting.php (the modal context has no component).
+    &[href*="/mod/zoom/loadmeeting.php"] {
+        --bs-btn-bg: var(--iiitdwd-green);
+        --bs-btn-border-color: var(--iiitdwd-green);
+        --bs-btn-hover-bg: #{darken($iiitdwd-green, 6%)};
+        --bs-btn-hover-border-color: #{darken($iiitdwd-green, 6%)};
+        --bs-btn-active-bg: #{darken($iiitdwd-green, 10%)};
+        --bs-btn-active-border-color: #{darken($iiitdwd-green, 10%)};
+
+        .iiitdwd-event-join-zoom {
+            display: inline-flex;
+        }
+
+        .iiitdwd-event-join-default {
+            display: none;
+        }
+    }
+}
+
+.maincalendar .bottom {
+    margin-top: 1rem;
+    color: var(--iiitdwd-text-secondary);
+}
+
+// Phones: the month names beside the arrows wrap under them, and the uppercase day names break into letters.
+@include media-breakpoint-down(sm) {
+    .maincalendar {
+        .calendarwrapper {
+            padding: .75rem .5rem;
+        }
+
+        .controls {
+            .calendar-controls {
+                align-items: center;
+            }
+
+            .arrow_link .arrow_text {
+                @include visually-hidden;
+            }
+
+            .arrow_link {
+                padding: .25rem .5rem;
+            }
+
+            .current {
+                font-size: 1.125rem;
+            }
+        }
+    }
+
+    // Main calendar and the dashboard Calendar block (both inside .maincalendar).
+    .maincalendar table.calendarmonth th.header {
+        padding: .5rem 0;
+        font-size: .6875rem;
+        letter-spacing: 0;
+        text-align: center;
+        word-break: keep-all;
+    }
+}

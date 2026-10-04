@@ -1,0 +1,339 @@
+// IIIT Dharwad overrides.
+//
+// Compiled after Bootstrap and Moodle core, so the SCSS tokens from preset/default.scss are in
+// scope. Colours are CSS custom properties (color_modes.scss) so they follow the Day/Night mode; plugins,
+// templates and Additional HTML can use them too.
+
+@import "color_modes";
+
+//
+// Body and page shell
+//
+
+body {
+    background-color: var(--iiitdwd-bg);
+    color: var(--iiitdwd-text);
+}
+
+#page,
+#page-wrapper,
+#topofscroll,
+.main-inner,
+#page.drawers .main-inner,
+.secondary-navigation,
+#page-footer {
+    background-color: var(--iiitdwd-bg);
+}
+
+// Boost hardcodes these with the bg-white / bg-body utilities (!important).
+#page-footer.bg-white,
+.bg-white {
+    background-color: var(--iiitdwd-surface) !important;
+}
+
+#page-footer {
+    color: var(--iiitdwd-text-secondary);
+    border-top: 1px solid var(--iiitdwd-border);
+}
+
+.text-muted,
+.dimmed_text,
+.form-text {
+    color: var(--iiitdwd-text-secondary) !important;
+}
+
+#page-header .page-header-headings h1,
+.page-context-header .page-header-headings h1 {
+    color: var(--iiitdwd-text);
+}
+
+//
+// Typography
+//
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    color: var(--iiitdwd-text);
+    letter-spacing: -0.01em;
+}
+
+small,
+.small {
+    color: var(--iiitdwd-text-secondary);
+}
+
+a:not(.btn):not(.nav-link):not(.dropdown-item):not(.list-group-item) {
+    color: var(--iiitdwd-link);
+}
+
+code {
+    color: var(--iiitdwd-green-alt);
+}
+
+hr {
+    border-color: var(--iiitdwd-border);
+    opacity: 1;
+}
+
+::selection {
+    background-color: rgba($iiitdwd-blue, .45);
+    color: var(--iiitdwd-text);
+}
+
+//
+// Navbar
+//
+
+.navbar.fixed-top,
+.navbar.fixed-top.bg-body {
+    background-color: var(--iiitdwd-sidebar) !important;
+    border-bottom: 1px solid var(--iiitdwd-border);
+    box-shadow: none;
+
+    .navbar-brand,
+    .nav-link,
+    .usermenu .login,
+    .btn-open,
+    .popover-region-toggle .icon {
+        color: var(--iiitdwd-text-secondary);
+    }
+
+    .nav-link:hover,
+    .nav-link:focus,
+    .nav-link.active,
+    .navbar-brand:hover {
+        color: var(--iiitdwd-text);
+    }
+
+    .divider {
+        background-color: var(--iiitdwd-border);
+    }
+
+    // Boost's hover-navbar mixin fills with $gray-100.
+    .primary-navigation .navigation .nav-link:hover,
+    #usernavigation .nav-link:hover,
+    .popover-region-toggle:hover,
+    .usermenu .dropdown-toggle:hover,
+    .editmode-switch-form:hover {
+        background-color: var(--iiitdwd-overlay-2);
+        border-color: transparent;
+    }
+
+    // Active primary nav item underline.
+    .primary-navigation .navigation .nav-link.active {
+        border-bottom-color: var(--iiitdwd-blue);
+    }
+}
+
+//
+// Sidebar (course index drawer, block drawer, mobile primary drawer)
+//
+
+.drawer,
+.drawer .drawerheader,
+.drawer.drawer-left,
+.drawer.drawer-right,
+#theme_boost-drawers-primary {
+    background-color: var(--iiitdwd-sidebar);
+    color: var(--iiitdwd-text-secondary);
+}
+
+.drawer {
+    border-color: var(--iiitdwd-border);
+}
+
+.drawer.drawer-left {
+    border-right: 1px solid var(--iiitdwd-border);
+}
+
+.drawer.drawer-right {
+    border-left: 1px solid var(--iiitdwd-border);
+}
+
+.drawer .drawerheader {
+    border-bottom: 1px solid var(--iiitdwd-border);
+}
+
+// Floating open buttons (Boost uses $gray-300).
+.drawer-toggles .drawer-toggler .btn {
+    background-color: var(--iiitdwd-surface);
+    border: 1px solid var(--iiitdwd-border);
+    color: var(--iiitdwd-text);
+
+    &:hover,
+    &:focus {
+        background-color: var(--iiitdwd-border);
+    }
+}
+
+.courseindex {
+    .courseindex-item {
+        border-radius: var(--iiitdwd-radius);
+
+        &.pageitem {
+            background-color: var(--iiitdwd-blue);
+        }
+    }
+
+    .courseindex-section-title .courseindex-link {
+        color: var(--iiitdwd-text);
+        font-weight: 600;
+    }
+}
+
+#theme_boost-drawers-primary .list-group-item {
+    background-color: transparent;
+    color: var(--iiitdwd-text-secondary);
+    border-color: var(--iiitdwd-border);
+
+    &.active {
+        background-color: var(--iiitdwd-blue);
+        color: var(--iiitdwd-text);
+    }
+}
+
+//
+// Cards and blocks
+//
+
+.card,
+.block.card,
+.dashboard-card,
+.course-card {
+    background-color: var(--iiitdwd-surface);
+    border: 1px solid var(--iiitdwd-border);
+    border-radius: var(--iiitdwd-radius-card);
+    color: var(--iiitdwd-text);
+}
+
+.card-header,
+.card-footer {
+    background-color: var(--iiitdwd-overlay-1);
+    border-color: var(--iiitdwd-border);
+}
+
+.card-title,
+.block .card-title {
+    color: var(--iiitdwd-text);
+    font-weight: 600;
+}
+
+.card-text,
+.card-body .text-muted {
+    color: var(--iiitdwd-text-secondary);
+}
+
+// Course card images take the card's top corners.
+.dashboard-card .card-img-top,
+.course-card .card-img-top,
+.dashboard-card .card-img,
+.course-card .card-img {
+    border-top-left-radius: calc(var(--iiitdwd-radius-card) - 1px);
+    border-top-right-radius: calc(var(--iiitdwd-radius-card) - 1px);
+}
+
+// Course card category, menu and progress text (Boost uses $gray-900 / $gray-600).
+.categoryname,
+.block .block-cards span.categoryname,
+.block .block-cards .progress-text {
+    color: var(--iiitdwd-text-secondary);
+}
+
+.block .block-cards .btn-link {
+    color: var(--iiitdwd-text);
+}
+
+// Boost renders the My courses overview block without a frame or padding.
+.pagelayout-mycourses .block_myoverview.card {
+    background-color: transparent;
+    border: 0;
+}
+
+.card.dashboard-card:hover,
+.card.course-card:hover {
+    border-color: rgba($iiitdwd-blue, .6);
+}
+
+// Course content sections.
+.course-content .section,
+.course-section {
+    border-color: var(--iiitdwd-border);
+}
+
+.activity-item {
+    background-color: var(--iiitdwd-surface);
+    border: 1px solid var(--iiitdwd-border);
+    border-radius: var(--iiitdwd-radius-card);
+}
+
+//
+// Buttons, inputs, badges
+//
+
+.btn {
+    border-radius: var(--iiitdwd-radius);
+}
+
+.form-control,
+.form-select,
+.custom-select {
+    background-color: var(--iiitdwd-bg);
+    border-color: var(--iiitdwd-border);
+    color: var(--iiitdwd-text);
+    border-radius: var(--iiitdwd-radius);
+
+    &:focus {
+        border-color: var(--iiitdwd-blue);
+        box-shadow: 0 0 0 .2rem rgba($iiitdwd-blue, .35);
+    }
+}
+
+.badge.bg-success,
+.badge.text-bg-success {
+    background-color: rgba($iiitdwd-green-alt, .15) !important;
+    color: var(--iiitdwd-green-alt) !important;
+    border: 1px solid rgba($iiitdwd-green-alt, .35);
+}
+
+.badge.bg-primary,
+.badge.text-bg-primary {
+    background-color: rgba($iiitdwd-blue, .18) !important;
+    color: color-mix(in srgb, #{$iiitdwd-blue} 55%, var(--iiitdwd-text)) !important;
+    border: 1px solid rgba($iiitdwd-blue, .4);
+}
+
+//
+// Fixed light surfaces in Boost core
+//
+
+.modchooser .modal-body .optionsummary,
+.modchooser .modal-body .optionsummary .actions {
+    background-color: var(--iiitdwd-surface);
+    border-color: var(--iiitdwd-border);
+}
+
+.bg-light,
+.bg-gray {
+    background-color: var(--iiitdwd-surface) !important;
+}
+
+.border,
+.border-top,
+.border-bottom,
+.border-start,
+.border-end {
+    border-color: var(--iiitdwd-border) !important;
+}
+
+//
+// Teacher dashboard
+//
+
+@import "teacher_dashboard";
+@import "course";
+@import "calendar";
+@import "elements";
+@import "pages";
+@import "messaging";
+@import "ipynb";
+@import "shell";

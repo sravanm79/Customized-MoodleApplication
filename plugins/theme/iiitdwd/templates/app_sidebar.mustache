@@ -1,0 +1,99 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_iiitdwd/app_sidebar
+
+    App shell sidebar: institution branding, the user's role badge and the theme's sections (Dashboard,
+    My courses, Calendar). Fixed on the left on large screens; an off-canvas menu opened by the navbar button
+    on small screens. Rendered by theme_iiitdwd\output\core_renderer::app_sidebar() from the navbar template.
+
+    Context variables required for this template:
+    * homeurl
+    * institutionname - fallback text, and the logo's alt text
+    * institutionlogourl - optional: the Institution logo theme setting
+    * rolebadge - optional: theme_iiitdwd/role_badge context
+    * items - text, url, icon (HTML), isactive
+
+    Example context (json):
+    {
+        "homeurl": "#",
+        "institutionname": "INDIAN INSTITUTE OF INFORMATION TECHNOLOGY",
+        "institutionlogourl": "",
+        "rolebadge": {"key": "teacher", "label": "Teacher", "arialabel": "Your role: Teacher", "variant": "sidebar"},
+        "items": [
+            {"text": "Dashboard", "url": "#", "icon": "", "isactive": true},
+            {"text": "My courses", "url": "#", "icon": "", "isactive": false},
+            {"text": "Calendar", "url": "#", "icon": "", "isactive": false}
+        ]
+    }
+}}
+<aside id="iiitdwd-app-sidebar" class="iiitdwd-app-sidebar d-print-none" aria-label="{{#str}}appnavigation, theme_iiitdwd{{/str}}">
+    <a class="iiitdwd-app-brand" href="{{homeurl}}">
+        {{#institutionlogourl}}
+        <img src="{{institutionlogourl}}" class="iiitdwd-app-logo" alt="{{institutionname}}">
+        {{/institutionlogourl}}
+        {{^institutionlogourl}}
+        <span class="iiitdwd-app-institution">{{institutionname}}</span>
+        {{/institutionlogourl}}
+    </a>
+    {{#rolebadge}}
+    <div class="iiitdwd-app-role">
+        {{> theme_iiitdwd/role_badge }}
+    </div>
+    {{/rolebadge}}
+    <nav class="iiitdwd-app-nav">
+        <ul>
+            {{#items}}
+            <li>
+                <a href="{{url}}" class="iiitdwd-app-link{{#isactive}} active{{/isactive}}" {{#isactive}}aria-current="page"{{/isactive}}>
+                    <span class="iiitdwd-app-icon">{{{icon}}}</span>
+                    <span>{{text}}</span>
+                </a>
+            </li>
+            {{/items}}
+        </ul>
+    </nav>
+</aside>
+<div class="iiitdwd-app-backdrop" data-region="iiitdwd-sidebar-backdrop" hidden></div>
+{{#js}}
+(function() {
+    // Small screens: the navbar button opens the sidebar as an off-canvas menu.
+    var body = document.body;
+    var toggles = document.querySelectorAll('.iiitdwd-sidebar-toggle');
+    var backdrop = document.querySelector('[data-region="iiitdwd-sidebar-backdrop"]');
+    var setOpen = function(open) {
+        body.classList.toggle('iiitdwd-sidebar-open', open);
+        backdrop.hidden = !open;
+        toggles.forEach(function(t) {
+            t.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+    };
+    toggles.forEach(function(t) {
+        t.addEventListener('click', function() {
+            setOpen(!body.classList.contains('iiitdwd-sidebar-open'));
+        });
+    });
+    backdrop.addEventListener('click', function() {
+        setOpen(false);
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && body.classList.contains('iiitdwd-sidebar-open')) {
+            setOpen(false);
+        }
+    });
+})();
+{{/js}}

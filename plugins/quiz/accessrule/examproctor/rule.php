@@ -43,6 +43,11 @@ class quizaccess_examproctor extends access_rule_base {
     public function description() {
         $messages = [get_string('studentdescription', 'quizaccess_examproctor', $this->rules_summary())];
 
+        // Device check (camera, Safe Exam Browser keys) before the attempt locks the screen.
+        $checkurl = new moodle_url('/mod/quiz/accessrule/examproctor/check.php', ['cmid' => $this->quizobj->get_cmid()]);
+        $messages[] = html_writer::link($checkurl, get_string('precheck_link', 'quizaccess_examproctor'),
+                ['class' => 'btn btn-outline-secondary btn-sm examproctor-precheck-link']);
+
         $context = $this->quizobj->get_context();
         if (has_capability('mod/quiz:viewreports', $context)) {
             $url = new moodle_url('/mod/quiz/accessrule/examproctor/report.php', ['cmid' => $this->quizobj->get_cmid()]);
@@ -58,11 +63,16 @@ class quizaccess_examproctor extends access_rule_base {
      */
     protected function rules_summary(): string {
         $items = [get_string('ruletabswitch', 'quizaccess_examproctor')];
-        if (!empty($this->quiz->examproctor_detectblur)) {
-            $items[] = get_string('rulewindowblur', 'quizaccess_examproctor');
-        }
-        if (!empty($this->quiz->examproctor_requirefullscreen)) {
-            $items[] = get_string('rulefullscreen', 'quizaccess_examproctor');
+        if ($this->requires_seb()) {
+            // SEB's kiosk mode replaces the fullscreen and focus rules (see setup_attempt_page()).
+            $items[] = get_string('rulesebkiosk', 'quizaccess_examproctor');
+        } else {
+            if (!empty($this->quiz->examproctor_detectblur)) {
+                $items[] = get_string('rulewindowblur', 'quizaccess_examproctor');
+            }
+            if (!empty($this->quiz->examproctor_requirefullscreen)) {
+                $items[] = get_string('rulefullscreen', 'quizaccess_examproctor');
+            }
         }
         if (!empty($this->quiz->examproctor_blockcopypaste)) {
             $items[] = get_string('rulecopypaste', 'quizaccess_examproctor');
@@ -72,6 +82,27 @@ class quizaccess_examproctor extends access_rule_base {
             ? get_string('rulemaxviolations', 'quizaccess_examproctor', $max)
             : get_string('rulenolimit', 'quizaccess_examproctor');
         return html_writer::alist($items);
+    }
+
+    /**
+     * Does quizaccess_seb require Safe Exam Browser for this quiz?
+     *
+     * @return bool
+     */
+    protected function requires_seb(): bool {
+        return !empty($this->quiz->seb_requiresafeexambrowser);
+    }
+
+    /**
+     * Is this attempt page running inside Safe Exam Browser's kiosk?
+     *
+     * Only trusted when the quiz requires SEB: quizaccess_seb then refuses the page unless the SEB config or
+     * browser exam key is valid, so a normal browser cannot fake the "SEB" user agent to skip fullscreen.
+     *
+     * @return bool
+     */
+    protected function in_seb_kiosk(): bool {
+        return $this->requires_seb() && strpos($_SERVER['HTTP_USER_AGENT'] ?? '', 'SEB') !== false;
     }
 
     public function is_preflight_check_required($attemptid) {
@@ -133,17 +164,22 @@ class quizaccess_examproctor extends access_rule_base {
         $strings = [];
         foreach (['bartitle', 'barviolations', 'barnolimit', 'warningtitle', 'warningbody', 'warninglimit',
                   'warningok', 'fullscreentitle', 'fullscreenbody', 'fullscreenbutton', 'submittingtitle',
-                  'submittingbody', 'blocked', 'ispreview'] as $key) {
+                  'submittingbody', 'blocked', 'ispreview', 'seb'] as $key) {
             $strings[$key] = get_string('js_' . $key, 'quizaccess_examproctor');
         }
 
+        // Inside SEB the window is already a locked kiosk. The Fullscreen API is unreliable in its web view (the
+        // gate could never be dismissed) and focus moves to SEB's own toolbar, camera prompt and quit dialogue,
+        // which would be counted as violations. SEB enforces both, so those two checks are switched off.
+        $inseb = $this->in_seb_kiosk();
         $page->requires->js_call_amd('quizaccess_examproctor/proctor', 'init', [[
             'attemptid' => $attemptid,
             'violations' => $violations,
             'maxviolations' => $max,
-            'requirefullscreen' => !empty($this->quiz->examproctor_requirefullscreen),
+            'requirefullscreen' => !$inseb && !empty($this->quiz->examproctor_requirefullscreen),
             'blockcopypaste' => !empty($this->quiz->examproctor_blockcopypaste),
-            'detectblur' => !empty($this->quiz->examproctor_detectblur),
+            'detectblur' => !$inseb && !empty($this->quiz->examproctor_detectblur),
+            'seb' => $inseb,
             'ispreview' => $this->quizobj->is_preview_user(),
             'strings' => $strings,
         ]]);

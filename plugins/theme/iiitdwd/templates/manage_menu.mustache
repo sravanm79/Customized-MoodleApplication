@@ -1,0 +1,55 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_iiitdwd/manage_menu
+
+    "Manage" gear menu in the navbar for site admins: Site administration and admin shortcuts.
+    Rendered by theme_iiitdwd\output\core_renderer::manage_menu().
+
+    Context variables required for this template:
+    * icon - Gear icon HTML
+    * siteadmin - text, url, icon, isactive
+    * shortcuts - text, url, icon
+
+    Example context (json):
+    {
+        "icon": "",
+        "siteadmin": {"text": "Site administration", "url": "#", "icon": "", "isactive": false},
+        "shortcuts": [
+            {"text": "Users", "url": "#", "icon": ""},
+            {"text": "Purge caches", "url": "#", "icon": ""}
+        ]
+    }
+}}
+<div class="dropdown iiitdwd-manage d-flex align-items-stretch">
+    <button type="button" class="btn nav-link iiitdwd-manage-toggle{{#siteadmin.isactive}} active{{/siteadmin.isactive}}"
+            id="iiitdwd-manage-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+            title="{{#str}}manage, theme_iiitdwd{{/str}}">
+        {{{icon}}}
+        <span class="iiitdwd-manage-label">{{#str}}manage, theme_iiitdwd{{/str}}</span>
+    </button>
+    <div class="dropdown-menu dropdown-menu-end iiitdwd-manage-menu" aria-labelledby="iiitdwd-manage-toggle">
+        {{#siteadmin}}
+        <a class="dropdown-item iiitdwd-manage-primary" href="{{url}}">{{{icon}}}<span>{{text}}</span></a>
+        {{/siteadmin}}
+        <div class="dropdown-divider"></div>
+        <h6 class="dropdown-header">{{#str}}manageshortcuts, theme_iiitdwd{{/str}}</h6>
+        {{#shortcuts}}
+        <a class="dropdown-item" href="{{url}}">{{{icon}}}<span>{{text}}</span></a>
+        {{/shortcuts}}
+    </div>
+</div>

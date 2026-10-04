@@ -1,0 +1,35 @@
+// IIIT Dharwad design tokens. Imported by preset/default.scss (site CSS) and editor.scss (TinyMCE content).
+// Plain variables only: no output, no Bootstrap functions.
+
+// Surfaces
+$iiitdwd-bg:            #050c18;  // Page background (deep dark navy)
+$iiitdwd-surface:       #0c182b;  // Cards, containers, dropdowns, modals
+$iiitdwd-sidebar:       #031633;  // Drawers, navbar
+$iiitdwd-border:        #132742;  // Card borders, subtle strokes, hover fills
+
+// Accents
+$iiitdwd-blue:          #1976d2;
+$iiitdwd-blue-alt:      #0d6efd;
+$iiitdwd-green:         #198754;
+$iiitdwd-green-alt:     #20c997;
+
+// Text
+$iiitdwd-text:          #fff;
+$iiitdwd-text-secondary: #8fa0b5;
+$iiitdwd-text-muted:    #5d718a;
+
+// Radii
+$iiitdwd-radius:        8px;      // Buttons, inputs
+$iiitdwd-radius-card:   14px;     // Cards (12px–16px range)
+$iiitdwd-radius-lg:     16px;     // Large containers, modals
+
+// Light mode (Day). The dark values above are the defaults compiled into Bootstrap; color_modes.scss switches
+// the CSS custom properties between the two sets with <html data-theme>.
+$iiitdwd-light-bg:             #f3f6fb;  // Page background
+$iiitdwd-light-surface:        #fff;     // Cards, containers, dropdowns, modals
+$iiitdwd-light-sidebar:        #fff;     // Sidebar, navbar
+$iiitdwd-light-border:         #dde4ee;  // Card borders, subtle strokes
+$iiitdwd-light-text:           #0f1b2d;
+$iiitdwd-light-text-secondary: #4f6079;
+$iiitdwd-light-text-muted:     #7a8aa1;
+$iiitdwd-light-link:           #1565c0;

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>startURL</key>
+    <string>https://EXAM_HOST/</string>
+    <key>sendBrowserExamKey</key>
+    <true/>
+    <key>browserWindowWebView</key>
+    <integer>3</integer>
+
+    <key>browserMediaCaptureCamera</key>
+    <true/>
+    <key>browserMediaCaptureMicrophone</key>
+    <true/>
+    <key>audioControlEnabled</key>
+    <false/>
+    <key>audioMute</key>
+    <false/>
+
+    <key>URLFilterEnable</key>
+    <true/>
+    <key>URLFilterEnableContentFilter</key>
+    <false/>
+    <key>URLFilterRules</key>
+    <array>
+        <dict>
+            <key>active</key>
+            <true/>
+            <key>action</key>
+            <integer>1</integer>
+            <key>regex</key>
+            <false/>
+            <key>expression</key>
+            <string>EXAM_HOST/*</string>
+        </dict>
+    </array>
+
+    <key>allowQuit</key>
+    <true/>
+    <key>quitURLConfirm</key>
+    <true/>
+    <key>browserWindowAllowReload</key>
+    <true/>
+    <key>showReloadButton</key>
+    <true/>
+    <key>showTaskBar</key>
+    <true/>
+    <key>showTime</key>
+    <true/>
+    <key>showInputLanguage</key>
+    <true/>
+    <key>allowWlan</key>
+    <false/>
+    <key>allowSpellCheck</key>
+    <false/>
+    <key>allowPreferencesWindow</key>
+    <false/>
+    <key>examSessionClearCookiesOnStart</key>
+    <false/>
+</dict>
+</plist>

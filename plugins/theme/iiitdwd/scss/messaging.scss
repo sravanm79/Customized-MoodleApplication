@@ -1,0 +1,262 @@
+// Messaging: the navbar chat icon and the messaging drawer (core_message/message_drawer) it opens from the right.
+// Boost paints the drawer with fixed greys (#72777f app background, light-grey "sent" bubbles with black text,
+// white-on-blue hover); everything here uses the runtime tokens, so it follows the Day/Night mode.
+
+//
+// Navbar: chat and notification icons, and their unread counters
+//
+
+.navbar .popover-region-toggle {
+    border-radius: var(--iiitdwd-radius);
+
+    // Keyboard focus keeps the ring; a mouse click does not leave a box around the icon.
+    &:focus:not(:focus-visible) {
+        box-shadow: none;
+        outline: 0;
+    }
+
+    // The drawer or popover it controls is open.
+    &[aria-expanded="true"] {
+        background-color: var(--iiitdwd-overlay-2);
+        color: var(--iiitdwd-text);
+    }
+}
+
+// Unread counters ("2" on the bell, unread conversations on the chat icon): a small red pill ringed with the
+// navbar colour, so it reads as a badge on the icon rather than a box beside it.
+.navbar .popover-region .count-container {
+    top: 10px;
+    right: 2px;
+    min-width: 1.05rem;
+    height: 1.05rem;
+    padding: 0 .3rem;
+    border-radius: 999px;
+    box-shadow: 0 0 0 2px var(--iiitdwd-sidebar);
+    background-color: $red;
+    color: $white;
+    font-size: .6875rem;
+    font-weight: 700;
+    line-height: 1.05rem;
+    text-align: center;
+}
+
+//
+// Drawer
+//
+
+[data-region="right-hand-drawer"] {
+    // Slide in with an ease-out curve; slide out a little faster.
+    transition: right .3s cubic-bezier(.22, 1, .36, 1);
+
+    &.drawer {
+        border-left: 1px solid var(--iiitdwd-border);
+        box-shadow: -16px 0 40px rgba($black, .3);
+    }
+
+    &.hidden {
+        transition: right .25s ease-in, visibility 0s linear .25s, opacity 0s linear .25s;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &,
+        &.hidden {
+            transition: none;
+        }
+    }
+}
+
+.message-app {
+    background-color: var(--iiitdwd-surface);
+    color: var(--iiitdwd-text);
+
+    // Header (search, conversation title) and footer (message box, "See all").
+    .header-container,
+    .footer-container {
+        background-color: var(--iiitdwd-sidebar);
+        border-color: var(--iiitdwd-border) !important;
+    }
+
+    .header-container {
+        border-bottom: 1px solid var(--iiitdwd-border);
+    }
+
+    .footer-container {
+        border-top: 1px solid var(--iiitdwd-border);
+    }
+
+    .body-container {
+        background-color: var(--iiitdwd-surface);
+    }
+
+    // Search.
+    [data-region="view-overview-search-input"],
+    [data-region="search-input"] {
+        background-color: var(--iiitdwd-bg);
+        border-color: var(--iiitdwd-border);
+        border-radius: 999px 0 0 999px;
+        padding-left: 1rem;
+    }
+
+    [data-region="view-overview-search-input"] + .input-group-append .btn,
+    [data-region="search-input"] + .input-group-append .btn,
+    .input-group > .btn {
+        border-color: var(--iiitdwd-border);
+        border-radius: 0 999px 999px 0;
+    }
+
+    // Overview sections (Starred, Group, Private): flat headings instead of white cards.
+    .section.card {
+        background-color: transparent;
+        border-bottom: 1px solid var(--iiitdwd-border) !important;
+    }
+
+    .section .card-header {
+        background-color: transparent;
+        border: 0;
+
+        .btn-link {
+            color: var(--iiitdwd-text);
+            font-size: .875rem;
+            font-weight: 600;
+        }
+
+        .text-muted,
+        small {
+            color: var(--iiitdwd-text-muted) !important;
+        }
+    }
+
+    a,
+    .btn-link {
+        color: inherit;
+    }
+
+    .btn-link:hover,
+    .btn-link:focus {
+        background-color: var(--iiitdwd-overlay-2);
+    }
+
+    // Conversation and contact rows: Boost turns them white-on-blue on hover.
+    .list-group .list-group-item {
+        background-color: transparent;
+        border-color: var(--iiitdwd-border);
+        color: var(--iiitdwd-text);
+        transition: background-color .12s ease;
+
+        &:hover,
+        &:focus {
+            background-color: var(--iiitdwd-overlay-2);
+            color: var(--iiitdwd-text);
+        }
+
+        &.active {
+            background-color: var(--iiitdwd-primary-light-bg);
+            border-color: var(--iiitdwd-border);
+            color: var(--iiitdwd-text);
+        }
+
+        // Last message preview and its time.
+        .text-muted,
+        .small,
+        p {
+            color: var(--iiitdwd-text-secondary) !important;
+        }
+
+        // Unread conversation counter.
+        .badge {
+            border-radius: 999px;
+        }
+    }
+
+    // Selected messages, confirmation dialogues and contact request panels use .bg-white / .bg-light.
+    .bg-white,
+    .bg-light {
+        background-color: var(--iiitdwd-surface) !important;
+    }
+
+    // Date separator between days of messages.
+    .day {
+        color: var(--iiitdwd-text-muted);
+        font-size: .75rem;
+        font-weight: 600;
+        letter-spacing: .04em;
+    }
+
+    //
+    // Chat bubbles
+    //
+
+    .message {
+        max-width: 85%;
+        border-radius: 14px !important;
+        box-shadow: 0 1px 2px rgba($black, .12);
+
+        .tail {
+            display: none;
+        }
+
+        .time {
+            font-size: .6875rem;
+        }
+
+        // Selected for deleting / forwarding.
+        &[aria-checked="true"] {
+            box-shadow: 0 0 0 2px var(--iiitdwd-blue);
+        }
+    }
+
+    // Received: a neutral bubble on the left, with the sender's name and contrasting muted time.
+    .message.received {
+        align-self: flex-start;
+        border-bottom-left-radius: 4px !important;
+        background-color: var(--iiitdwd-border);
+        color: var(--iiitdwd-text);
+
+        h6 {
+            color: var(--iiitdwd-text);
+        }
+
+        .time {
+            color: var(--iiitdwd-text-secondary);
+        }
+    }
+
+    // Sent: the accent blue on the right, white text and a translucent white time.
+    .message.send {
+        align-self: flex-end;
+        border-bottom-right-radius: 4px !important;
+        background-color: var(--iiitdwd-blue);
+        color: $white;
+
+        a {
+            color: $white;
+            text-decoration: underline;
+        }
+
+        .time {
+            color: rgba($white, .75);
+        }
+    }
+
+    // Message box.
+    [data-region="send-message-txt"] {
+        background-color: var(--iiitdwd-bg) !important;
+        border: 1px solid var(--iiitdwd-border);
+        border-radius: 18px;
+        color: var(--iiitdwd-text);
+
+        &:focus {
+            border-color: var(--iiitdwd-blue);
+            box-shadow: 0 0 0 3px rgba($iiitdwd-blue, .25);
+        }
+    }
+
+    [data-action="send-message"] {
+        color: var(--iiitdwd-blue);
+    }
+
+    // Online dot on contacts.
+    .contact-status.online .icon {
+        color: var(--iiitdwd-green-alt);
+    }
+}

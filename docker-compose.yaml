@@ -18,8 +18,10 @@ services:
     container_name: moodle_app
     restart: unless-stopped
     ports:
+      # https://192.168.30.239 is the one address of the site ($CFG->wwwroot); plain http on 9999 only serves the
+      # CA certificate download and otherwise redirects to https.
+      - "443:8443"
       - "9999:8080"
-      - "8443:8443"
     environment:
       - MARIADB_HOST=mariadb
       - MARIADB_PORT_NUMBER=3306
@@ -29,13 +31,17 @@ services:
       - MOODLE_USERNAME=admin
       - MOODLE_PASSWORD=${MOODLE_ADMIN_PASSWORD}
       - MOODLE_EMAIL=admin@example.com
-      - MOODLE_SITE_URL=http://localhost:9999
+      - MOODLE_SITE_URL=https://192.168.30.239
     volumes:
       - moodle_data:/bitnami/moodle
       - moodledata_data:/bitnami/moodledata
       # Apache event MPM + PHP-FPM tuning (see moodle-tuning/start.sh)
       - ./moodle-tuning:/opt/moodle-tuning:ro
       - ./moodle-tuning/start.sh:/opt/bitnami/scripts/moodle/run.sh:ro
+      # Certificate from tls/make-certs.sh (private IIIT Dharwad LMS CA) instead of Bitnami's self-signed one.
+      - ./tls/server/fullchain.crt:/opt/bitnami/apache/conf/bitnami/certs/server.crt:ro
+      - ./tls/server/server.key:/opt/bitnami/apache/conf/bitnami/certs/server.key:ro
+      - ./tls/public:/opt/lms-ca:ro
     depends_on:
       - mariadb
 
@@ -48,18 +54,58 @@ services:
     build: ./jupyterhub
     container_name: moodle_jupyterhub
     restart: unless-stopped
-    ports:
-      - "8000:8000"
+    # No published port: browsers reach the hub through Moodle's Apache at https://192.168.30.239/jupyter/.
     environment:
       - MOODLE_SERVICE_TOKEN=${MOODLE_SERVICE_TOKEN}
-      - MOODLE_ORIGIN=http://localhost:9999
+      - MOODLE_ORIGIN=https://192.168.30.239
+      - SINGLEUSER_IMAGE=moodle-jupyter-singleuser:latest
+      - DOCKER_NETWORK_NAME=moodle_jupyter
     volumes:
       - jupyterhub_data:/srv/jupyterhub/data
-      - jupyterhub_home:/srv/jupyterhub/home
+      # DockerSpawner starts one container per student through the Docker API.
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - default
+      - jupyter
+
+  # Outgoing mail. Moodle sends to mailpit:1025; the web inbox is https://192.168.30.239/mail/ (user admin, password
+  # MAILPIT_UI_PASSWORD in .env). Real delivery through an SMTP account: SMTP_RELAY_* in .env + mailpit/configure.sh.
+  mailpit:
+    image: axllent/mailpit:v1.31.4
+    container_name: moodle_mailpit
+    restart: unless-stopped
+    entrypoint: ["/bin/sh", "/start.sh"]
+    # Settings as environment (not flags) so the image's health check (mailpit readyz) sees the /mail/ webroot too.
+    environment:
+      - MP_WEBROOT=/mail/
+      - MP_UI_AUTH_FILE=/secrets/ui-auth
+      - MP_DATABASE=/data/mailpit.db
+      - MP_MAX_MESSAGES=5000
+      - MP_MAX_AGE=30d
+      - MP_DISABLE_VERSION_CHECK=true
+    volumes:
+      - ./mailpit/start.sh:/start.sh:ro
+      - ./mailpit/secrets:/secrets:ro
+      - mailpit_data:/data
+
+  # Image of each student's Jupyter server. Build only (never started by compose):
+  #   docker compose --profile build-only build jupyter-singleuser
+  jupyter-singleuser:
+    build: ./jupyterhub/singleuser
+    image: moodle-jupyter-singleuser:latest
+    profiles: ["build-only"]
+
+networks:
+  # Students' containers live only on this network: they reach the hub, not the database or Moodle's container.
+  jupyter:
+    name: moodle_jupyter
 
 volumes:
   mariadb_data:
   moodle_data:
   moodledata_data:
   jupyterhub_data:
+  mailpit_data:
+  # Home folders of the old shared-process hub (before DockerSpawner); kept so nothing is lost. Migrated into the
+  # per-student volumes jupyter-moodle<id> on 2026-10-04.
   jupyterhub_home:

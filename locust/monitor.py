@@ -4,6 +4,7 @@ Columns: host CPU %, MemAvailable, swap used, swap-in/out pages/s, load, per-con
 Apache busy workers (of 256), MariaDB connections, number of Jupyter single-user servers.
 """
 import csv
+import shlex
 import json
 import os
 import subprocess
@@ -30,8 +31,17 @@ def apache_busy():
     return (int(out[0]), int(out[1])) if len(out) == 2 else (-1, -1)
 
 
+def db_password():
+    """The DB password from the repository's .env (never written into the repository)."""
+    env = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".env")
+    for line in open(env):
+        if line.startswith("MOODLE_DB_PASSWORD="):
+            return line.split("=", 1)[1].strip()
+    return ""
+
+
 def db_conns():
-    out = sh("docker exec moodle_db mariadb -ubn_moodle -p"$MOODLE_DB_PASSWORD" -N -e "
+    out = sh(f"docker exec -e MYSQL_PWD={shlex.quote(db_password())} moodle_db mariadb -ubn_moodle -N -e "
              "\"SHOW GLOBAL STATUS WHERE Variable_name IN ('Threads_connected','Threads_running')\" 2>/dev/null").split()
     d = dict(zip(out[0::2], out[1::2]))
     return int(d.get("Threads_connected", -1)), int(d.get("Threads_running", -1))

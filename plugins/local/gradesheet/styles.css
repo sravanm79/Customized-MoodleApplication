@@ -1,0 +1,262 @@
+/* Grade sheets: uses the IIIT Dharwad theme tokens when present, else Bootstrap's. */
+.local-gradesheet-head,
+.local-gradesheet-sheet-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: .75rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.local-gradesheet-head h2 {
+    margin: 0 0 .25rem;
+}
+
+.local-gradesheet-sheet {
+    margin-bottom: 1rem;
+}
+
+.local-gradesheet-sheet h3 {
+    margin: 0 0 .15rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.local-gradesheet-actions {
+    display: flex;
+    gap: .5rem;
+}
+
+.local-gradesheet-empty {
+    padding: 2rem 1rem;
+    color: var(--iiitdwd-text-secondary, var(--bs-secondary-color));
+    text-align: center;
+}
+
+.local-gradesheet-empty p {
+    margin: 0;
+}
+
+/* Summary figures. */
+.local-gradesheet-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+    gap: .5rem;
+    margin: 0 0 1rem;
+}
+
+.local-gradesheet-stats > div {
+    padding: .6rem .75rem;
+    border: 1px solid var(--iiitdwd-border, var(--bs-border-color));
+    border-radius: .5rem;
+}
+
+.local-gradesheet-stats dt {
+    color: var(--iiitdwd-text-secondary, var(--bs-secondary-color));
+    font-size: .75rem;
+    font-weight: 500;
+}
+
+.local-gradesheet-stats dd {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Box plot on a 0-100 axis. */
+.local-gradesheet-box {
+    position: relative;
+    height: 1.5rem;
+    margin: .5rem 0 .15rem;
+}
+
+.local-gradesheet-box span {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.local-gradesheet-box-whisker {
+    height: 2px;
+    background-color: var(--iiitdwd-text-muted, var(--bs-secondary-color));
+}
+
+.local-gradesheet-box-iqr {
+    height: 1rem;
+    border-radius: 4px;
+    background-color: rgba(25, 118, 210, .35);
+    border: 1px solid #1976d2;
+}
+
+.local-gradesheet-box-median {
+    width: 3px;
+    height: 1.4rem;
+    margin-left: -1px;
+    background-color: var(--iiitdwd-text, var(--bs-body-color));
+}
+
+.local-gradesheet-axis {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    color: var(--iiitdwd-text-muted, var(--bs-secondary-color));
+    font-size: .6875rem;
+}
+
+/* Histogram. */
+.local-gradesheet-histogram {
+    margin: 0 0 1rem;
+}
+
+.local-gradesheet-bars {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    align-items: end;
+    gap: .35rem;
+    height: 9rem;
+    padding-top: 1.25rem;
+}
+
+.local-gradesheet-bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: stretch;
+    height: 100%;
+    text-align: center;
+}
+
+.local-gradesheet-bar-fill {
+    display: block;
+    min-height: 2px;
+    border-radius: 4px 4px 0 0;
+    background-color: rgba(25, 118, 210, .45);
+}
+
+.local-gradesheet-bar.is-own .local-gradesheet-bar-fill {
+    background-color: #20c997;
+    box-shadow: 0 0 0 2px rgba(32, 201, 151, .35);
+}
+
+.local-gradesheet-bar-count {
+    color: var(--iiitdwd-text-secondary, var(--bs-secondary-color));
+    font-size: .6875rem;
+    font-weight: 600;
+}
+
+.local-gradesheet-bar-label {
+    margin-top: .3rem;
+    color: var(--iiitdwd-text-muted, var(--bs-secondary-color));
+    font-size: .625rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.local-gradesheet-bar.is-own .local-gradesheet-bar-label {
+    color: var(--iiitdwd-text, var(--bs-body-color));
+    font-weight: 700;
+}
+
+/* A student's own result. */
+.local-gradesheet-own {
+    margin-bottom: 1.25rem;
+}
+
+.local-gradesheet-own-score {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .25rem .75rem;
+}
+
+.local-gradesheet-own-percent {
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.local-gradesheet-meter {
+    height: .5rem;
+    margin: .6rem 0;
+    overflow: hidden;
+    border-radius: 999px;
+    background-color: var(--iiitdwd-border, var(--bs-secondary-bg));
+}
+
+.local-gradesheet-meter span {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background-color: #20c997;
+}
+
+.local-gradesheet-percentile {
+    margin: 0;
+    font-weight: 600;
+}
+
+.local-gradesheet-subhead {
+    margin: 0 0 .75rem;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.local-gradesheet-students summary,
+.local-gradesheet-preview summary {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.local-gradesheet-students table,
+.local-gradesheet-preview table {
+    margin-top: .75rem;
+}
+
+/* Upload preview. */
+.local-gradesheet-preview {
+    margin-bottom: 1.5rem;
+}
+
+.local-gradesheet-preview h3 {
+    font-size: 1.125rem;
+}
+
+.local-gradesheet-preview h4 {
+    margin-top: 1rem;
+    font-size: 1rem;
+}
+
+.local-gradesheet-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin: .5rem 0 1rem;
+    padding: 0;
+    list-style: none;
+}
+
+.local-gradesheet-chips li {
+    padding: .2rem .7rem;
+    border: 1px solid var(--iiitdwd-border, var(--bs-border-color));
+    border-radius: 999px;
+    font-size: .8125rem;
+    font-weight: 600;
+}
+
+.local-gradesheet-chips .is-ok {
+    border-color: rgba(32, 201, 151, .5);
+    color: #20c997;
+}
+
+.local-gradesheet-chips .is-error {
+    border-color: rgba(220, 53, 69, .5);
+    color: #e35d6a;
+}
+
+.local-gradesheet-chips .is-warning {
+    border-color: rgba(240, 173, 78, .5);
+    color: #f0ad4e;
+}

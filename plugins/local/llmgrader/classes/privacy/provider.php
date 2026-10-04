@@ -37,9 +37,10 @@ class provider implements \core_privacy\local\metadata\provider {
             'userid' => 'privacy:metadata:local_llmgrader_job:userid',
             'score' => 'privacy:metadata:local_llmgrader_job:score',
             'feedback' => 'privacy:metadata:local_llmgrader_job:feedback',
+            'reviewerid' => 'privacy:metadata:local_llmgrader_job:reviewerid',
         ], 'privacy:metadata:local_llmgrader_job');
         $collection->add_external_location_link('llm', [
-            'notebook' => 'privacy:metadata:llm:notebook',
+            'submission' => 'privacy:metadata:llm:submission',
         ], 'privacy:metadata:llm');
         return $collection;
     }

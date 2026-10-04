@@ -1,0 +1,78 @@
+// TinyMCE content area: compiled on its own (config.php $THEME->editor_scss) and loaded into the editor
+// iframe, so text is edited on the same dark surface it is shown on in courses.
+
+@import "tokens";
+
+html,
+body {
+    background-color: $iiitdwd-surface;
+    color: $iiitdwd-text;
+}
+
+body {
+    margin: 1rem;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: .9375rem;
+    line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: $iiitdwd-text;
+}
+
+a {
+    color: mix($iiitdwd-text, $iiitdwd-blue, 30%);
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid $iiitdwd-border;
+}
+
+blockquote {
+    margin-left: 0;
+    padding-left: 1rem;
+    border-left: 3px solid $iiitdwd-border;
+    color: $iiitdwd-text-secondary;
+}
+
+code,
+pre {
+    background-color: $iiitdwd-bg;
+    color: $iiitdwd-green-alt;
+    border-radius: 6px;
+}
+
+pre {
+    padding: .75rem 1rem;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table,
+th,
+td {
+    border-color: $iiitdwd-border;
+}
+
+// TinyMCE selection outlines and placeholders.
+.mce-content-body [data-mce-selected],
+.mce-content-body img[data-mce-selected],
+.mce-content-body table[data-mce-selected] {
+    outline: 2px solid $iiitdwd-blue !important;
+}
+
+.mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before {
+    color: $iiitdwd-text-muted !important;
+}
+
+.mce-content-body *[contentEditable="false"][data-mce-selected] {
+    outline-color: $iiitdwd-blue;
+}

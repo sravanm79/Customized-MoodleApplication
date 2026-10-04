@@ -1,0 +1,4 @@
+// Boost caps standard and limited-width pages (course, activities, dashboard, profile...) at 830px,
+// which leaves the content as a narrow column in the middle of the screen. Use the full width instead.
+// Boost's "Raw initial SCSS" setting is added after this file, so it can still set a different width.
+$course-content-maxwidth: 100%;

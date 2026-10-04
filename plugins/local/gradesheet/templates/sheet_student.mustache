@@ -1,0 +1,65 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_gradesheet/sheet_student
+
+    One sheet for a student: their score, normalised grade and percentile, and (when enough students have grades)
+    the anonymised class distribution with mean, median and quartiles. No other student's score is shown.
+
+    Example context (json):
+    {
+        "id": 1, "name": "MLP Live Session Summary - 02/10/2026", "date": "03/10/26", "max": "50", "n": 40,
+        "hasscore": true, "score": "42", "percent": "84", "percentwidth": 84, "haspercentile": true, "percentile": 78,
+        "showclass": true, "mincohort": 5,
+        "stats": [{"label": "Class average", "value": "72%"}, {"label": "Median", "value": "74%"}],
+        "histogram": [{"label": "80–90%", "count": 9, "height": 100, "isown": true, "title": "80–90%: 9 students"}]
+    }
+}}
+<section class="card local-gradesheet-sheet" aria-labelledby="local-gradesheet-sheet-{{id}}">
+    <div class="card-body">
+        <div class="local-gradesheet-sheet-head">
+            <div>
+                <h3 id="local-gradesheet-sheet-{{id}}">{{name}}</h3>
+                <p class="text-muted small">{{date}}</p>
+            </div>
+        </div>
+        {{#hasscore}}
+            <div class="local-gradesheet-own">
+                <div class="local-gradesheet-own-score">
+                    <span class="local-gradesheet-own-percent">{{percent}}%</span>
+                    <span class="text-muted">{{#str}}rawscore, local_gradesheet, { "score": {{#quote}}{{score}}{{/quote}}, "max": {{#quote}}{{max}}{{/quote}} }{{/str}}</span>
+                </div>
+                <div class="local-gradesheet-meter" role="img" aria-label="{{percent}}%"><span style="width: {{percentwidth}}%"></span></div>
+                {{#haspercentile}}
+                    <p class="local-gradesheet-percentile">{{#str}}percentile, local_gradesheet, {{percentile}}{{/str}}</p>
+                {{/haspercentile}}
+            </div>
+        {{/hasscore}}
+        {{^hasscore}}<p class="text-muted">{{#str}}noscoreyet, local_gradesheet{{/str}}</p>{{/hasscore}}
+
+        {{#showclass}}
+            <h4 class="local-gradesheet-subhead">{{#str}}classresults, local_gradesheet, {{n}}{{/str}}</h4>
+            <dl class="local-gradesheet-stats">
+                {{#stats}}<div><dt>{{label}}</dt><dd>{{value}}</dd></div>{{/stats}}
+            </dl>
+            {{> local_gradesheet/histogram }}
+        {{/showclass}}
+        {{^showclass}}
+            <p class="text-muted small mb-0">{{#str}}classhidden, local_gradesheet, {{mincohort}}{{/str}}</p>
+        {{/showclass}}
+    </div>
+</section>

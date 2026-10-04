@@ -31,6 +31,11 @@ define(['core/ajax'], function(Ajax) {
     var BLUR_CHECK_MS = 250;
     /** Fallback poll for focus loss that fires no blur event (e.g. from inside an iframe). */
     var POLL_MS = 1000;
+    /**
+     * A fullscreen exit this soon after returning belongs to the same absence. Browsers exit fullscreen when the tab is
+     * hidden but only deliver fullscreenchange once the page is visible again, i.e. after the student came back.
+     */
+    var RETURN_GRACE_MS = 3000;
 
     var cfg = null;
     var state = {
@@ -38,6 +43,7 @@ define(['core/ajax'], function(Ajax) {
         away: false,
         awayType: null,
         awaySince: 0,
+        returnedAt: 0,
         lastViolationAt: 0,
         submitting: false,
         stopped: false,
@@ -147,6 +153,7 @@ define(['core/ajax'], function(Ajax) {
             return;
         }
         state.away = false;
+        state.returnedAt = Date.now();
         var seconds = Math.round((Date.now() - state.awaySince) / 1000);
         send('returned', state.awayType + ':' + seconds + 's');
         if (!state.submitting) {
@@ -179,7 +186,11 @@ define(['core/ajax'], function(Ajax) {
         if (state.submitting || state.stopped) {
             return;
         }
-        recordViolation('fullscreenexit');
+        // Leaving the tab already counted as a violation: do not count the fullscreen exit it caused as a second one.
+        var partOfAbsence = state.away || document.hidden || Date.now() - state.returnedAt < RETURN_GRACE_MS;
+        if (!partOfAbsence) {
+            recordViolation('fullscreenexit');
+        }
         state.fullscreenPending = true;
         showFullscreenGate();
     };
@@ -256,6 +267,10 @@ define(['core/ajax'], function(Ajax) {
         bar.setAttribute('role', 'status');
         bar.appendChild(el('span', 'examproctor-bar-dot'));
         bar.appendChild(el('span', 'examproctor-bar-title', str('bartitle')));
+        if (cfg.seb) {
+            // Fullscreen and focus checks are left to Safe Exam Browser's kiosk mode.
+            bar.appendChild(el('span', 'examproctor-bar-seb', str('seb')));
+        }
         if (cfg.ispreview) {
             bar.appendChild(el('span', 'examproctor-bar-preview', str('ispreview')));
         }

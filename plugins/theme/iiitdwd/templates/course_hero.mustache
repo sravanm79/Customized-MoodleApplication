@@ -1,0 +1,93 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_iiitdwd/course_hero
+
+    Course page hero with the Live Session Stats widget, rendered above the course content by
+    theme_iiitdwd\output\core_renderer. Replaces Boost's page heading on the course page.
+
+    Context variables required for this template:
+    * fullname, shortname, category - Course details
+    * startdate, enddate, hasstarted - Formatted dates ('' when not set)
+    * haslive, live - title, hasdata, percent, degrees, attended, missed, sessions (only when mod_zoom is installed)
+    * icons.calendar - Icon HTML
+
+    Example context (json):
+    {
+        "fullname": "Machine Learning: Principles and Concepts",
+        "shortname": "MLPC04",
+        "category": "Semester 4",
+        "startdate": "29 September 2026",
+        "enddate": "15 January 2027",
+        "hasstarted": true,
+        "haslive": true,
+        "live": {"title": "Live Session Stats", "hasdata": true, "percent": 78, "degrees": 281,
+                 "attended": 156, "missed": 44, "sessions": "10 sessions"},
+        "icons": {"calendar": ""}
+    }
+}}
+<div class="iiitdwd-course-top">
+    <div class="iiitdwd-course-hero">
+        <div class="iiitdwd-course-hero-pills">
+            <span class="iiitdwd-course-card-code">{{shortname}}</span>
+            {{#category}}<span class="iiitdwd-course-hero-category">{{category}}</span>{{/category}}
+        </div>
+        <h1 class="iiitdwd-course-hero-title">{{fullname}}</h1>
+        {{#startdate}}
+        <p class="iiitdwd-course-hero-dates">
+            {{{icons.calendar}}}
+            {{#hasstarted}}{{#str}}coursestarted, theme_iiitdwd, {{startdate}}{{/str}}{{/hasstarted}}
+            {{^hasstarted}}{{#str}}coursestarts, theme_iiitdwd, {{startdate}}{{/str}}{{/hasstarted}}
+            {{#enddate}}<span class="iiitdwd-course-hero-sep" aria-hidden="true">·</span>{{#str}}courseends, theme_iiitdwd, {{enddate}}{{/str}}{{/enddate}}
+        </p>
+        {{/startdate}}
+    </div>
+
+    {{#haslive}}
+    {{#live}}
+    <div class="iiitdwd-tdash-card iiitdwd-live-stats">
+        <h2 class="iiitdwd-tdash-card-title">{{title}}</h2>
+        {{#hasdata}}
+        <div class="iiitdwd-live-stats-body">
+            <div class="iiitdwd-gauge" style="--iiitdwd-gauge: {{degrees}}deg" role="img"
+                 aria-label="{{#str}}attendancerate, theme_iiitdwd, {{percent}}{{/str}}">
+                <span class="iiitdwd-gauge-value">{{percent}}%</span>
+                <span class="iiitdwd-gauge-label">{{#str}}attendance, theme_iiitdwd{{/str}}</span>
+            </div>
+            <dl class="iiitdwd-live-stats-counts">
+                <div class="is-attended">
+                    <dt>{{#str}}attended, theme_iiitdwd{{/str}}</dt>
+                    <dd>{{attended}}</dd>
+                </div>
+                <div class="is-missed">
+                    <dt>{{#str}}missed, theme_iiitdwd{{/str}}</dt>
+                    <dd>{{missed}}</dd>
+                </div>
+            </dl>
+        </div>
+        <p class="iiitdwd-live-stats-foot">{{sessions}}</p>
+        {{/hasdata}}
+        {{^hasdata}}
+        <div class="iiitdwd-tdash-empty">
+            <span class="iiitdwd-tdash-badge iiitdwd-tdash-badge-blue">{{{icons.calendar}}}</span>
+            <p>{{#str}}nolivesessions, theme_iiitdwd{{/str}}</p>
+        </div>
+        {{/hasdata}}
+    </div>
+    {{/live}}
+    {{/haslive}}
+</div>

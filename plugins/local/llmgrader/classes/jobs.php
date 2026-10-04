@@ -25,22 +25,23 @@ namespace local_llmgrader;
 class jobs {
 
     /** Statuses after which a job is never touched again. */
-    const FINAL_STATUSES = ['applied', 'evaluated', 'stale', 'superseded', 'failed', 'skipped_human_graded'];
+    const FINAL_STATUSES = ['applied', 'draft', 'rejected', 'evaluated', 'stale', 'superseded', 'failed',
+        'skipped_human_graded'];
 
     /**
-     * Create (or re-use) the job for this exact notebook and queue it.
+     * Create (or re-use) the job for this exact content and queue it.
      *
      * @param int $courseid
      * @param int $cmid
      * @param \stdClass $submission assign_submission record
-     * @param \stored_file $file The notebook
-     * @param bool $force Re-evaluate even if this exact content was already evaluated
+     * @param array $content From submission_content::extract().
+     * @param bool $force Evaluate again even if this exact content was already evaluated.
      * @return int Job id
      */
-    public static function queue(int $courseid, int $cmid, \stdClass $submission, \stored_file $file, bool $force = false): int {
+    public static function queue(int $courseid, int $cmid, \stdClass $submission, array $content, bool $force = false): int {
         global $DB;
 
-        $key = sha1($submission->id . '|' . $submission->attemptnumber . '|' . $file->get_contenthash());
+        $key = sha1($submission->id . '|' . $submission->attemptnumber . '|' . $content['hash']);
         $now = time();
         $job = $DB->get_record('local_llmgrader_job', ['idempotencykey' => $key]);
 
@@ -48,8 +49,8 @@ class jobs {
             return $job->id; // Same content already queued or evaluated.
         }
 
-        // Older jobs for this submission no longer matter.
-        [$insql, $params] = $DB->get_in_or_equal(['queued'], SQL_PARAMS_NAMED);
+        // Older waiting jobs and unreviewed drafts for this submission no longer matter.
+        [$insql, $params] = $DB->get_in_or_equal(['queued', 'draft'], SQL_PARAMS_NAMED);
         $params['submissionid'] = $submission->id;
         $params['key'] = $key;
         $DB->set_field_select('local_llmgrader_job', 'status', 'superseded',
@@ -59,6 +60,8 @@ class jobs {
             $job->status = 'queued';
             $job->error = null;
             $job->tries = 0;
+            $job->reviewerid = null;
+            $job->timereviewed = null;
             $job->timemodified = $now;
             $DB->update_record('local_llmgrader_job', $job);
         } else {
@@ -70,9 +73,9 @@ class jobs {
                 'submissionid' => $submission->id,
                 'attemptnumber' => $submission->attemptnumber,
                 'userid' => $submission->userid,
-                'fileid' => $file->get_id(),
-                'contenthash' => $file->get_contenthash(),
-                'filename' => $file->get_filename(),
+                'fileid' => $content['fileid'],
+                'contenthash' => $content['hash'],
+                'filename' => $content['filename'],
                 'status' => 'queued',
                 'timecreated' => $now,
                 'timemodified' => $now,
@@ -86,5 +89,42 @@ class jobs {
         \core\task\manager::queue_adhoc_task($task, true);
 
         return $job->id;
+    }
+
+    /**
+     * Queues the submitted work of an assignment: "Assign to LLM", and the close trigger.
+     *
+     * @param \stdClass $course
+     * @param \cm_info|\stdClass $cm
+     * @param int $userid Only this student, evaluated again even if already done (0: everyone not yet evaluated).
+     * @return int Submissions queued.
+     */
+    public static function queue_assignment(\stdClass $course, $cm, int $userid = 0): int {
+        global $DB;
+        $context = \context_module::instance($cm->id);
+        $params = ['assignment' => $cm->instance, 'latest' => 1, 'status' => 'submitted'];
+        if ($userid) {
+            $params['userid'] = $userid;
+        }
+        // Only current students: not deleted, suspended or unenrolled users' leftover submissions.
+        $students = get_enrolled_users($context, 'mod/assign:submit', 0, 'u.id', null, 0, 0, true);
+        $count = 0;
+        foreach ($DB->get_records('assign_submission', $params) as $submission) {
+            // Group submissions are out of scope for now.
+            if (empty($submission->userid) || !isset($students[$submission->userid])) {
+                continue;
+            }
+            $content = submission_content::extract($context, $submission, review::maxchars());
+            if (!$content) {
+                continue;
+            }
+            $done = $DB->record_exists('local_llmgrader_job', ['idempotencykey' =>
+                sha1($submission->id . '|' . $submission->attemptnumber . '|' . $content['hash'])]);
+            if ($userid || !$done) {
+                self::queue($course->id, $cm->id, $submission, $content, (bool) $userid);
+                $count++;
+            }
+        }
+        return $count;
     }
 }

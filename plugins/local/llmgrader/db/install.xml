@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/llmgrader/db" VERSION="20260930" COMMENT="XMLDB file for Moodle local/llmgrader"
+<XMLDB PATH="local/llmgrader/db" VERSION="20261013" COMMENT="XMLDB file for Moodle local/llmgrader"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -17,7 +17,7 @@
         <FIELD NAME="fileid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="contenthash" TYPE="char" LENGTH="40" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="filename" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="status" TYPE="char" LENGTH="30" NOTNULL="true" DEFAULT="queued" SEQUENCE="false" COMMENT="queued, applied, evaluated, stale, superseded, failed, skipped_human_graded"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="30" NOTNULL="true" DEFAULT="queued" SEQUENCE="false" COMMENT="queued, draft (awaiting teacher review), applied (released), rejected, evaluated (legacy), stale, superseded, failed, skipped_human_graded"/>
         <FIELD NAME="score" TYPE="number" LENGTH="10" DECIMALS="5" NOTNULL="false" SEQUENCE="false" COMMENT="Marks awarded, in the notebook's own marks"/>
         <FIELD NAME="maxscore" TYPE="number" LENGTH="10" DECIMALS="5" NOTNULL="false" SEQUENCE="false" COMMENT="Total marks in the notebook"/>
         <FIELD NAME="appliedgrade" TYPE="number" LENGTH="10" DECIMALS="5" NOTNULL="false" SEQUENCE="false" COMMENT="Grade rescaled to the assignment's maximum"/>
@@ -29,6 +29,8 @@
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timeevaluated" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="reviewerid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Teacher who approved or rejected the draft"/>
+        <FIELD NAME="timereviewed" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -40,6 +42,23 @@
         <INDEX NAME="submissionid" UNIQUE="false" FIELDS="submissionid"/>
         <INDEX NAME="cmid" UNIQUE="false" FIELDS="cmid"/>
       </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_llmgrader_assign" COMMENT="Per-assignment LLM grading settings: when to run, review, rubric and reference solution">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="triggermode" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="submit" SEQUENCE="false" COMMENT="submit, close or manual"/>
+        <FIELD NAME="requirereview" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="1: results are drafts until a teacher approves them"/>
+        <FIELD NAME="rubric" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Rubric and criteria, with marks"/>
+        <FIELD NAME="reference" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Reference solution"/>
+        <FIELD NAME="guidelines" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Marking guidelines for the LLM"/>
+        <FIELD NAME="closedprocessed" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Close time already handled by the close trigger"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="cmid" TYPE="foreign-unique" FIELDS="cmid" REFTABLE="course_modules" REFFIELDS="id"/>
+      </KEYS>
     </TABLE>
   </TABLES>
 </XMLDB>

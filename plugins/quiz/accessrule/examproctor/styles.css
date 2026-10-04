@@ -47,6 +47,13 @@ body.quizaccess-examproctor-noselect #responseform .answer label {
     font-size: .75rem;
 }
 
+.examproctor-bar-seb {
+    padding: 0 .4rem;
+    border-radius: .25rem;
+    background: #357a32;
+    font-size: .75rem;
+}
+
 .examproctor-bar-count {
     margin-left: auto;
 }
@@ -112,4 +119,110 @@ body.quizaccess-examproctor-noselect #responseform .answer label {
 
 .examproctor-toast-show {
     opacity: 1;
+}
+
+/* Device pre-check (check.php). Theme tokens are used when the theme provides them. */
+.examproctor-precheck-card {
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--iiitdwd-border, #dee2e6);
+    border-radius: .5rem;
+    background: var(--iiitdwd-surface, #fff);
+}
+
+.examproctor-precheck-card > summary {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.examproctor-precheck-video {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    max-height: 20rem;
+    overflow: hidden;
+    border-radius: .375rem;
+    background: #111418;
+}
+
+.examproctor-precheck-video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+}
+
+.examproctor-precheck-video-empty {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    color: #adb5bd;
+    text-align: center;
+}
+
+.examproctor-precheck-meter {
+    height: .4rem;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--iiitdwd-border, #dee2e6);
+}
+
+.examproctor-precheck-meter span {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: #357a32;
+    transition: width .1s linear;
+}
+
+.examproctor-precheck-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.examproctor-precheck-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: .6rem;
+    padding: .45rem 0;
+    border-bottom: 1px solid var(--iiitdwd-border, #dee2e6);
+    font-size: .9rem;
+}
+
+.examproctor-precheck-list li:last-child {
+    border-bottom: 0;
+}
+
+.examproctor-check-badge {
+    flex: 0 0 4.5rem;
+    padding: .1rem .4rem;
+    border-radius: 999px;
+    background: #6a737b;
+    color: #fff;
+    font-size: .7rem;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.examproctor-check-ok .examproctor-check-badge {
+    background: #357a32;
+}
+
+.examproctor-check-warn .examproctor-check-badge {
+    background: #a35a00;
+}
+
+.examproctor-check-error .examproctor-check-badge {
+    background: #ca3120;
+}
+
+.examproctor-check-info .examproctor-check-badge {
+    background: #0f6cbf;
+}
+
+.examproctor-precheck-link {
+    margin-top: .25rem;
 }

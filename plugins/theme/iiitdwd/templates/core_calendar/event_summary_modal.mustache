@@ -1,0 +1,61 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template core_calendar/event_summary_modal
+
+    This template renders the calendar events summary modal.
+
+    Overridden by theme_iiitdwd (from Moodle 5.0.1): the event's action is a button ("Join Zoom meeting" for
+    Zoom sessions, opening in a new tab; e.g. "Add submission" for others), and "Go to activity" stays available
+    beside it. The join link is mod_zoom's calendar action (/mod/zoom/loadmeeting.php): Moodle checks access,
+    then sends the host to the start URL and everyone else to the join URL with the passcode embedded.
+
+    Example context (json):
+    {
+        "title": "Assignment due 1"
+    }
+}}
+{{< core/modal }}
+    {{$footer}}
+        {{#candelete}}
+            <button type="button" class="btn btn-secondary" data-action="delete">{{#str}} delete {{/str}}</button>
+        {{/candelete}}
+        {{#isactionevent}}
+            <a href="{{url}}" class="btn btn-outline-secondary">{{#str}} gotoactivity, core_calendar {{/str}}</a>
+        {{/isactionevent}}
+        {{#action.actionable}}
+            {{! Zoom sessions are recognised by the action URL (the modal context has no component). }}
+            <a href="{{action.url}}" class="btn btn-primary iiitdwd-event-join">
+                <span class="iiitdwd-event-join-zoom">{{> theme_iiitdwd/zoom_icon }} {{#str}}joinzoommeeting, theme_iiitdwd{{/str}}</span>
+                <span class="iiitdwd-event-join-default">{{{action.name}}}</span>
+            </a>
+        {{/action.actionable}}
+
+        {{^isactionevent}}
+            {{#canedit}}
+                <button type="button" class="btn btn-primary" data-action="edit">{{#str}} edit {{/str}}</button>
+            {{/canedit}}
+        {{/isactionevent}}
+    {{/footer}}
+{{/ core/modal }}
+{{#js}}
+    // Zoom opens in a new tab, so the calendar stays open behind the meeting.
+    document.querySelectorAll('.iiitdwd-event-join[href*="/mod/zoom/loadmeeting.php"]').forEach(function(link) {
+        link.target = '_blank';
+        link.rel = 'noopener';
+    });
+{{/js}}

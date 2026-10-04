@@ -11,3 +11,13 @@ loadtest/k6
 
 # Upstream clones' own git metadata (plugins are vendored here)
 .git-upstream/
+
+# Node dev tooling (e.g. plugins/theme/iiitdwd)
+node_modules/
+
+# Private keys of the LMS certificate authority and server certificate (tls/make-certs.sh).
+tls/ca/
+tls/server/
+
+# Mailpit secrets (mailpit/configure.sh): web inbox password hash and SMTP relay credentials.
+mailpit/secrets/

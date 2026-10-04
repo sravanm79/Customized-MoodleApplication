@@ -1,0 +1,581 @@
+// Standard Moodle elements: alerts and error pages, forms and selects, search, modals, the TinyMCE editor UI.
+// Colours for alerts, inputs, dropdowns and modals come from the preset variables; this file fixes what
+// Boost or TinyMCE hardcode, and adds the design system's shape.
+
+//
+// Alerts: notifications (\core\notification, $OUTPUT->notification()) and error pages
+//
+
+$alert-accents: (
+    "primary": $iiitdwd-blue,
+    "secondary": $iiitdwd-text-muted,
+    "success": $iiitdwd-green-alt,
+    "info": $iiitdwd-blue-alt,
+    "warning": $orange,
+    "danger": $red,
+);
+
+.alert {
+    border-width: 1px;
+    border-left-width: 4px;
+    border-radius: 12px;
+    padding: .9rem 1.1rem;
+
+    // Moodle makes alert links bold in a darkened tone; keep them readable on the dark fill.
+    a:not(.btn) {
+        color: inherit;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+    }
+
+    .btn-close {
+        opacity: .7;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
+
+@each $name, $color in $alert-accents {
+    .alert-#{$name} {
+        border-left-color: $color;
+    }
+}
+
+// Error page ("A required parameter (id) was missing", "Must specify course id ..."): print_error /
+// moodle_exception output, a .errorbox.alert-danger followed by a Continue button.
+.errorbox.alert-danger {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: .9rem;
+    padding: 1.25rem 1.5rem;
+    background-color: color-mix(in srgb, #{$red} 16%, var(--iiitdwd-surface));
+    border-color: color-mix(in srgb, #{$red} 45%, var(--iiitdwd-surface));
+    border-left-color: $red;
+
+    // Warning glyph in a round badge (decorative; the message carries the meaning).
+    &::before {
+        content: "!";
+        grid-row: 1 / span 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        background-color: rgba($red, .2);
+        color: color-mix(in srgb, #{$red} 60%, var(--iiitdwd-text));
+        font-weight: 700;
+    }
+
+    > * {
+        grid-column: 2;
+    }
+
+    .errormessage {
+        margin: .3rem 0 .25rem;
+        color: var(--iiitdwd-text);
+        font-weight: 600;
+    }
+
+    .errorcode {
+        margin: 0;
+        font-size: .8125rem;
+
+        a {
+            color: color-mix(in srgb, #{$red} 50%, var(--iiitdwd-text));
+            font-weight: 400;
+        }
+    }
+}
+
+.errorbox + .continuebutton,
+.errorbox ~ .continuebutton {
+    margin-top: 1rem;
+}
+
+// Error page card (templates/error_card.mustache, core_renderer::fatal_error()).
+.iiitdwd-error-card {
+    max-width: 40rem;
+    margin: 2rem auto;
+    padding: 2rem 2rem 1.5rem;
+    background-color: var(--iiitdwd-surface);
+    border: 1px solid var(--iiitdwd-border);
+    border-radius: var(--iiitdwd-radius-lg);
+    text-align: center;
+
+    .iiitdwd-error-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 3.5rem;
+        height: 3.5rem;
+        margin-bottom: 1rem;
+        border-radius: 50%;
+        background-color: rgba($red, .14);
+        color: color-mix(in srgb, #{$red} 75%, var(--iiitdwd-text));
+    }
+
+    .iiitdwd-error-title {
+        margin-bottom: .5rem;
+        font-size: 1.375rem;
+        font-weight: 700;
+    }
+
+    .iiitdwd-error-hint {
+        margin: 0 auto 1rem;
+        max-width: 32rem;
+        color: var(--iiitdwd-text-secondary);
+    }
+
+    // Moodle's own message, as a quiet detail.
+    .iiitdwd-error-message {
+        display: inline-block;
+        margin: 0 0 1.5rem;
+        padding: .4rem .8rem;
+        border-radius: var(--iiitdwd-radius);
+        background-color: var(--iiitdwd-overlay-2);
+        color: var(--iiitdwd-text);
+        font-size: .875rem;
+    }
+
+    .iiitdwd-error-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: .5rem;
+    }
+
+    .iiitdwd-error-code {
+        margin: 1.25rem 0 0;
+        color: var(--iiitdwd-text-muted);
+        font-family: $font-family-monospace;
+        font-size: .75rem;
+    }
+
+    @include media-breakpoint-down(sm) {
+        padding: 1.5rem 1rem 1.25rem;
+
+        .iiitdwd-error-actions .btn {
+            flex: 1 1 100%;
+        }
+    }
+}
+
+// Toasts (e.g. "Changes saved" after AJAX actions).
+.toast {
+    border-radius: 12px;
+    border-left: 4px solid var(--iiitdwd-blue);
+}
+
+//
+// Utilities whose "dark" colour is now the navy background
+//
+
+// Moodle pairs .text-dark with light badges (e.g. autocomplete selections); keep it readable, except
+// on the warning (amber) fill where dark text is correct.
+.text-dark:not(.bg-warning):not(.text-bg-warning):not(.badge-warning) {
+    color: var(--iiitdwd-text) !important;
+}
+
+//
+// Forms and selects
+//
+
+.form-control,
+.form-select {
+    &::placeholder {
+        color: var(--iiitdwd-text-muted);
+        opacity: 1;
+    }
+
+    &:disabled,
+    &[readonly] {
+        color: var(--iiitdwd-text-secondary);
+    }
+}
+
+.form-select option,
+select option {
+    background-color: var(--iiitdwd-surface);
+    color: var(--iiitdwd-text);
+}
+
+.form-check-input {
+    background-color: var(--iiitdwd-bg);
+    border-color: var(--iiitdwd-text-muted);
+
+    &:checked {
+        background-color: var(--iiitdwd-blue);
+        border-color: var(--iiitdwd-blue);
+    }
+}
+
+// Moodle form labels and help.
+.mform .col-form-label,
+.mform label {
+    color: var(--iiitdwd-text);
+}
+
+.mform .form-control-static,
+.felement .form-text {
+    color: var(--iiitdwd-text-secondary);
+}
+
+// Collapsible form sections ("General", "Description", ...).
+.mform fieldset.collapsible {
+    border-bottom: 1px solid var(--iiitdwd-border);
+}
+
+// Autocomplete (course category, tags, users): selection pills and suggestion list.
+.form-autocomplete-selection .badge {
+    background-color: rgba($iiitdwd-blue, .18) !important;
+    border: 1px solid rgba($iiitdwd-blue, .45);
+    color: var(--iiitdwd-text) !important;
+    border-radius: 999px;
+    font-weight: 500;
+}
+
+.form-autocomplete-suggestions {
+    border-radius: var(--iiitdwd-radius);
+    box-shadow: $box-shadow;
+
+    li {
+        color: var(--iiitdwd-text);
+
+        &:hover {
+            background-color: var(--iiitdwd-border);
+        }
+
+        &[aria-selected="true"] {
+            background-color: var(--iiitdwd-blue);
+            color: $white;
+        }
+    }
+}
+
+.form-autocomplete-downarrow .loading-icon {
+    background-color: transparent;
+}
+
+// Date selector calendar icon and inline icons next to fields.
+.fdate_selector .icon,
+.fdate_time_selector .icon {
+    color: var(--iiitdwd-text-secondary);
+}
+
+//
+// Search inputs
+//
+
+.simplesearchform {
+    .btn-submit {
+        background-color: var(--iiitdwd-surface);
+        border-color: var(--iiitdwd-border);
+        color: var(--iiitdwd-text-secondary);
+    }
+
+    // Navbar search expanded over the navbar.
+    .collapse.show,
+    .collapsing {
+        background-color: var(--iiitdwd-sidebar);
+    }
+}
+
+input[type="search"],
+.search-input-form input,
+[role="search"] input.form-control {
+    background-color: var(--iiitdwd-bg);
+    border-color: var(--iiitdwd-border);
+    color: var(--iiitdwd-text);
+}
+
+// Highlighted search terms (admin search, global search).
+.highlight {
+    background-color: rgba($orange, .25);
+    color: var(--iiitdwd-text);
+    border-radius: 3px;
+}
+
+// Loading placeholders (core/placeholder "bg-pulse-grey" animation is defined with light greys).
+@keyframes bg-pulse-grey {
+    0% {
+        background-color: $iiitdwd-surface;
+    }
+
+    50% {
+        background-color: $iiitdwd-border;
+    }
+
+    100% {
+        background-color: $iiitdwd-surface;
+    }
+}
+
+//
+// Modals
+//
+
+.modal-content {
+    box-shadow: $box-shadow-lg;
+}
+
+// Moodle focuses the dialog when it opens; Boost then rings it. Keep the ring for keyboard users only.
+.modal-dialog:focus:not(:focus-visible) .modal-content {
+    box-shadow: $box-shadow-lg;
+}
+
+.modal-header {
+    padding: 1rem 1.25rem;
+
+    .modal-title {
+        color: var(--iiitdwd-text);
+        font-weight: 600;
+    }
+}
+
+.modal-body {
+    padding: 1.25rem;
+}
+
+.modal-footer {
+    padding: .875rem 1.25rem;
+    // A shade between the card and the page, in either mode.
+    background-color: color-mix(in srgb, var(--iiitdwd-bg) 50%, var(--iiitdwd-surface));
+    border-bottom-left-radius: $iiitdwd-radius-lg;
+    border-bottom-right-radius: $iiitdwd-radius-lg;
+}
+
+.modal-backdrop.show {
+    backdrop-filter: blur(2px);
+}
+
+// Modal chooser (activity chooser) and its summary pane use white in Boost.
+.modchooser .modal-body .optionsummary,
+.modchooser .modal-body .optionsummary .actions {
+    background-color: var(--iiitdwd-surface);
+}
+
+//
+// TinyMCE editor UI (toolbar, menus, status bar, dialogs). The editing area is styled by editor.scss.
+//
+
+.tox.tox-tinymce {
+    border: 1px solid var(--iiitdwd-border);
+    border-radius: var(--iiitdwd-radius);
+}
+
+.tox {
+    // Toolbar, menu bar, status bar.
+    &:not(.tox-tinymce-inline) .tox-editor-header,
+    .tox-menubar,
+    .tox-toolbar,
+    .tox-toolbar__primary,
+    .tox-toolbar__overflow,
+    .tox-toolbar-overlord,
+    .tox-statusbar {
+        background-color: var(--iiitdwd-sidebar) !important;
+        background-image: none !important;
+        border-color: var(--iiitdwd-border) !important;
+    }
+
+    &:not(.tox-tinymce-inline) .tox-editor-header {
+        border-bottom: 1px solid var(--iiitdwd-border) !important;
+        box-shadow: none !important;
+    }
+
+    .tox-edit-area::before {
+        border-color: var(--iiitdwd-blue) !important;
+    }
+
+    .tox-edit-area__iframe {
+        background-color: var(--iiitdwd-surface) !important;
+    }
+
+    // TinyMCE's skin gives every menu/toolbar button a white background.
+    .tox-mbtn,
+    .tox-tbtn,
+    .tox-split-button,
+    .tox-tbtn--select {
+        background: transparent !important;
+    }
+
+    .tox-mbtn,
+    .tox-tbtn,
+    .tox-split-button,
+    .tox-statusbar a,
+    .tox-statusbar__path-item,
+    .tox-statusbar__wordcount,
+    .tox-statusbar__text-container {
+        color: var(--iiitdwd-text-secondary) !important;
+    }
+
+    .tox-tbtn svg,
+    .tox-mbtn svg,
+    .tox-split-button svg,
+    .tox-collection__item-icon svg,
+    .tox-collection__item-caret svg,
+    .tox-statusbar__resize-handle svg {
+        fill: var(--iiitdwd-text-secondary) !important;
+    }
+
+    .tox-mbtn:hover:not(:disabled),
+    .tox-mbtn--active,
+    .tox-tbtn:hover,
+    .tox-tbtn:focus,
+    .tox-tbtn--enabled,
+    .tox-tbtn--enabled:hover,
+    .tox-split-button:hover {
+        background-color: var(--iiitdwd-border) !important;
+        color: var(--iiitdwd-text) !important;
+
+        svg {
+            fill: var(--iiitdwd-text) !important;
+        }
+    }
+
+    // Moodle's own buttons (record audio/video, H5P, ...) embed a black image in the SVG, which fill cannot
+    // recolour; invert it and dim it to the other icons' tone.
+    svg[data-buttonsource="moodle"] image {
+        filter: invert(1);
+        opacity: .65;
+    }
+
+    .tox-tbtn:hover svg[data-buttonsource="moodle"] image,
+    .tox-tbtn--enabled svg[data-buttonsource="moodle"] image {
+        opacity: 1;
+    }
+
+    .tox-tbtn--disabled svg,
+    .tox-tbtn:disabled svg {
+        fill: var(--iiitdwd-text-muted) !important;
+    }
+
+    // Menus and dropdowns.
+    .tox-menu,
+    .tox-collection--list,
+    .tox-collection--toolbar,
+    .tox-collection--grid,
+    .tox-pop__dialog {
+        background-color: var(--iiitdwd-surface) !important;
+        border-color: var(--iiitdwd-border) !important;
+    }
+
+    .tox-collection__item,
+    .tox-collection__item-label,
+    .tox-collection__item-accessory {
+        color: var(--iiitdwd-text) !important;
+    }
+
+    .tox-collection--list .tox-collection__item--active,
+    .tox-collection--list .tox-collection__item--enabled {
+        background-color: var(--iiitdwd-border) !important;
+    }
+
+    .tox-collection--list .tox-collection__group {
+        border-color: var(--iiitdwd-border) !important;
+    }
+
+    // Dialogs (insert link, image, table properties ...).
+    .tox-dialog,
+    .tox-dialog__header,
+    .tox-dialog__footer {
+        background-color: var(--iiitdwd-surface) !important;
+        border-color: var(--iiitdwd-border) !important;
+        color: var(--iiitdwd-text) !important;
+    }
+
+    .tox-dialog__title,
+    .tox-label,
+    .tox-form__group label {
+        color: var(--iiitdwd-text) !important;
+    }
+
+    .tox-textfield,
+    .tox-textarea,
+    .tox-listboxfield .tox-listbox--select,
+    .tox-selectfield select {
+        background-color: var(--iiitdwd-bg) !important;
+        border-color: var(--iiitdwd-border) !important;
+        color: var(--iiitdwd-text) !important;
+    }
+
+    .tox-button--secondary {
+        background-color: var(--iiitdwd-border) !important;
+        border-color: var(--iiitdwd-border) !important;
+        color: var(--iiitdwd-text) !important;
+    }
+
+    .tox-dialog-wrap__backdrop {
+        background-color: rgba($black, .6) !important;
+    }
+}
+
+//
+// Tables (participants, assignment status, reports, admin lists)
+//
+
+.generaltable {
+    thead th,
+    thead td {
+        background-color: var(--iiitdwd-sidebar);
+        color: var(--iiitdwd-text-secondary);
+        font-size: .8125rem;
+        font-weight: 600;
+        border-bottom-width: 1px;
+    }
+
+    tbody tr {
+        transition: background-color .12s ease;
+
+        &:hover {
+            background-color: var(--iiitdwd-overlay-1);
+        }
+    }
+}
+
+//
+// Interaction: the same short transition and hover language (blue-tinted border, slight lift for cards that
+// are links) everywhere.
+//
+
+.btn {
+    transition: color .15s ease, background-color .15s ease, border-color .15s ease, box-shadow .15s ease,
+        transform .1s ease;
+
+    &:active:not(:disabled):not(.disabled) {
+        transform: translateY(1px);
+    }
+}
+
+.dropdown-item {
+    transition: background-color .12s ease, color .12s ease;
+}
+
+.card.dashboard-card,
+.card.course-card,
+.iiitdwd-course-card,
+.course_category_tree .coursebox {
+    transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba($black, .35);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn,
+    .card.dashboard-card,
+    .card.course-card,
+    .iiitdwd-course-card,
+    .course_category_tree .coursebox {
+        transition: none;
+
+        &:hover,
+        &:active {
+            transform: none !important;
+        }
+    }
+}

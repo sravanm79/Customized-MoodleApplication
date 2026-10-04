@@ -1,0 +1,207 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template core/loginform
+
+    Login form.
+
+    Overridden by theme_iiitdwd (from Moodle 5.0.1): the institution logo above the form, pill-shaped inputs,
+    a full-width "Log in" button, "Forgotten your username or password?" and the support contact at the bottom.
+    Field names, ids, the form action and the JS are unchanged, so login, the password toggle, autofocus and
+    identity providers work as in core. Re-copy the form and JS from core when upgrading Moodle.
+
+    Extra context (theme_iiitdwd\output\core_renderer::render_from_template()):
+    * institutionname - the logo's alt text, and the wordmark when no logo is set
+    * institutionlogourl - optional: the Institution logo theme setting
+    * supportemail - optional: the Login support email theme setting
+
+    Example context (json):
+    {
+        "sitename": "IIIT Dharwad",
+        "institutionname": "INDIAN INSTITUTE OF INFORMATION TECHNOLOGY",
+        "institutionlogourl": "",
+        "supportemail": "support.dsai@iiitdwd.ac.in",
+        "showloginform": true,
+        "loginurl": "#",
+        "logintoken": "token",
+        "forgotpasswordurl": "#",
+        "canloginasguest": false,
+        "autofocusform": true,
+        "togglepassword": true,
+        "smallscreensonly": true
+    }
+}}
+<div class="loginform iiitdwd-login">
+    <div class="iiitdwd-login-brand">
+        {{#institutionlogourl}}
+            <img src="{{institutionlogourl}}" class="iiitdwd-login-logo" alt="{{institutionname}}">
+        {{/institutionlogourl}}
+        {{^institutionlogourl}}
+            <span class="iiitdwd-login-wordmark">{{institutionname}}</span>
+        {{/institutionlogourl}}
+    </div>
+    <h1 class="iiitdwd-login-title">{{#str}}login{{/str}}</h1>
+    <p class="iiitdwd-login-subtitle">{{#str}} loginto, core, {{sitename}} {{/str}}</p>
+
+    {{#maintenance}}
+        <div class="alert alert-danger login-maintenance">
+            {{{maintenance}}}
+        </div>
+    {{/maintenance}}
+    {{#error}}
+        <a href="#" id="loginerrormessage" class="visually-hidden">{{error}}</a>
+        <div class="alert alert-danger" role="alert">{{error}}</div>
+    {{/error}}
+    {{#info}}
+        <a href="#" id="logininfomessage" class="visually-hidden">{{info}}</a>
+        <div class="alert alert-info" role="alert">{{info}}</div>
+    {{/info}}
+    {{#cansignup}}
+        <a href="{{signupurl}}" class="visually-hidden">{{#str}} tocreatenewaccount {{/str}}</a>
+    {{/cansignup}}
+    {{#showloginform}}
+        <form class="login-form" action="{{loginurl}}" method="post" id="login">
+            <input id="anchor" type="hidden" name="anchor" value="">
+            <script>document.getElementById('anchor').value = location.hash;</script>
+            <input type="hidden" name="logintoken" value="{{logintoken}}">
+            <div class="login-form-username mb-3">
+                <label for="username" class="visually-hidden">
+                    {{^canloginbyemail}}
+                        {{#str}} username {{/str}}
+                    {{/canloginbyemail}}
+                    {{#canloginbyemail}}
+                        {{#str}} usernameemail {{/str}}
+                    {{/canloginbyemail}}
+                </label>
+                <input type="text" name="username" id="username" {{!
+                    !}}class="form-control form-control-lg" {{!
+                    !}}value="{{username}}" {{!
+                    !}}placeholder="{{^canloginbyemail}}{{#cleanstr}}username{{/cleanstr}}{{/canloginbyemail}}{{!
+                    !}}{{#canloginbyemail}}{{#cleanstr}}usernameemail{{/cleanstr}}{{/canloginbyemail}}" {{!
+                    !}}autocomplete="username">
+            </div>
+            <div class="login-form-password mb-3">
+                <label for="password" class="visually-hidden">{{#str}} password {{/str}}</label>
+                <input type="password" name="password" id="password" value="" {{!
+                    !}}class="form-control form-control-lg" {{!
+                    !}}placeholder="{{#cleanstr}}password{{/cleanstr}}" {{!
+                    !}}autocomplete="current-password">
+            </div>
+            {{#recaptcha}}
+                <div class="login-form-recaptcha mb-3">
+                    {{{recaptcha}}}
+                </div>
+            {{/recaptcha}}
+            <div class="login-form-submit">
+                <button class="btn btn-primary btn-lg w-100" type="submit" id="loginbtn">{{#str}}login{{/str}}</button>
+            </div>
+            <div class="login-form-forgotpassword">
+                <a href="{{forgotpasswordurl}}">{{#str}}forgotten{{/str}}</a>
+            </div>
+        </form>
+    {{/showloginform}}
+    {{#hasidentityproviders}}
+        <div class="login-divider"></div>
+        <div class="login-identityproviders">
+            <h2 class="login-heading">{{#str}} potentialidps, auth {{/str}}</h2>
+            {{#identityproviders}}
+                <a class="btn login-identityprovider-btn w-100" href="{{url}}">
+                    {{#iconurl}}
+                        <img src="{{iconurl}}" alt="" width="24" height="24"/>
+                    {{/iconurl}}
+                    {{name}}
+                </a>
+            {{/identityproviders}}
+        </div>
+    {{/hasidentityproviders}}
+    {{#hasinstructions}}
+        <div class="login-divider"></div>
+        <div class="login-instructions {{#cansignup}}mb-3{{/cansignup}}">
+            <h2 class="login-heading">{{#str}}firsttime{{/str}}</h2>
+            {{{instructions}}}
+        </div>
+    {{/hasinstructions}}
+    {{#cansignup}}
+        <div class="login-signup">
+            <a class="btn btn-secondary w-100" href="{{signupurl}}">{{#str}}startsignup{{/str}}</a>
+        </div>
+    {{/cansignup}}
+    {{#canloginasguest}}
+        <div class="login-divider"></div>
+        <form action="{{loginurl}}" method="post" id="guestlogin" class="iiitdwd-login-guest">
+            <input type="hidden" name="logintoken" value="{{logintoken}}">
+            <input type="hidden" name="username" value="guest" />
+            <input type="hidden" name="password" value="guest" />
+            <span>{{#str}}someallowguest{{/str}}</span>
+            <button class="btn btn-outline-secondary" type="submit" id="loginguestbtn">{{#str}}loginguest{{/str}}</button>
+        </form>
+    {{/canloginasguest}}
+    <div class="login-divider"></div>
+    <div class="iiitdwd-login-footer">
+        {{#supportemail}}
+            <p class="iiitdwd-login-support">
+                {{#str}}loginsupport, theme_iiitdwd{{/str}}
+                <a href="mailto:{{supportemail}}">{{supportemail}}</a>
+            </p>
+        {{/supportemail}}
+        <div class="iiitdwd-login-meta">
+            {{#languagemenu}}
+                <div class="login-languagemenu">
+                    {{>core/action_menu}}
+                </div>
+            {{/languagemenu}}
+            <button type="button" class="btn btn-link iiitdwd-login-cookies" {{!
+            }} data-modal="alert"{{!
+            }} data-modal-title-str='["cookiesenabled", "core"]' {{!
+            }} data-modal-content-str='["cookiesenabled_help_html", "core"]'{{!
+            }}>{{#str}}cookiesnotice{{/str}}</button>
+        </div>
+    </div>
+</div>
+
+{{#js}}
+    {{^error}}
+        {{#autofocusform}}
+            require(['core_form/events'], function(FormEvent) {
+                function autoFocus() {
+                    const userNameField = document.getElementById('username');
+                    if (userNameField.value.length == 0) {
+                        userNameField.focus();
+                    } else {
+                        document.getElementById('password').focus();
+                    }
+                }
+                autoFocus();
+                window.addEventListener(FormEvent.eventTypes.fieldStructureChanged, autoFocus);
+            });
+        {{/autofocusform}}
+    {{/error}}
+    {{#error}}
+        document.getElementById('loginerrormessage').focus();
+    {{/error}}
+    {{#togglepassword}}
+        require(['core/togglesensitive'], function(ToggleSensitive) {
+            ToggleSensitive.init("password", {{smallscreensonly}});
+        });
+    {{/togglepassword}}
+    require(['core_form/submit'], function(Submit) {
+        Submit.init("loginbtn");
+        {{#canloginasguest}}
+            Submit.init("loginguestbtn");
+        {{/canloginasguest}}
+    });
+{{/js}}

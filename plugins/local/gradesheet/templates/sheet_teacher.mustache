@@ -1,0 +1,75 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_gradesheet/sheet_teacher
+
+    One sheet for teachers: summary statistics (normalised %), box plot, distribution and every student's score.
+
+    Example context (json):
+    {
+        "id": 1, "name": "MLP Live Session Summary - 02/10/2026", "date": "03/10/26", "max": "50", "n": 2,
+        "hasscores": true, "missing": 1,
+        "stats": [{"label": "Mean", "value": "72%"}, {"label": "Median", "value": "74%"}],
+        "box": {"min": 40, "q1": 60, "median": 74, "q3": 85, "max": 98, "iqr": 25, "whisker": 58},
+        "histogram": [{"label": "70–80%", "count": 2, "height": 100, "title": "70–80%: 2 students"}],
+        "students": [{"fullname": "Asha Rao", "score": "42", "percent": "84"}],
+        "gradebookurl": "#", "deleteurl": "#"
+    }
+}}
+<section class="card local-gradesheet-sheet" aria-labelledby="local-gradesheet-sheet-{{id}}">
+    <div class="card-body">
+        <div class="local-gradesheet-sheet-head">
+            <div>
+                <h3 id="local-gradesheet-sheet-{{id}}">{{name}}</h3>
+                <p class="text-muted small">{{#str}}sheetmeta, local_gradesheet, { "date": {{#quote}}{{date}}{{/quote}}, "max": {{#quote}}{{max}}{{/quote}}, "n": {{n}} }{{/str}}</p>
+            </div>
+            <div class="local-gradesheet-actions">
+                <a class="btn btn-outline-secondary btn-sm" href="{{gradebookurl}}">{{#str}}gradebook, local_gradesheet{{/str}}</a>
+                <a class="btn btn-outline-danger btn-sm" href="{{deleteurl}}">{{#str}}delete{{/str}}</a>
+            </div>
+        </div>
+        {{#hasscores}}
+            <dl class="local-gradesheet-stats">
+                {{#stats}}<div><dt>{{label}}</dt><dd>{{value}}</dd></div>{{/stats}}
+            </dl>
+            {{#box}}
+                <div class="local-gradesheet-box" role="img" aria-label="{{#str}}boxplot, local_gradesheet{{/str}}">
+                    <span class="local-gradesheet-box-whisker" style="left: {{min}}%; width: {{whisker}}%"></span>
+                    <span class="local-gradesheet-box-iqr" style="left: {{q1}}%; width: {{iqr}}%"></span>
+                    <span class="local-gradesheet-box-median" style="left: {{median}}%"></span>
+                </div>
+                <div class="local-gradesheet-axis" aria-hidden="true"><span>0%</span><span>50%</span><span>100%</span></div>
+            {{/box}}
+            {{> local_gradesheet/histogram }}
+            <details class="local-gradesheet-students">
+                <summary>{{#str}}showscores, local_gradesheet, {{n}}{{/str}}</summary>
+                <table class="generaltable table-sm">
+                    <thead><tr>
+                        <th scope="col">{{#str}}student, local_gradesheet{{/str}}</th>
+                        <th scope="col" class="text-end">{{#str}}score, local_gradesheet{{/str}}</th>
+                        <th scope="col" class="text-end">{{#str}}normalised, local_gradesheet{{/str}}</th>
+                    </tr></thead>
+                    <tbody>
+                        {{#students}}<tr><td>{{fullname}}</td><td class="text-end">{{score}} / {{max}}</td><td class="text-end">{{percent}}%</td></tr>{{/students}}
+                    </tbody>
+                </table>
+            </details>
+            {{#missing}}<p class="text-muted small mb-0">{{#str}}missingscores, local_gradesheet, {{missing}}{{/str}}</p>{{/missing}}
+        {{/hasscores}}
+        {{^hasscores}}<p class="text-muted mb-0">{{#str}}noscores, local_gradesheet{{/str}}</p>{{/hasscores}}
+    </div>
+</section>

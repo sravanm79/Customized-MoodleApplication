@@ -12,7 +12,7 @@
 | Moodle download | https://download.moodle.org/ |
 | Installation guide | https://docs.moodle.org/502/en/Installing_Moodle |
 | Docker compose reference | https://github.com/bitnami/containers/blob/main/bitnami/moodle/docker-compose.yml |
-| Admin login | `admin` / `see MOODLE_ADMIN_PASSWORD in .env` |
+| Admin login | `admin` / password in `.env` (`MOODLE_ADMIN_PASSWORD`) |
 | Load-test students | `loadtest0001` … `loadtest1000`, password `LoadTest#2026`, enrolled in course id 2 (`test`) |
 
 ### Server specs

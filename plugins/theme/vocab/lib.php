@@ -44,13 +44,13 @@ function theme_vocab_get_main_scss_content($theme) {
 }
 
 /**
- * Pre SCSS: Boost's brand colour and raw initial SCSS.
+ * Pre SCSS: this theme's variables, then Boost's brand colour and raw initial SCSS.
  *
  * @param theme_config $theme
  * @return string
  */
 function theme_vocab_get_pre_scss($theme) {
-    return theme_boost_get_pre_scss(theme_vocab_boost_config());
+    return file_get_contents(__DIR__ . '/scss/pre.scss') . "\n" . theme_boost_get_pre_scss(theme_vocab_boost_config());
 }
 
 /**

@@ -1,0 +1,447 @@
+// Course pages: left sub-sidebar navigation, course hero with Live Session Stats, section and activity cards.
+
+$course-subnav-width: 220px;
+
+//
+// Course navigation sub-sidebar (templates/course_nav.mustache): the course's secondary navigation (Course,
+// Settings, Participants, Grades, ...) as a vertical list left of the content, on course-level pages
+// (body.iiitdwd-course-subnav, set by the renderer). Where it is not used, Boost's horizontal tabs show instead.
+//
+
+// With the app sidebar and the course index open there is not enough width for a third column, so the
+// sub-sidebar is used when the course index is closed, or on very wide screens; otherwise Boost's tabs stay.
+@mixin course-subnav-sidebar($page) {
+    body.iiitdwd-course-subnav #{$page} .main-inner {
+        display: grid;
+        // The page heading and the content column are inset 15px by Boost; inset the sub-sidebar to match.
+        grid-template-columns: calc(#{$course-subnav-width} + 15px) minmax(0, 1fr);
+        column-gap: 1.5rem;
+        align-items: start;
+
+        > .drawer-toggles,
+        > #page-header {
+            grid-column: 1 / -1;
+        }
+
+        // Boost centres the header with margin: auto, which in a grid shrinks it to its text.
+        > #page-header {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        > .iiitdwd-coursenav {
+            display: block;
+            grid-column: 1;
+            position: sticky;
+            top: calc(#{$navbar-height} + 1rem);
+            max-height: calc(100vh - #{$navbar-height} - 2rem);
+            margin-left: 15px;
+            overflow-y: auto;
+        }
+
+        > .secondary-navigation {
+            display: none;
+        }
+
+        > #page-content {
+            grid-column: 2;
+            min-width: 0;
+        }
+    }
+}
+
+.iiitdwd-coursenav {
+    display: none;
+    padding: .5rem;
+    background-color: var(--iiitdwd-sidebar);
+    border: 1px solid var(--iiitdwd-border);
+    border-radius: var(--iiitdwd-radius-card);
+}
+
+.iiitdwd-coursenav-list,
+.iiitdwd-coursenav-children {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.iiitdwd-coursenav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.iiitdwd-coursenav-row {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+// Pill links; the current page is a solid blue pill.
+.iiitdwd-coursenav-link,
+.iiitdwd-coursenav-sublink {
+    border-radius: 999px;
+    color: var(--iiitdwd-text-secondary) !important;
+    text-decoration: none !important;
+    transition: background-color .12s ease, color .12s ease;
+
+    &:hover,
+    &:focus-visible {
+        background-color: var(--iiitdwd-overlay-2);
+        color: var(--iiitdwd-text) !important;
+    }
+
+    &.active,
+    &.active:hover {
+        background-color: var(--iiitdwd-blue);
+        color: $white !important;
+        box-shadow: 0 2px 8px rgba($iiitdwd-blue, .35);
+    }
+}
+
+.iiitdwd-coursenav-link {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: .65rem;
+    min-width: 0;
+    padding: .5rem .85rem;
+    font-weight: 500;
+
+    // A group holding the current page.
+    &.has-active-child {
+        color: var(--iiitdwd-text) !important;
+        font-weight: 600;
+    }
+}
+
+.iiitdwd-coursenav-icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    justify-content: center;
+    width: 1.1rem;
+
+    .icon {
+        width: 1rem;
+        height: 1rem;
+        margin: 0;
+        color: inherit;
+        font-size: 1rem;
+    }
+}
+
+.iiitdwd-coursenav-text {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+// Expand buttons and the "More" heading share the chevron, turned when open.
+.iiitdwd-coursenav-chevron {
+    flex-shrink: 0;
+    transition: transform .15s ease;
+
+    [aria-expanded="true"] > & {
+        transform: rotate(90deg);
+    }
+}
+
+.iiitdwd-coursenav-expand {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 50%;
+    color: var(--iiitdwd-text-muted);
+
+    &:hover,
+    &:focus-visible {
+        background-color: var(--iiitdwd-overlay-2);
+        color: var(--iiitdwd-text);
+    }
+}
+
+// Sub-pages: indented under the parent's icon, with a guide line.
+.iiitdwd-coursenav-children {
+    margin: 2px 0 .35rem 1.45rem;
+    padding-left: .5rem;
+    border-left: 1px solid var(--iiitdwd-border);
+
+    li + li {
+        margin-top: 1px;
+    }
+}
+
+.iiitdwd-coursenav-sublink {
+    display: block;
+    padding: .4rem .75rem;
+    font-size: .875rem;
+}
+
+// "More": the items Moodle puts in its overflow menu.
+.iiitdwd-coursenav-more {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: .5rem;
+    padding: .65rem .85rem .4rem;
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--iiitdwd-border);
+    color: var(--iiitdwd-text-muted);
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+
+    &:hover,
+    &:focus-visible {
+        color: var(--iiitdwd-text);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .iiitdwd-coursenav-chevron {
+        transition: none;
+    }
+}
+
+@include media-breakpoint-up(lg) {
+    @include course-subnav-sidebar("#page.drawers:not(.show-drawer-left)");
+}
+
+@media (min-width: 1600px) {
+    @include course-subnav-sidebar("#page.drawers.show-drawer-left");
+}
+
+//
+// Course hero (templates/course_hero.mustache) on /course/view.php
+//
+
+// The hero shows the course title, so Boost's page heading is not needed there.
+body.iiitdwd-has-course-hero #page-header .page-context-header {
+    display: none !important;
+}
+
+.iiitdwd-course-top {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    // Rendered just outside div[role=main]; line it up with the sections, which Boost pads at md and up.
+    @include media-breakpoint-up(md) {
+        #page.drawers & {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+    }
+
+    @include media-breakpoint-up(xl) {
+        grid-template-columns: minmax(0, 1fr) 300px;
+    }
+}
+
+.iiitdwd-course-hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 11rem;
+    padding: 1.75rem;
+    border: 1px solid var(--iiitdwd-border);
+    border-radius: var(--iiitdwd-radius-lg);
+    background:
+        repeating-linear-gradient(135deg, rgba($white, .03) 0 2px, transparent 2px 16px),
+        radial-gradient(circle at 100% 0%, rgba($iiitdwd-blue, .35), transparent 55%),
+        linear-gradient(135deg, mix($iiitdwd-blue, $iiitdwd-sidebar, 25%) 0%, var(--iiitdwd-surface) 75%);
+}
+
+.iiitdwd-course-hero-pills {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: .75rem;
+}
+
+.iiitdwd-course-hero-category {
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--iiitdwd-text-secondary);
+}
+
+.iiitdwd-course-hero-title {
+    margin: 0;
+    font-size: 1.875rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.iiitdwd-course-hero-dates {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .4rem;
+    margin: .875rem 0 0;
+    font-size: .875rem;
+    color: var(--iiitdwd-text-secondary);
+
+    .icon {
+        margin: 0;
+        color: var(--iiitdwd-text-muted);
+    }
+}
+
+.iiitdwd-course-hero-sep {
+    color: var(--iiitdwd-text-muted);
+}
+
+// Live Session Stats.
+.iiitdwd-live-stats {
+    display: flex;
+    flex-direction: column;
+}
+
+.iiitdwd-live-stats-body {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+// Circular gauge: a conic-gradient ring filled to --iiitdwd-gauge degrees.
+.iiitdwd-gauge {
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 7.5rem;
+    height: 7.5rem;
+    border-radius: 50%;
+    background:
+        radial-gradient(closest-side, var(--iiitdwd-surface) 78%, transparent 79%),
+        conic-gradient(var(--iiitdwd-green-alt) var(--iiitdwd-gauge, 0deg), var(--iiitdwd-border) 0);
+}
+
+.iiitdwd-gauge-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.iiitdwd-gauge-label {
+    font-size: .6875rem;
+    color: var(--iiitdwd-text-secondary);
+}
+
+.iiitdwd-live-stats-counts {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+    margin: 0;
+
+    > div {
+        padding-left: .75rem;
+        border-left: 3px solid var(--iiitdwd-green-alt);
+
+        &.is-missed {
+            border-left-color: $red;
+        }
+    }
+
+    dt {
+        font-size: .75rem;
+        font-weight: 400;
+        color: var(--iiitdwd-text-secondary);
+    }
+
+    dd {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+}
+
+.iiitdwd-live-stats-foot {
+    margin: 1rem 0 0;
+    font-size: .75rem;
+    color: var(--iiitdwd-text-muted);
+}
+
+//
+// Section and activity cards
+//
+
+.course-content {
+    .course-section {
+        border: 0;
+        padding: 0;
+        margin-bottom: 1rem;
+    }
+
+    .course-section .section-item {
+        background-color: var(--iiitdwd-surface);
+        border: 1px solid var(--iiitdwd-border);
+        border-radius: var(--iiitdwd-radius-card);
+        padding: 1rem 1.25rem;
+    }
+
+    .course-section .sectionname,
+    .course-section .sectionname a {
+        color: var(--iiitdwd-text) !important;
+        font-weight: 600;
+    }
+
+    .course-section .icons-collapse-expand {
+        border-radius: var(--iiitdwd-radius);
+    }
+
+    .activity-item {
+        background-color: var(--iiitdwd-bg);
+        border: 1px solid var(--iiitdwd-border);
+        border-radius: 12px;
+        transition: border-color .15s ease;
+
+        &:hover {
+            border-color: rgba($iiitdwd-blue, .5);
+        }
+    }
+
+    .activity-item .activityname a {
+        color: var(--iiitdwd-text) !important;
+    }
+
+    .activity-altcontent,
+    .activity-item .description {
+        color: var(--iiitdwd-text-secondary);
+    }
+}
+
+@include media-breakpoint-down(md) {
+    .course-content {
+        .course-section .section-item {
+            padding: .75rem 1rem;
+        }
+
+        .course-section .sectionname {
+            font-size: 1.0625rem;
+        }
+    }
+
+    .iiitdwd-course-hero {
+        min-height: 0;
+        padding: 1.25rem;
+    }
+
+    .iiitdwd-course-hero-title {
+        font-size: 1.5rem;
+    }
+}

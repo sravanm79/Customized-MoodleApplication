@@ -1,0 +1,136 @@
+// Day/Night colour modes.
+//
+// The theme's colours are CSS custom properties: light (Day) values on :root, dark (Night) values on
+// [data-theme="dark"]. The renderer writes data-theme on <html> from the user's preference (or localStorage when
+// logged out), and amd/src/theme_toggle.js switches it. Bootstrap's own --bs-* properties are mapped to the same
+// tokens, so Bootstrap components follow the mode too.
+//
+// Compiled after Bootstrap and Moodle core, so these declarations win over Bootstrap's :root.
+
+// One mode's custom properties.
+@mixin iiitdwd-color-mode($bg, $surface, $sidebar, $border, $text, $text-secondary, $text-muted, $link, $overlay,
+        $scheme) {
+    // Surfaces
+    --iiitdwd-bg: #{$bg};
+    --iiitdwd-surface: #{$surface};
+    --iiitdwd-sidebar: #{$sidebar};
+    --iiitdwd-border: #{$border};
+
+    // Text
+    --iiitdwd-text: #{$text};
+    --iiitdwd-text-secondary: #{$text-secondary};
+    --iiitdwd-text-muted: #{$text-muted};
+    --iiitdwd-link: #{$link};
+
+    // Hover and selection fills: a tint of the text colour, so they show on either background.
+    --iiitdwd-overlay-1: #{rgba($overlay, .03)};
+    --iiitdwd-overlay-2: #{rgba($overlay, .05)};
+    --iiitdwd-overlay-3: #{rgba($overlay, .08)};
+
+    // Boost's "primary light" fills (section chevrons, selected items, info blocks).
+    --iiitdwd-primary-light-bg: #{mix($iiitdwd-blue, $surface, if($scheme == dark, 20%, 12%))};
+    --iiitdwd-primary-light-hover: #{mix($iiitdwd-blue, $surface, if($scheme == dark, 30%, 20%))};
+    --iiitdwd-primary-light-border: #{mix($iiitdwd-blue, $surface, if($scheme == dark, 60%, 40%))};
+
+    // Bootstrap 5.3 runtime colours.
+    --bs-body-bg: #{$bg};
+    --bs-body-bg-rgb: #{to-rgb($bg)};
+    --bs-body-color: #{$text};
+    --bs-body-color-rgb: #{to-rgb($text)};
+    --bs-emphasis-color: #{$text};
+    --bs-emphasis-color-rgb: #{to-rgb($text)};
+    --bs-secondary-color: #{$text-secondary};
+    --bs-secondary-color-rgb: #{to-rgb($text-secondary)};
+    --bs-secondary-bg: #{$surface};
+    --bs-secondary-bg-rgb: #{to-rgb($surface)};
+    --bs-tertiary-color: #{$text-muted};
+    --bs-tertiary-color-rgb: #{to-rgb($text-muted)};
+    --bs-tertiary-bg: #{$sidebar};
+    --bs-tertiary-bg-rgb: #{to-rgb($sidebar)};
+    --bs-heading-color: #{$text};
+    --bs-link-color: #{$link};
+    --bs-link-color-rgb: #{to-rgb($link)};
+    --bs-link-hover-color: #{$link};
+    --bs-link-hover-color-rgb: #{to-rgb($link)};
+    --bs-border-color: #{$border};
+    --bs-border-color-translucent: #{rgba($overlay, .1)};
+
+    // Subtle theme colours (alerts, list-group and table variants, .text-bg-*-subtle).
+    @each $name, $color in ("primary": $iiitdwd-blue, "success": $iiitdwd-green, "info": $iiitdwd-blue-alt,
+            "warning": $orange, "danger": $red) {
+        --bs-#{$name}-bg-subtle: #{mix($color, $surface, if($scheme == dark, 16%, 10%))};
+        --bs-#{$name}-border-subtle: #{mix($color, $surface, if($scheme == dark, 50%, 35%))};
+        --bs-#{$name}-text-emphasis: #{if($scheme == dark, mix($white, $color, 50%), mix($black, $color, 30%))};
+    }
+
+    // Lets the browser draw scrollbars, date pickers and autofill in the matching mode.
+    color-scheme: #{$scheme};
+}
+
+:root {
+    // Accents and radii: the same in both modes.
+    --iiitdwd-blue: #{$iiitdwd-blue};
+    --iiitdwd-blue-alt: #{$iiitdwd-blue-alt};
+    --iiitdwd-green: #{$iiitdwd-green};
+    --iiitdwd-green-alt: #{$iiitdwd-green-alt};
+    --iiitdwd-radius: #{$iiitdwd-radius};
+    --iiitdwd-radius-card: #{$iiitdwd-radius-card};
+    --iiitdwd-radius-lg: #{$iiitdwd-radius-lg};
+
+    // Day (light).
+    @include iiitdwd-color-mode($iiitdwd-light-bg, $iiitdwd-light-surface, $iiitdwd-light-sidebar,
+        $iiitdwd-light-border, $iiitdwd-light-text, $iiitdwd-light-text-secondary, $iiitdwd-light-text-muted,
+        $iiitdwd-light-link, $iiitdwd-light-text, light);
+}
+
+// Night (dark): the theme's original palette. Also applied to the navy banners (course hero, teacher dashboard
+// hero, course card banners), which stay dark in both modes; .iiitdwd-force-dark does the same for any element.
+[data-theme="dark"],
+.iiitdwd-force-dark,
+.iiitdwd-course-hero,
+.iiitdwd-tdash-hero,
+.iiitdwd-course-card-banner {
+    @include iiitdwd-color-mode($iiitdwd-bg, $iiitdwd-surface, $iiitdwd-sidebar, $iiitdwd-border, $iiitdwd-text,
+        $iiitdwd-text-secondary, $iiitdwd-text-muted, $link-color, $white, dark);
+}
+
+// Elements whose Bootstrap colours are set as component custom properties from compile-time values get the
+// runtime colours here.
+.popover {
+    --bs-popover-border-color: var(--iiitdwd-border);
+}
+
+// Secondary buttons: a neutral fill from the border token (navy at night, light grey by day).
+.btn-secondary {
+    --bs-btn-color: var(--iiitdwd-text);
+    --bs-btn-bg: var(--iiitdwd-border);
+    --bs-btn-border-color: var(--iiitdwd-border);
+    --bs-btn-hover-color: var(--iiitdwd-text);
+    --bs-btn-hover-bg: color-mix(in srgb, var(--iiitdwd-border) 85%, var(--iiitdwd-text));
+    --bs-btn-hover-border-color: color-mix(in srgb, var(--iiitdwd-border) 85%, var(--iiitdwd-text));
+    --bs-btn-active-color: var(--iiitdwd-text);
+    --bs-btn-active-bg: color-mix(in srgb, var(--iiitdwd-border) 75%, var(--iiitdwd-text));
+    --bs-btn-active-border-color: color-mix(in srgb, var(--iiitdwd-border) 75%, var(--iiitdwd-text));
+    --bs-btn-disabled-color: var(--iiitdwd-text-muted);
+    --bs-btn-disabled-bg: var(--iiitdwd-border);
+    --bs-btn-disabled-border-color: var(--iiitdwd-border);
+}
+
+// Outline secondary buttons ("Access as a guest", filters): text and border from the runtime tokens.
+.btn-outline-secondary {
+    --bs-btn-color: var(--iiitdwd-text-secondary);
+    --bs-btn-border-color: var(--iiitdwd-border);
+    --bs-btn-hover-color: var(--iiitdwd-text);
+    --bs-btn-hover-bg: var(--iiitdwd-overlay-2);
+    --bs-btn-hover-border-color: color-mix(in srgb, var(--iiitdwd-border) 70%, var(--iiitdwd-text-muted));
+    --bs-btn-active-color: var(--iiitdwd-text);
+    --bs-btn-active-bg: var(--iiitdwd-overlay-3);
+    --bs-btn-active-border-color: color-mix(in srgb, var(--iiitdwd-border) 70%, var(--iiitdwd-text-muted));
+    --bs-btn-disabled-color: var(--iiitdwd-text-muted);
+    --bs-btn-disabled-border-color: var(--iiitdwd-border);
+}
+
+// Bootstrap's close "x" is an SVG image coloured at compile time (white, for Night); darken it by Day.
+:root:not([data-theme="dark"]) .btn-close {
+    filter: invert(1) grayscale(1);
+}

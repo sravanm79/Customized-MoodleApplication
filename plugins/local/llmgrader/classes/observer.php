@@ -17,7 +17,7 @@
 namespace local_llmgrader;
 
 /**
- * Queues an LLM evaluation when a student submits a notebook. Never calls the LLM itself.
+ * Queues an LLM evaluation when a student submits, for assignments set to run on submission. Never calls the LLM.
  *
  * @package   local_llmgrader
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -33,34 +33,20 @@ class observer {
         if (!get_config('local_llmgrader', 'enabled')) {
             return;
         }
+        if (assignment_config::get($event->contextinstanceid)->triggermode !== assignment_config::TRIGGER_SUBMIT) {
+            return;
+        }
         $submission = $event->get_record_snapshot('assign_submission', $event->objectid);
         // Group submissions are out of scope for now.
         if (empty($submission->userid)) {
             return;
         }
-        $file = self::find_notebook($event->contextid, $submission->id);
-        if (!$file) {
+        $content = submission_content::extract(\context_module::instance($event->contextinstanceid), $submission,
+            review::maxchars());
+        if (!$content) {
             return;
         }
         $submission->assignment = (int) $submission->assignment;
-        jobs::queue($event->courseid, $event->contextinstanceid, $submission, $file);
-    }
-
-    /**
-     * First .ipynb file in a submission.
-     *
-     * @param int $contextid
-     * @param int $submissionid
-     * @return \stored_file|null
-     */
-    public static function find_notebook(int $contextid, int $submissionid): ?\stored_file {
-        $files = get_file_storage()->get_area_files($contextid, 'assignsubmission_file', 'submission_files',
-            $submissionid, 'id', false);
-        foreach ($files as $file) {
-            if (strtolower(pathinfo($file->get_filename(), PATHINFO_EXTENSION)) === 'ipynb') {
-                return $file;
-            }
-        }
-        return null;
+        jobs::queue($event->courseid, $event->contextinstanceid, $submission, $content);
     }
 }

@@ -1,0 +1,70 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_gradesheet/preview
+
+    Upload preview: how many rows will be imported, the rows with problems (and why), and students without a row.
+
+    Example context (json):
+    {
+        "rows": 4, "validcount": 2, "errorcount": 1, "missingcount": 1,
+        "valid": [{"line": 2, "identifier": "s1", "fullname": "student 1", "score": "42"}],
+        "haserrors": true,
+        "errors": [{"line": 4, "identifier": "x9", "value": "40", "reason": "Not a student of this course"}],
+        "hasmissing": true, "missing": "user 3"
+    }
+}}
+<div class="local-gradesheet-preview card">
+    <div class="card-body">
+        <h3>{{#str}}previewheading, local_gradesheet{{/str}}</h3>
+        <ul class="local-gradesheet-chips">
+            <li>{{#str}}previewrows, local_gradesheet, {{rows}}{{/str}}</li>
+            <li class="is-ok">{{#str}}previewvalid, local_gradesheet, {{validcount}}{{/str}}</li>
+            <li class="{{#haserrors}}is-error{{/haserrors}}">{{#str}}previewerrors, local_gradesheet, {{errorcount}}{{/str}}</li>
+            <li class="{{#hasmissing}}is-warning{{/hasmissing}}">{{#str}}previewmissing, local_gradesheet, {{missingcount}}{{/str}}</li>
+        </ul>
+        {{#haserrors}}
+            <h4>{{#str}}previewerrorsheading, local_gradesheet{{/str}}</h4>
+            <table class="generaltable table-sm">
+                <thead><tr>
+                    <th scope="col">{{#str}}line, local_gradesheet{{/str}}</th>
+                    <th scope="col">{{#str}}studentid, local_gradesheet{{/str}}</th>
+                    <th scope="col">{{#str}}score, local_gradesheet{{/str}}</th>
+                    <th scope="col">{{#str}}problem, local_gradesheet{{/str}}</th>
+                </tr></thead>
+                <tbody>
+                    {{#errors}}<tr><td>{{line}}</td><td>{{identifier}}</td><td>{{value}}</td><td>{{reason}}</td></tr>{{/errors}}
+                </tbody>
+            </table>
+        {{/haserrors}}
+        {{#hasmissing}}<p class="text-muted small">{{#str}}previewmissinglist, local_gradesheet, {{missing}}{{/str}}</p>{{/hasmissing}}
+        <details>
+            <summary>{{#str}}previewvalidlist, local_gradesheet, {{validcount}}{{/str}}</summary>
+            <table class="generaltable table-sm">
+                <thead><tr>
+                    <th scope="col">{{#str}}line, local_gradesheet{{/str}}</th>
+                    <th scope="col">{{#str}}studentid, local_gradesheet{{/str}}</th>
+                    <th scope="col">{{#str}}student, local_gradesheet{{/str}}</th>
+                    <th scope="col" class="text-end">{{#str}}score, local_gradesheet{{/str}}</th>
+                </tr></thead>
+                <tbody>
+                    {{#valid}}<tr><td>{{line}}</td><td>{{identifier}}</td><td>{{fullname}}</td><td class="text-end">{{score}}</td></tr>{{/valid}}
+                </tbody>
+            </table>
+        </details>
+    </div>
+</div>
