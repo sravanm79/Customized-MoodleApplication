@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Navigation: "Students and logins" in courses for people who may register students.
+ * Navigation: Class overview, Send announcement and Students and logins in courses, per capability.
  *
  * @package    local_studentportal
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -29,10 +29,22 @@
  * @param context_course $context
  */
 function local_studentportal_extend_navigation_course(navigation_node $navigation, stdClass $course, context_course $context) {
-    if ($course->id == SITEID || !has_capability('local/studentportal:register', context_system::instance())) {
+    if ($course->id == SITEID) {
         return;
     }
-    $navigation->add(get_string('coursestudents', 'local_studentportal'),
-        new moodle_url('/local/studentportal/students.php', ['id' => $course->id]),
-        navigation_node::TYPE_SETTING, null, 'local_studentportal_students', new pix_icon('i/users', ''));
+    if (has_capability('local/studentportal:viewclass', $context)) {
+        $navigation->add(get_string('classoverview', 'local_studentportal'),
+            new moodle_url('/local/studentportal/classoverview.php', ['id' => $course->id]),
+            navigation_node::TYPE_SETTING, null, 'local_studentportal_class', new pix_icon('i/report', ''));
+    }
+    if (has_capability('local/studentportal:announce', $context)) {
+        $navigation->add(get_string('sendannouncement', 'local_studentportal'),
+            new moodle_url('/local/studentportal/announce.php', ['courseid' => $course->id]),
+            navigation_node::TYPE_SETTING, null, 'local_studentportal_announce', new pix_icon('i/email', ''));
+    }
+    if (has_capability('local/studentportal:register', context_system::instance())) {
+        $navigation->add(get_string('coursestudents', 'local_studentportal'),
+            new moodle_url('/local/studentportal/students.php', ['id' => $course->id]),
+            navigation_node::TYPE_SETTING, null, 'local_studentportal_students', new pix_icon('i/users', ''));
+    }
 }

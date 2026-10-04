@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Admin menu: Site administration › Users › Accounts › Register students.
+ * Admin menu: Site administration › Users › Accounts › Register students, All students, Send announcement.
  *
  * @package    local_studentportal
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -26,3 +26,9 @@ defined('MOODLE_INTERNAL') || die();
 $ADMIN->add('accounts', new admin_externalpage('local_studentportal_register',
     new lang_string('registerstudents', 'local_studentportal'),
     new moodle_url('/local/studentportal/register.php'), 'local/studentportal:register'));
+$ADMIN->add('accounts', new admin_externalpage('local_studentportal_allstudents',
+    new lang_string('allstudents', 'local_studentportal'),
+    new moodle_url('/local/studentportal/allstudents.php'), 'local/studentportal:register'));
+$ADMIN->add('accounts', new admin_externalpage('local_studentportal_announce',
+    new lang_string('sendannouncement', 'local_studentportal'),
+    new moodle_url('/local/studentportal/announce.php'), 'local/studentportal:announcesite'));

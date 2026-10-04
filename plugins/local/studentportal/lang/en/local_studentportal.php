@@ -21,8 +21,17 @@
  */
 
 $string['pluginname'] = 'Student portal';
-$string['privacy:metadata'] = 'The Student portal stores no personal data of its own. It creates accounts and enrolments in Moodle core, and shows students their own grades and activity.';
+$string['privacy:metadata:ann'] = 'Announcements sent to students.';
+$string['privacy:metadata:ann:userid'] = 'The person who sent the announcement.';
+$string['privacy:metadata:ann:subject'] = 'The subject of the announcement.';
+$string['privacy:metadata:ann:message'] = 'The text of the announcement.';
+$string['privacy:metadata:ann:timecreated'] = 'When the announcement was sent.';
+$string['privacy:metadata:messages'] = 'Announcements are delivered to students as Moodle notifications.';
 $string['studentportal:register'] = 'Register students and issue their login credentials';
+$string['studentportal:announce'] = 'Send announcements to the students of a course';
+$string['studentportal:announcesite'] = 'Send announcements to every student on the site';
+$string['studentportal:viewclass'] = 'See the class overview and student reports of a course';
+$string['messageprovider:announcement'] = 'Announcements from admins and teachers';
 
 // Register students.
 $string['registerstudents'] = 'Register students';
@@ -160,3 +169,41 @@ $string['viewfeedback'] = 'Feedback';
 $string['nogradesyet'] = 'No grades yet in this course.';
 $string['fullgradereport'] = 'Full grade report';
 $string['nocourses'] = 'You are not enrolled in any course as a student yet.';
+
+// Announcements.
+$string['announcements'] = 'Announcements';
+$string['allannouncements'] = 'All announcements';
+$string['sendannouncement'] = 'Send announcement';
+$string['announceintro'] = 'Students receive the announcement as a notification (the bell at the top, and by email unless they turned that off) and see it on their dashboard and on the Announcements page.';
+$string['audience'] = 'Send to';
+$string['audience_site'] = 'To all students';
+$string['audience_chosen'] = 'Students of the courses below';
+$string['audience_courses'] = 'To students of: {$a}';
+$string['subject'] = 'Subject';
+$string['message'] = 'Message';
+$string['announcementqueued'] = 'Announcement queued for {$a} student(s). It is delivered within a minute.';
+$string['error_nocourses'] = 'Choose at least one course you teach.';
+$string['received'] = 'Received';
+$string['sent'] = 'Sent';
+$string['new'] = 'New';
+$string['noannouncements'] = 'No announcements yet.';
+$string['nosent'] = 'Nothing sent yet.';
+$string['annstatus_queued'] = 'Sending…';
+$string['annstatus_sent'] = 'Sent to {$a} student(s)';
+$string['error_noannouncement'] = 'This announcement does not exist or was not sent to you.';
+
+// Class overview, student report, all students.
+$string['classoverview'] = 'Class overview';
+$string['inactive7'] = 'Not seen for 7+ days';
+$string['lastvisitcol'] = 'Last visit';
+$string['viewreport'] = 'Report';
+$string['messagestudent'] = 'Message';
+$string['studentreport'] = 'Student report: {$a}';
+$string['reportintro'] = '{$a->name} · roll number {$a->idnumber} · {$a->email}. This is what the student sees on their My performance page.';
+$string['error_notastudent'] = 'This user is not enrolled in this course.';
+$string['allstudents'] = 'All students';
+$string['allstudentscount'] = '{$a} student(s) with a student role in at least one course.';
+$string['searchstudents'] = 'Search name, roll number, email or username';
+$string['nostudentsfound'] = 'No students found.';
+$string['col_submitted'] = 'Submitted';
+$string['col_tests'] = 'Tests';

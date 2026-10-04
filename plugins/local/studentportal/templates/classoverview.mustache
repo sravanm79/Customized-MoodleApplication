@@ -1,0 +1,78 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+{{!
+    @template local_studentportal/classoverview
+
+    Students of a course with their progress and grades.
+
+    Example context (json):
+    {
+        "metrics": [{"label": "Students enrolled", "value": 3, "variant": "blue", "icon": ""}],
+        "hasrows": true,
+        "rows": [{"fullname": "Asha Rao", "idnumber": "23BDS001", "email": "a@example.com", "lastaccess": "2 days ago",
+                  "never": false, "inactive": false, "hasgrade": true, "grade": 80, "level": "good", "hascompletion": false,
+                  "submissions": 2, "attempts": 1, "reporturl": "#", "messageurl": "#"}],
+        "downloadurl": "#", "announceurl": "#", "gradebookurl": "#"
+    }
+}}
+<div class="local-studentportal-page iiitdwd-tdash">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <h2 class="h4 mb-0">{{#str}}classoverview, local_studentportal{{/str}}</h2>
+        <div class="d-flex flex-wrap gap-2">
+            {{#announceurl}}<a class="btn btn-primary" href="{{announceurl}}">{{#str}}sendannouncement, local_studentportal{{/str}}</a>{{/announceurl}}
+            {{#gradebookurl}}<a class="btn btn-secondary" href="{{gradebookurl}}">{{#str}}gradebook, grades{{/str}}</a>{{/gradebookurl}}
+            <a class="btn btn-secondary" href="{{downloadurl}}">{{#str}}downloadcsv, local_studentportal{{/str}}</a>
+        </div>
+    </div>
+    <ul class="iiitdwd-tdash-metrics">
+        {{#metrics}}
+        <li class="iiitdwd-tdash-card iiitdwd-tdash-metric">
+            <span class="iiitdwd-tdash-badge iiitdwd-tdash-badge-{{variant}}" aria-hidden="true">{{{icon}}}</span>
+            <span class="iiitdwd-tdash-metric-text">
+                <span class="iiitdwd-tdash-metric-value">{{value}}</span>
+                <span class="iiitdwd-tdash-metric-label">{{label}}</span>
+            </span>
+        </li>
+        {{/metrics}}
+    </ul>
+    {{#hasrows}}
+    <div class="iiitdwd-tdash-card table-responsive">
+        <table class="table local-studentportal-table">
+            <thead><tr>
+                <th>{{#str}}name{{/str}}</th><th>{{#str}}rollnumber, local_studentportal{{/str}}</th>
+                <th>{{#str}}lastvisitcol, local_studentportal{{/str}}</th><th>{{#str}}completion, local_studentportal{{/str}}</th>
+                <th>{{#str}}coursegrade, local_studentportal{{/str}}</th><th>{{#str}}col_submitted, local_studentportal{{/str}}</th>
+                <th>{{#str}}col_tests, local_studentportal{{/str}}</th><th></th>
+            </tr></thead>
+            <tbody>
+            {{#rows}}
+                <tr>
+                    <td><a href="{{reporturl}}">{{fullname}}</a><br><span class="small">{{email}}</span></td>
+                    <td>{{idnumber}}</td>
+                    <td>{{#never}}<span class="local-studentportal-status is-error">{{lastaccess}}</span>{{/never}}
+                        {{^never}}{{#inactive}}<span class="local-studentportal-status is-warn">{{lastaccess}}</span>{{/inactive}}{{^inactive}}{{lastaccess}}{{/inactive}}{{/never}}</td>
+                    <td>{{#hascompletion}}{{completion}}%{{/hascompletion}}{{^hascompletion}}–{{/hascompletion}}</td>
+                    <td>{{#hasgrade}}<span class="local-studentportal-grade is-{{level}}">{{grade}}%</span>{{/hasgrade}}{{^hasgrade}}–{{/hasgrade}}</td>
+                    <td>{{submissions}}</td><td>{{attempts}}</td>
+                    <td class="text-nowrap"><a class="btn btn-sm btn-outline-secondary" href="{{reporturl}}">{{#str}}viewreport, local_studentportal{{/str}}</a></td>
+                </tr>
+            {{/rows}}
+            </tbody>
+        </table>
+    </div>
+    {{/hasrows}}
+    {{^hasrows}}<div class="alert alert-info">{{#str}}nostudents, local_studentportal{{/str}}</div>{{/hasrows}}
+</div>

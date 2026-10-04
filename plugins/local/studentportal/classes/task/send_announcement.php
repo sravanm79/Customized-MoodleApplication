@@ -13,18 +13,22 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+namespace local_studentportal\task;
 
 /**
- * Student portal: register students into courses with shareable credentials, and the student "My performance" page.
+ * Sends one announcement to its students (queued by local_studentportal\local\announcements::create()).
  *
  * @package    local_studentportal
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+class send_announcement extends \core\task\adhoc_task {
 
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->component = 'local_studentportal';
-$plugin->version   = 2026100501;
-$plugin->requires  = 2025041400; // Moodle 5.0.
-$plugin->maturity  = MATURITY_BETA;
-$plugin->release   = '0.2.0';
+    /**
+     * Run.
+     */
+    public function execute() {
+        $data = $this->get_custom_data();
+        $sent = \local_studentportal\local\announcements::send((int) $data->id);
+        mtrace("Announcement {$data->id}: notified {$sent} student(s).");
+    }
+}

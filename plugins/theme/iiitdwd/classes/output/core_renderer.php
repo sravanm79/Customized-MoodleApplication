@@ -212,6 +212,8 @@ class core_renderer extends \theme_boost\output\core_renderer {
         if ($this->is_student()) {
             $items[] = ['performance', get_string('myperformance', 'theme_iiitdwd'),
                 new \moodle_url('/local/studentportal/performance.php'), 'i/report'];
+            $items[] = ['announcements', get_string('announcements', 'theme_iiitdwd'),
+                new \moodle_url('/local/studentportal/announcements.php'), 'i/email'];
         }
         $active = $this->active_app_section();
         $context = [
@@ -295,6 +297,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
         if ($url->compare(new \moodle_url('/local/studentportal/performance.php'), URL_MATCH_BASE)) {
             return 'performance';
         }
+        if ($url->compare(new \moodle_url('/local/studentportal/announcements.php'), URL_MATCH_BASE)) {
+            return 'announcements';
+        }
         if ($url->compare(new \moodle_url('/my/courses.php'), URL_MATCH_BASE)) {
             return 'mycourses';
         }
@@ -330,7 +335,10 @@ class core_renderer extends \theme_boost\output\core_renderer {
             ['managepurgecaches', new \moodle_url('/admin/purgecaches.php'), 'i/reload'],
         ];
         if (student_dashboard::available()) {
-            array_unshift($shortcuts, ['manageregisterstudents', new \moodle_url('/local/studentportal/register.php'), 'i/enrolusers']);
+            array_unshift($shortcuts,
+                ['manageregisterstudents', new \moodle_url('/local/studentportal/register.php'), 'i/enrolusers'],
+                ['manageallstudents', new \moodle_url('/local/studentportal/allstudents.php'), 'i/users'],
+                ['managesendannouncement', new \moodle_url('/local/studentportal/announce.php'), 'i/email']);
         }
         $context = [
             'icon' => $this->pix_icon('i/settings', ''),

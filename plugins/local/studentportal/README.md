@@ -37,6 +37,25 @@ Capability `local/studentportal:register` (system; managers by default; admins a
 Only the student's own data, and only what the gradebook lets them see (hidden items, hidden grades and grades not
 yet released are left out).
 
+## Announcements
+
+*Manage › Send announcement* (admins/managers: **to all students** or chosen courses), a course's **Send
+announcement** (teachers: their own courses), or the teacher dashboard button. Students get a Moodle notification
+(bell, and email per their *Notification preferences › Announcements from admins and teachers*), a card on their
+dashboard (last 30 days) and the **Announcements** page (sidebar). Sending runs as a background task (within a
+minute via cron). Capabilities: `local/studentportal:announce` (course; editing teachers, managers),
+`local/studentportal:announcesite` (system; managers).
+
+## Class overview, student report, all students
+
+- **Class overview** (course sub-sidebar; teachers, non-editing teachers, managers; `local/studentportal:viewclass`):
+  every student with last visit (never / 7+ days flagged), completion, course grade, submissions and tests; CSV.
+- **Student report**: one student's My performance view, for that course (teachers) or all courses (admins).
+- **All students** (*Manage* menu; `local/studentportal:register`): every student on the site with their courses and
+  last login; search, paging, CSV.
+
+The site has *Force users to log in* on, so nothing is visible without an account.
+
 ## Privacy
 
-Stores nothing of its own (null privacy provider).
+Stores announcements (author, audience, text) in `local_studentportal_ann`; everything else belongs to Moodle core.

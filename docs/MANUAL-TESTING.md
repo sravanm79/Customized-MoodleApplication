@@ -41,7 +41,8 @@ real Zoom meeting).
 
 If you don't know a test user's password, log in as `admin`, open the user's profile
 (*Site administration › Users › Browse list of users* › the user) and click **Log in as**. Log out to return.
-(Section 2.4 also tests the forgotten-password email.)
+(Section 2.4 also tests the forgotten-password email.) Note: while "logged in as" someone, Moodle does not allow
+changing their password or reading some private pages; test those (§19.4, §19.12) with the student's own login.
 
 ### 0.4 Where things are (PYTHON LESSON, course id 2)
 
@@ -55,6 +56,37 @@ If you don't know a test user's password, log in as `admin`, open the user's pro
 | YouTube video | `/mod/url/view.php?id=8` |
 | Proctored Exam Demo quiz (course "Proctoring Demo", hidden) | `/mod/quiz/view.php?id=4` |
 | Zoom classes (course "Zoom Test", hidden) | `/mod/zoom/view.php?id=24`, `?id=26` |
+
+### 0.5 End-to-end journeys (do these first, then the detailed sections)
+
+Each journey uses the real flow from start to finish. Note the section numbers of anything that fails.
+
+**A. Admin sets up a class (≈15 min)**
+1. Log in as `admin` → Dashboard (teacher dashboard, gear **Manage** menu) — §3.
+2. *Manage › Register students* → register 3 test students into PYTHON LESSON from a pasted list (§19.1–19.3).
+3. Share the logins: **Print slips**, **Email each student** → check Mailpit (§19.2, §16).
+4. *Manage › All students* → the 3 new students appear, "Never" logged in; search by roll number (§19.11).
+5. *Manage › Send announcement* → "To all students": "Welcome to the LMS" (§19.9).
+6. PYTHON LESSON › **Students and logins** → reset one student's password and share it again (§19.5).
+
+**B. Teacher runs the course (≈20 min)**
+1. Log in as `teacher` → teacher dashboard with **Send announcement**, "Needs your attention" (§7).
+2. PYTHON LESSON › course sub-sidebar **Send announcement** → "Quiz on Friday" to this course (§19.9).
+3. Add a Zoom meeting for later today; check the calendar Join button (§6).
+4. **Class overview** → every student with last visit, progress, grade, work done; **Download CSV**; open a
+   **Report** (§19.10).
+5. After students submit (journey C): grade an assignment, run **Auto Grade** on the AUTO GRADER TEST and release a
+   draft (§10), upload a grade sheet (§9).
+
+**C. Student learns (≈20 min, use a student account created in A)**
+1. Install the LMS certificate (§1.1) → first login with the temporary password → choose a new password (§19.4).
+2. Dashboard: the two announcements (card + bell + email), Up next, Live classes with Join (§19.6, §19.9).
+3. Open PYTHON LESSON from the course card → watch the video (§14.1) → open the notebook (§11) → submit BASICS-01 and
+   the AUTO GRADER assignment (§7.2, §10.2) → take CODING TEST (§12).
+4. Device check and the proctored quiz in SEB (§13).
+5. After the teacher graded (B5): **My performance** shows grades, feedback and insights; the dashboard's "Recent
+   grades & feedback" shows the new grade; Grade sheets shows your score (§19.7, §9.4).
+6. Messages: reply to the teacher (§5); Announcements page lists everything received (§19.9).
 
 ---
 
@@ -79,7 +111,13 @@ If you don't know a test user's password, log in as `admin`, open the user's pro
 
 - [ ] Expected: both end at `https://192.168.30.239/...` (the login page or home).
 
-### 1.4 Without the certificate
+### 1.4 Login required
+1. In a private window open `https://192.168.30.239/` and `https://192.168.30.239/course/index.php`.
+
+- [ ] Both go to the login page (*Force users to log in* is on: nothing is visible without an account).
+- [ ] `http://192.168.30.239:9999/lms-ca.crt` still downloads without logging in.
+
+### 1.5 Without the certificate
 1. On a device **without** the certificate (or a phone before installing it), open `https://192.168.30.239`.
 
 - [ ] Expected: the browser warns that the connection is not private. This is why every exam device needs the
@@ -592,7 +630,7 @@ Notes: ______________________________________________
 
 ---
 
-## 19. Student portal: registering students and the student view
+## 19. Student portal: registration, announcements, class overview and the student view
 
 ### 19.1 Register one student (admin)
 *Manage* (gear) › **Register students** (or PYTHON LESSON › course sub-sidebar **Students and logins** ›
@@ -670,16 +708,75 @@ Sidebar › **My performance**.
 - [ ] Hide a grade item in the gradebook (teacher): it disappears from the student's page.
 - [ ] Only your own data; no other student's name or grade anywhere.
 
+### 19.9 Announcements (notifications from admin and teachers)
+**Admin, site-wide:** *Manage › Send announcement* (or *Site administration › Users › Accounts › Send announcement*).
+
+- [ ] **Send to**: "To all students" or "Students of the courses below". Choose all students; subject "Welcome",
+      a message with bold text and a link › **Send announcement** → "Announcement queued for N student(s)".
+- [ ] Within a minute (cron), *Announcements* › **Sent** shows "Sent to N student(s)".
+
+**Teacher, one course:** as `teacher`, PYTHON LESSON › course sub-sidebar **Send announcement** (or the teacher
+dashboard button).
+
+- [ ] Only "Students of the courses below" is offered, and only the teacher's own courses are listed.
+- [ ] Send "Quiz on Friday" to PYTHON LESSON.
+
+**Student (s1):**
+- [ ] The bell shows a red counter; opening it lists both announcements; **View full notification** opens them.
+- [ ] Email for each in Mailpit (unless the student turned email off in *Preferences › Notification preferences ›
+      Announcements from admins and teachers*).
+- [ ] Dashboard: **Announcements** card with both (marked **New** for 3 days), author and time; clicking opens the
+      full announcement (subject, author, "To all students" / "To students of: COURSE -01", formatted message).
+- [ ] Sidebar **Announcements**: the full list, newest first.
+- [ ] A student of another course (e.g. not in PYTHON LESSON) does not get the course announcement, and opening its
+      link says "does not exist or was not sent to you".
+- [ ] Turn off email for announcements in notification preferences → the next announcement arrives only in the bell.
+
+### 19.10 Class overview and student report (teacher)
+PYTHON LESSON › course sub-sidebar **Class overview**.
+
+- [ ] Metrics: students enrolled, average grade, never logged in, not seen for 7+ days.
+- [ ] One row per student: name + email, roll number, last visit (red "Never", amber if 7+ days ago), completion,
+      course grade (green / amber / red), assignments submitted, tests taken, **Report**.
+- [ ] **Download CSV**: the same columns in Excel.
+- [ ] **Report** (or the name) → "Student report: <name>": exactly what the student sees on My performance, for this
+      course only, with **Message** and **Back**.
+- [ ] **Gradebook** opens the grader report; **Send announcement** pre-selects this course.
+- [ ] A teacher cannot open the class overview of a course they do not teach.
+
+### 19.11 All students (admin)
+*Manage › All students* (or *Site administration › Users › Accounts › All students*).
+
+- [ ] Every user with a student role in any course: name + email, roll number, username, course pills (each opens
+      that course's Students and logins), last login (red "Never"), suspended badge.
+- [ ] Search by name, roll number, email or username; paging after 50; **Download CSV**; **Register students**.
+- [ ] **Report** opens the student's report across all their courses.
+- [ ] Teachers and students cannot open this page.
+
+### 19.12 Student essentials (as a student)
+- [ ] User menu › **Profile**: own details; **Edit profile** (picture, description) saves.
+- [ ] User menu › **Preferences** › **Change password**: works with the old password (use the student's real login,
+      not "Log in as": Moodle blocks password changes in a logged-in-as session).
+- [ ] User menu › **Grades**: overview of all courses; click a course → its user report (same grades as My performance).
+- [ ] Course › **Participants**: the student can see classmates' names (Moodle default) but not their grades.
+- [ ] **Messages** (chat icon): message the teacher; **Notifications** (bell) › gear: notification preferences.
+- [ ] **Forgotten password** from the login page (§2.4) works for a newly registered student too.
+- [ ] Log out → the login page; the browser Back button does not show course content.
+
 ### 19.8 Permissions
 - [ ] As a student, `/local/studentportal/register.php`, `/local/studentportal/students.php?id=2` and any
       `/local/studentportal/credentials.php?key=…` are refused.
-- [ ] A teacher (not manager/admin) has no **Students and logins** link and cannot open those pages.
+- [ ] A teacher (not manager/admin) has no **Students and logins** link and cannot open those pages, nor
+      `/local/studentportal/allstudents.php`.
+- [ ] As a student, `/local/studentportal/announce.php`, `/local/studentportal/classoverview.php?id=2`,
+      `/local/studentportal/report.php?id=2&userid=<another student>` and `/local/studentportal/allstudents.php` are
+      refused.
 
 Notes: ______________________________________________
 
 ## After testing
 
-- Remove test data you created: test student accounts from section 19 (*Site administration › Users › Browse list of users* › delete), test grade sheets (Delete), test submissions (as teacher, *Remove submission*),
+- Remove test data you created: test announcements (they stay in the Announcements lists), test student accounts from section 19 (*Site administration › Users › Browse list of users* › delete), test grade sheets (Delete), test submissions (as teacher, *Remove submission*),
   test forum posts, quiz preview attempts (Results › select › Delete), test messages.
 - Set any setting you changed for a test back (minimum class size 5, webcam proctoring off on the demo quiz, the
   Zoom test meeting).

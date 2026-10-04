@@ -145,7 +145,24 @@ class student_dashboard implements renderable, templatable {
         }
         $activedays = count(array_filter($week, fn($d) => $d['count'] > 0));
 
+        $announcements = [];
+        foreach ($this->data->get_announcements(3) as $a) {
+            $author = \core_user::get_user($a->userid);
+            $time = $a->timesent ?: $a->timecreated;
+            $announcements[] = [
+                'subject' => format_string($a->subject),
+                'author' => $author ? fullname($author) : '',
+                'when' => get_string('ago', 'core_message', format_time($now - $time)),
+                'isnew' => $time > $now - 3 * DAYSECS,
+                'snippet' => shorten_text(html_to_text(format_text($a->message, $a->messageformat), 0, false), 160),
+                'url' => (new moodle_url('/local/studentportal/announcements.php', ['id' => $a->id]))->out(false),
+            ];
+        }
+
         return [
+            'announcements' => $announcements,
+            'hasannouncements' => !empty($announcements),
+            'announcementsurl' => (new moodle_url('/local/studentportal/announcements.php'))->out(false),
             'date' => userdate($now, get_string('strftimedaydate', 'langconfig')),
             'greeting' => get_string($greeting, 'theme_iiitdwd', $USER->firstname),
             'summary' => get_string('sdashsummary', 'theme_iiitdwd', [
@@ -193,6 +210,7 @@ class student_dashboard implements renderable, templatable {
                 'quiz' => $output->pix_icon('monologo', '', 'mod_quiz'),
                 'assign' => $output->pix_icon('monologo', '', 'mod_assign'),
                 'other' => $output->pix_icon('i/calendareventdescription', ''),
+                'announce' => $output->pix_icon('i/email', ''),
             ],
         ];
     }

@@ -1,0 +1,74 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+{{!
+    @template local_studentportal/announcements
+
+    Announcements received (students) and sent (staff).
+
+    Example context (json):
+    {
+        "showreceived": true, "hasreceived": true,
+        "received": [{"id": 1, "subject": "Exam schedule", "author": "Admin", "audience": "To all students", "date": "5 Oct 2026",
+                      "isnew": true, "snippet": "The mid-term exams start on...", "url": "#"}],
+        "cansend": true, "sendurl": "#", "hassent": true,
+        "sent": [{"id": 1, "subject": "Exam schedule", "audience": "To all students", "date": "5 Oct 2026", "status": "Sent to 40 students", "url": "#"}]
+    }
+}}
+<div class="local-studentportal-page">
+    {{#cansend}}
+    <div class="d-flex justify-content-end mb-3">
+        <a class="btn btn-primary" href="{{sendurl}}">{{#str}}sendannouncement, local_studentportal{{/str}}</a>
+    </div>
+    {{/cansend}}
+
+    {{#showreceived}}
+    <div class="iiitdwd-tdash-card mb-3">
+        <h3 class="iiitdwd-tdash-card-title">{{#str}}received, local_studentportal{{/str}}</h3>
+        {{#hasreceived}}
+        <ul class="local-studentportal-announcements">
+            {{#received}}
+            <li>
+                <a href="{{url}}" class="local-studentportal-ann-title">{{subject}}</a>
+                {{#isnew}}<span class="local-studentportal-status is-create">{{#str}}new, local_studentportal{{/str}}</span>{{/isnew}}
+                <p class="local-studentportal-ann-meta">{{author}} · {{audience}} · {{date}}</p>
+                <p class="mb-0">{{snippet}}</p>
+            </li>
+            {{/received}}
+        </ul>
+        {{/hasreceived}}
+        {{^hasreceived}}<p class="mb-0">{{#str}}noannouncements, local_studentportal{{/str}}</p>{{/hasreceived}}
+    </div>
+    {{/showreceived}}
+
+    {{#cansend}}
+    <div class="iiitdwd-tdash-card mb-3 table-responsive">
+        <h3 class="iiitdwd-tdash-card-title">{{#str}}sent, local_studentportal{{/str}}</h3>
+        {{#hassent}}
+        <table class="table local-studentportal-table">
+            <thead><tr><th>{{#str}}subject, local_studentportal{{/str}}</th><th>{{#str}}audience, local_studentportal{{/str}}</th>
+                <th>{{#str}}date{{/str}}</th><th>{{#str}}status{{/str}}</th></tr></thead>
+            <tbody>
+            {{#sent}}
+                <tr><td><a href="{{url}}">{{subject}}</a></td><td>{{audience}}</td><td>{{date}}</td>
+                    <td><span class="local-studentportal-status{{^queued}} is-create{{/queued}}">{{status}}</span></td></tr>
+            {{/sent}}
+            </tbody>
+        </table>
+        {{/hassent}}
+        {{^hassent}}<p class="mb-0">{{#str}}nosent, local_studentportal{{/str}}</p>{{/hassent}}
+    </div>
+    {{/cansend}}
+</div>

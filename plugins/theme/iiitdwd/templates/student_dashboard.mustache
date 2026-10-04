@@ -41,7 +41,9 @@
         "courses": [{"shortname": "PY101", "fullname": "Python", "lastvisit": "Last visit 2 hours ago", "hascompletion": true,
                      "completion": 40, "hasgrade": true, "grade": 78, "variant": "blue", "contenturl": "#", "gradeurl": "#"}],
         "mycoursesurl": "#",
-        "icons": {"arrow": "", "calendar": "", "check": "", "grades": "", "quiz": "", "assign": "", "other": ""}
+        "hasannouncements": true, "announcementsurl": "#",
+        "announcements": [{"subject": "Exam schedule", "author": "Admin", "when": "2 hours ago", "isnew": true, "snippet": "Mid-terms start on...", "url": "#"}],
+        "icons": {"arrow": "", "calendar": "", "check": "", "grades": "", "quiz": "", "assign": "", "other": "", "announce": ""}
     }
 }}
 <section class="iiitdwd-tdash iiitdwd-sdash" aria-label="{{#str}}sdashlabel, theme_iiitdwd{{/str}}">
@@ -89,6 +91,31 @@
         </li>
         {{/metrics}}
     </ul>
+
+    {{! Announcements from admins and teachers (only when there are recent ones). }}
+    {{#hasannouncements}}
+    <div class="iiitdwd-tdash-card iiitdwd-sdash-announcements">
+        <div class="iiitdwd-tdash-card-head">
+            <h3 class="iiitdwd-tdash-card-title">{{#str}}sdashannouncements, theme_iiitdwd{{/str}}</h3>
+            <a class="iiitdwd-tdash-link" href="{{announcementsurl}}">{{#str}}viewall, theme_iiitdwd{{/str}}</a>
+        </div>
+        <ul class="iiitdwd-tdash-list">
+            {{#announcements}}
+            <li>
+                <a class="iiitdwd-tdash-item" href="{{url}}">
+                    <span class="iiitdwd-tdash-badge iiitdwd-tdash-badge-blue" aria-hidden="true">{{{icons.announce}}}</span>
+                    <span class="iiitdwd-tdash-item-body">
+                        <span class="iiitdwd-tdash-item-title">{{subject}}{{#isnew}} <span class="iiitdwd-tdash-tag iiitdwd-tdash-tag-live">{{#str}}sdashnew, theme_iiitdwd{{/str}}</span>{{/isnew}}</span>
+                        <span class="iiitdwd-tdash-tags"><span class="iiitdwd-tdash-item-meta">{{author}} · {{when}}</span></span>
+                        <span class="iiitdwd-sdash-snippet">{{snippet}}</span>
+                    </span>
+                    <span class="iiitdwd-tdash-arrow">{{{icons.arrow}}}</span>
+                </a>
+            </li>
+            {{/announcements}}
+        </ul>
+    </div>
+    {{/hasannouncements}}
 
     <div class="iiitdwd-tdash-lower">
         {{! Up next: assignments to submit and tests to take, from the calendar. }}

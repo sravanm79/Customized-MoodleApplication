@@ -105,6 +105,10 @@ class teacher_dashboard implements renderable, templatable {
             ]),
             'gradeurl' => $attention ? $attention[0]['url'] : null,
             'messageurl' => (new moodle_url('/message/index.php'))->out(false),
+            // Only with local_studentportal and in at least one course where the teacher may announce.
+            'announceurl' => class_exists(\local_studentportal\local\announcements::class)
+                && \local_studentportal\local\announcements::courses_for((int) $USER->id)
+                ? (new moodle_url('/local/studentportal/announce.php'))->out(false) : null,
             'week' => [
                 'activelearners' => $week['activelearners'],
                 'submissions' => $week['submissions'],

@@ -1,0 +1,63 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+{{!
+    @template local_studentportal/allstudents
+
+    Every student on the site.
+
+    Example context (json):
+    {
+        "total": 1, "never": 0, "q": "", "searchurl": "#", "registerurl": "#", "downloadurl": "#", "paging": "", "hasrows": true,
+        "rows": [{"fullname": "Asha Rao", "idnumber": "23BDS001", "email": "a@example.com", "username": "23bds001",
+                  "courses": [{"name": "PY101", "url": "#"}], "never": false, "suspended": false, "lastaccess": "5/10/26",
+                  "reporturl": "#", "profileurl": "#"}]
+    }
+}}
+<div class="local-studentportal-page">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+        <form class="d-flex gap-2" method="get" action="{{searchurl}}" role="search">
+            <input type="search" name="q" value="{{q}}" class="form-control" placeholder="{{#str}}searchstudents, local_studentportal{{/str}}"
+                   aria-label="{{#str}}searchstudents, local_studentportal{{/str}}">
+            <button type="submit" class="btn btn-secondary">{{#str}}search{{/str}}</button>
+        </form>
+        <div class="d-flex gap-2">
+            <a class="btn btn-primary" href="{{registerurl}}">{{#str}}registerstudents, local_studentportal{{/str}}</a>
+            <a class="btn btn-secondary" href="{{downloadurl}}">{{#str}}downloadcsv, local_studentportal{{/str}}</a>
+        </div>
+    </div>
+    <p class="small">{{#str}}allstudentscount, local_studentportal, {{total}}{{/str}}</p>
+    {{#hasrows}}
+    <div class="iiitdwd-tdash-card table-responsive">
+        <table class="table local-studentportal-table">
+            <thead><tr><th>{{#str}}name{{/str}}</th><th>{{#str}}rollnumber, local_studentportal{{/str}}</th><th>{{#str}}username{{/str}}</th>
+                <th>{{#str}}courses, local_studentportal{{/str}}</th><th>{{#str}}lastlogin{{/str}}</th><th></th></tr></thead>
+            <tbody>
+            {{#rows}}
+                <tr>
+                    <td><a href="{{profileurl}}">{{fullname}}</a>{{#suspended}} <span class="local-studentportal-status is-error">{{#str}}suspended{{/str}}</span>{{/suspended}}<br><span class="small">{{email}}</span></td>
+                    <td>{{idnumber}}</td><td><code>{{username}}</code></td>
+                    <td>{{#courses}}<a class="local-studentportal-pill" href="{{url}}">{{name}}</a> {{/courses}}</td>
+                    <td>{{#never}}<span class="local-studentportal-status is-error">{{lastaccess}}</span>{{/never}}{{^never}}{{lastaccess}}{{/never}}</td>
+                    <td><a class="btn btn-sm btn-outline-secondary" href="{{reporturl}}">{{#str}}viewreport, local_studentportal{{/str}}</a></td>
+                </tr>
+            {{/rows}}
+            </tbody>
+        </table>
+    </div>
+    {{{paging}}}
+    {{/hasrows}}
+    {{^hasrows}}<div class="alert alert-info">{{#str}}nostudentsfound, local_studentportal{{/str}}</div>{{/hasrows}}
+</div>

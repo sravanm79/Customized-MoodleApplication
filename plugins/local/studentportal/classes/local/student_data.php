@@ -314,6 +314,21 @@ class student_data {
     }
 
     /**
+     * Recent announcements to this student (site-wide and for their courses).
+     *
+     * @param int $limit
+     * @param int $days Only from the last N days.
+     * @return \stdClass[]
+     */
+    public function get_announcements(int $limit = 3, int $days = 30): array {
+        global $DB;
+        if (!$DB->get_manager()->table_exists('local_studentportal_ann')) {
+            return [];
+        }
+        return announcements::for_student((int) $this->user->id, $limit, $this->now - $days * DAYSECS);
+    }
+
+    /**
      * A grade as a percentage of its item's range.
      *
      * @param float $value

@@ -13,9 +13,8 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Student portal: register students into courses with shareable credentials, and the student "My performance" page.
+ * Message providers: announcements reach students as a notification (bell) and by email, per their preferences.
  *
  * @package    local_studentportal
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -23,8 +22,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'local_studentportal';
-$plugin->version   = 2026100501;
-$plugin->requires  = 2025041400; // Moodle 5.0.
-$plugin->maturity  = MATURITY_BETA;
-$plugin->release   = '0.2.0';
+$messageproviders = [
+    'announcement' => [
+        'defaults' => [
+            'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+            'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+        ],
+    ],
+];
