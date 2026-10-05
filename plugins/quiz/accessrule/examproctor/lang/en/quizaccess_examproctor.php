@@ -73,7 +73,7 @@ $string['js_ispreview'] = 'Preview';
 $string['js_seb'] = 'Safe Exam Browser';
 
 // Report.
-$string['viewreport'] = 'View proctoring report';
+$string['viewreport'] = 'View exam activity report';
 $string['reporttitle'] = 'Proctoring report';
 $string['reportdetail'] = 'Proctoring events for {$a}';
 $string['noevents'] = 'No proctoring events recorded yet.';

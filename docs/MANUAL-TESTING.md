@@ -495,7 +495,7 @@ visible and enrol a student).
       **1 / 3** (one switch = one violation; fixed 2026-10-04) and the exam asks for fullscreen again.
 - [ ] Alt+Tab to another application and back: 2 / 3.
 - [ ] A third violation submits the attempt automatically ("Violation limit reached"), and you land on the review page.
-- [ ] Quiz page › **View proctoring report**: the attempt with counts per event type; clicking it lists each
+- [ ] Quiz page › **View exam activity report**: the attempt with counts per event type; clicking it lists each
       event with times.
 
 ### 13.2 Webcam proctoring plugin (#157)
@@ -505,8 +505,8 @@ Enable webcam capture by Proctoring** › Save. Preview the quiz.
 - [ ] Before starting: a camera preview; **Start attempt** stays disabled until the camera works and you tick the
       webcam agreement.
 - [ ] During the attempt a small webcam preview is shown; pictures are taken every 30 seconds.
-- [ ] Quiz page › **View proctoring report** (the webcam plugin's link, next to the proctored-exam report link): the
-      pictures per user and time ("Identity mismatch: Not Found" is expected: no face-matching service is configured).
+- [ ] Quiz page › **View webcam photos** › **View images** on a student's row: every photo with date and time; click
+      one to enlarge ("Identity mismatch: Not Found" is expected: no face-matching service is configured).
 - [ ] Turn the setting off again if it was only a test.
 
 ### 13.3 Device pre-check (#176)
