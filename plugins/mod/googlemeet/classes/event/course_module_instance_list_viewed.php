@@ -15,17 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details for theme_iiitdwd.
+ * The mod_googlemeet instance list viewed event.
  *
- * @package    theme_iiitdwd
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_googlemeet
+ * @copyright   2020 Rone Santos <ronefel@hotmail.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace mod_googlemeet\event;
 
-$plugin->component = 'theme_iiitdwd';
-$plugin->version = 2026101306;
-$plugin->requires = 2025041400;
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->release = '0.7.3';
-$plugin->dependencies = ['theme_boost' => 2025041400];
+/**
+ * The mod_googlemeet instance list viewed event class.
+ */
+class course_module_instance_list_viewed extends \core\event\course_module_instance_list_viewed {
+
+}

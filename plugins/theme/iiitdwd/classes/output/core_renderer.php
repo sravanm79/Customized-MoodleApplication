@@ -240,7 +240,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
      *
      * @return string
      */
-    protected function institution_logo_url(): string {
+    public function institution_logo_url(): string {
         $uploaded = $this->page->theme->setting_file_url('institutionlogo', 'institutionlogo');
         return $uploaded ?: $this->image_url('institution_logo', 'theme_iiitdwd')->out(false);
     }

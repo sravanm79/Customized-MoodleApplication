@@ -20,7 +20,8 @@
     This template renders the calendar events summary modal.
 
     Overridden by theme_iiitdwd (from Moodle 5.0.1): the event's action is a button ("Join Zoom meeting" for
-    Zoom sessions, opening in a new tab; e.g. "Add submission" for others), and "Go to activity" stays available
+    Zoom sessions, "Join Google Meet" for mod_googlemeet sessions (/mod/googlemeet/join.php), both opening in a new
+    tab; e.g. "Add submission" for others), and "Go to activity" stays available
     beside it. The join link is mod_zoom's calendar action (/mod/zoom/loadmeeting.php): Moodle checks access,
     then sends the host to the start URL and everyone else to the join URL with the passcode embedded.
 
@@ -41,6 +42,7 @@
             {{! Zoom sessions are recognised by the action URL (the modal context has no component). }}
             <a href="{{action.url}}" class="btn btn-primary iiitdwd-event-join">
                 <span class="iiitdwd-event-join-zoom">{{> theme_iiitdwd/zoom_icon }} {{#str}}joinzoommeeting, theme_iiitdwd{{/str}}</span>
+                <span class="iiitdwd-event-join-meet">{{> theme_iiitdwd/meet_icon }} {{#str}}joingooglemeet, theme_iiitdwd{{/str}}</span>
                 <span class="iiitdwd-event-join-default">{{{action.name}}}</span>
             </a>
         {{/action.actionable}}
@@ -54,7 +56,7 @@
 {{/ core/modal }}
 {{#js}}
     // Zoom opens in a new tab, so the calendar stays open behind the meeting.
-    document.querySelectorAll('.iiitdwd-event-join[href*="/mod/zoom/loadmeeting.php"]').forEach(function(link) {
+    document.querySelectorAll('.iiitdwd-event-join[href*="/mod/zoom/loadmeeting.php"], .iiitdwd-event-join[href*="/mod/googlemeet/join.php"]').forEach(function(link) {
         link.target = '_blank';
         link.rel = 'noopener';
     });

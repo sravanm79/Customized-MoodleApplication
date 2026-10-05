@@ -258,13 +258,29 @@ class teacher_dashboard implements renderable, templatable {
                 'time' => userdate($event->timestart, get_string('strftimetime', 'langconfig')),
                 'name' => $cm ? $cm->get_formatted_name() : format_string($event->name),
                 'course' => format_string($courses[$event->courseid]->shortname),
-                'url' => ($cm && $cm->url ? $cm->url : new moodle_url('/course/view.php', ['id' => $event->courseid]))
-                    ->out(false),
+                // One click straight into the meeting (Moodle checks access first), else the activity page.
+                'url' => self::join_url($event->modulename, $cm)
+                    ?? ($cm && $cm->url ? $cm->url : new moodle_url('/course/view.php', ['id' => $event->courseid]))->out(false),
                 'status' => get_string('live' . $status, 'theme_iiitdwd'),
                 'islive' => $status === 'live',
                 'isended' => $status === 'ended',
             ];
         }
         return $items;
+    }
+
+    /**
+     * Direct join link of a live class: mod_zoom's loadmeeting.php or mod_googlemeet's join.php.
+     *
+     * @param string $modname
+     * @param \cm_info|null $cm
+     * @return string|null
+     */
+    public static function join_url(string $modname, ?\cm_info $cm): ?string {
+        if (!$cm) {
+            return null;
+        }
+        $pages = ['zoom' => '/mod/zoom/loadmeeting.php', 'googlemeet' => '/mod/googlemeet/join.php'];
+        return isset($pages[$modname]) ? (new moodle_url($pages[$modname], ['id' => $cm->id]))->out(false) : null;
     }
 }

@@ -196,6 +196,10 @@ class student_data {
             if (!isset($courses[$courseid]) || !$action || !$action->is_actionable()) {
                 continue;
             }
+            // Meetings are listed under live classes (get_live_classes()), not as deadlines.
+            if (in_array($event->get_component(), ['mod_zoom', 'mod_googlemeet'], true)) {
+                continue;
+            }
             $time = $event->get_times()->get_sort_time()->getTimestamp();
             $out[] = [
                 'name' => $event->get_name(),
@@ -215,7 +219,7 @@ class student_data {
     }
 
     /**
-     * Live classes (Zoom meetings) in the student's courses from 2 hours ago to $days ahead.
+     * Live classes (Zoom and Google Meet sessions) in the student's courses from 2 hours ago to $days ahead.
      *
      * @param int $days
      * @return array[] ['name', 'course', 'start', 'end', 'joinurl', 'viewurl', 'islive', 'istoday']
@@ -223,18 +227,21 @@ class student_data {
     public function get_live_classes(int $days = 7): array {
         global $DB;
         $courses = $this->get_courses();
-        if (!$courses || !$DB->get_manager()->table_exists('zoom')) {
+        $joinpages = ['zoom' => '/mod/zoom/loadmeeting.php', 'googlemeet' => '/mod/googlemeet/join.php'];
+        $modules = array_values(array_filter(array_keys($joinpages), fn($m) => $DB->get_manager()->table_exists($m)));
+        if (!$courses || !$modules) {
             return [];
         }
+        [$modsql, $modparams] = $DB->get_in_or_equal($modules, SQL_PARAMS_NAMED, 'mod');
         [$insql, $params] = $DB->get_in_or_equal(array_keys($courses), SQL_PARAMS_NAMED);
-        $params += ['from' => $this->now - 2 * HOURSECS, 'to' => $this->now + $days * DAYSECS];
-        $events = $DB->get_records_select('event', "modulename = 'zoom' AND courseid $insql AND visible = 1
+        $params += $modparams + ['from' => $this->now - 2 * HOURSECS, 'to' => $this->now + $days * DAYSECS];
+        $events = $DB->get_records_select('event', "modulename $modsql AND courseid $insql AND visible = 1
             AND timestart >= :from AND timestart <= :to", $params, 'timestart ASC', '*', 0, 10);
         $out = [];
         $today = usergetmidnight($this->now);
         foreach ($events as $event) {
             $modinfo = get_fast_modinfo($event->courseid, $this->user->id);
-            $cm = $modinfo->instances['zoom'][$event->instance] ?? null;
+            $cm = $modinfo->instances[$event->modulename][$event->instance] ?? null;
             if (!$cm || !$cm->uservisible) {
                 continue;
             }
@@ -247,7 +254,8 @@ class student_data {
                 'course' => format_string($courses[$event->courseid]->shortname),
                 'start' => (int) $event->timestart,
                 'end' => $end,
-                'joinurl' => (new \moodle_url('/mod/zoom/loadmeeting.php', ['id' => $cm->id]))->out(false),
+                'joinurl' => (new \moodle_url($joinpages[$event->modulename], ['id' => $cm->id]))->out(false),
+                'service' => $event->modulename,
                 'viewurl' => $cm->url->out(false),
                 'islive' => $event->timestart <= $this->now,
                 'istoday' => $event->timestart < $today + DAYSECS,

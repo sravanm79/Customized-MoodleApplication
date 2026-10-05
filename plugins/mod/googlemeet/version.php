@@ -15,17 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details for theme_iiitdwd.
+ * Plugin version and other meta-data are defined here.
  *
- * @package    theme_iiitdwd
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_googlemeet
+ * @copyright   2020 Rone Santos <ronefel@hotmail.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'theme_iiitdwd';
-$plugin->version = 2026101306;
-$plugin->requires = 2025041400;
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->release = '0.7.3';
-$plugin->dependencies = ['theme_boost' => 2025041400];
+$plugin->component = 'mod_googlemeet';
+$plugin->release = '2.1.1+iiitdwd.1';
+$plugin->version = 2023050102;
+$plugin->requires = 2019052000; // Moodle 3.7.
+$plugin->maturity = MATURITY_STABLE;

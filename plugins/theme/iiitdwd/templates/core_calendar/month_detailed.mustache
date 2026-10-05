@@ -130,12 +130,14 @@
                                                         <span class="iiitdwd-event-course">{{course.shortname}}</span>
                                                     {{/course.shortname}}
                                                 </a>
-                                                {{! theme_iiitdwd: one-click join (mod_zoom's calendar action, /mod/zoom/loadmeeting.php). The SCSS
-                                                    shows it for mod_zoom only. Inside the action.url section, name is still the event's name. }}
+                                                {{! theme_iiitdwd: one-click join (mod_zoom's /mod/zoom/loadmeeting.php or mod_googlemeet's
+                                                    /mod/googlemeet/join.php calendar action). The SCSS shows it for those two components only, with
+                                                    the matching icon. Inside the action.url section, name is still the event's name. }}
                                                 {{#action.url}}
                                                     <a class="iiitdwd-event-action" href="{{action.url}}" target="_blank" rel="noopener"
-                                                            aria-label="{{#str}}joinzoomfor, theme_iiitdwd, {{name}}{{/str}}">
+                                                            aria-label="{{#str}}joinclassfor, theme_iiitdwd, {{name}}{{/str}}">
                                                         {{> theme_iiitdwd/zoom_icon }}
+                                                        {{> theme_iiitdwd/meet_icon }}
                                                         {{#str}}join, theme_iiitdwd{{/str}}
                                                     </a>
                                                 {{/action.url}}

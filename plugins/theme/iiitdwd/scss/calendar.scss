@@ -293,7 +293,8 @@ $cal-pill-types: (
 }
 
 // Zoom sessions: the "live class" green, matching the Join link and the dashboard's live tags.
-.maincalendar table.calendarmonth [data-region="event-item"][data-event-component="mod_zoom"] > a[data-action="view-event"] {
+.maincalendar table.calendarmonth [data-region="event-item"][data-event-component="mod_zoom"] > a[data-action="view-event"],
+.maincalendar table.calendarmonth [data-region="event-item"][data-event-component="mod_googlemeet"] > a[data-action="view-event"] {
     background-color: rgba($iiitdwd-green-alt, .14);
     border-left-color: var(--iiitdwd-green-alt);
 
@@ -302,7 +303,8 @@ $cal-pill-types: (
     }
 }
 
-.calendarmonth [data-region="event-item"][data-event-component="mod_zoom"] .iiitdwd-event-action {
+.calendarmonth [data-region="event-item"][data-event-component="mod_zoom"] .iiitdwd-event-action,
+.calendarmonth [data-region="event-item"][data-event-component="mod_googlemeet"] .iiitdwd-event-action {
     display: inline-flex;
     align-items: center;
     gap: .25rem;
@@ -388,14 +390,16 @@ $cal-pill-types: (
     gap: .4rem;
     font-weight: 600;
 
-    .iiitdwd-event-join-zoom {
+    .iiitdwd-event-join-zoom,
+    .iiitdwd-event-join-meet {
         display: none;
         align-items: center;
         gap: .4rem;
     }
 
-    // Zoom sessions: mod_zoom's action is /mod/zoom/loadmeeting.php (the modal context has no component).
-    &[href*="/mod/zoom/loadmeeting.php"] {
+    // Zoom and Google Meet sessions (the modal context has no component, so match the action URL).
+    &[href*="/mod/zoom/loadmeeting.php"],
+    &[href*="/mod/googlemeet/join.php"] {
         --bs-btn-bg: var(--iiitdwd-green);
         --bs-btn-border-color: var(--iiitdwd-green);
         --bs-btn-hover-bg: #{darken($iiitdwd-green, 6%)};
@@ -403,13 +407,32 @@ $cal-pill-types: (
         --bs-btn-active-bg: #{darken($iiitdwd-green, 10%)};
         --bs-btn-active-border-color: #{darken($iiitdwd-green, 10%)};
 
-        .iiitdwd-event-join-zoom {
-            display: inline-flex;
-        }
-
         .iiitdwd-event-join-default {
             display: none;
         }
+    }
+
+    &[href*="/mod/zoom/loadmeeting.php"] .iiitdwd-event-join-zoom,
+    &[href*="/mod/googlemeet/join.php"] .iiitdwd-event-join-meet {
+        display: inline-flex;
+    }
+}
+
+// Month view join chip: the icon of the meeting service.
+.calendarmonth [data-region="event-item"] .iiitdwd-event-action {
+    .iiitdwd-meet-icon {
+        display: none;
+    }
+}
+
+.calendarmonth [data-region="event-item"][data-event-component="mod_googlemeet"] .iiitdwd-event-action {
+    .iiitdwd-meet-icon {
+        display: inline-block;
+    }
+
+    .iiitdwd-zoom-icon,
+    svg:not(.iiitdwd-meet-icon) {
+        display: none;
     }
 }
 

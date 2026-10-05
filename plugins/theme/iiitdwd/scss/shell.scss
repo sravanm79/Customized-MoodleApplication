@@ -334,3 +334,9 @@ body:not(.iiitdwd-app-shell) {
         transition: none !important;
     }
 }
+
+// Secure layout (quizzes that require Safe Exam Browser, proctored attempts): the logo in the top bar.
+.pagelayout-secure .navbar .iiitdwd-secure-logo {
+    max-height: 44px;
+    width: auto;
+}

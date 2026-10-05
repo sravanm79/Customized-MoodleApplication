@@ -15,17 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details for theme_iiitdwd.
+ * Definition of Google Meet task.
  *
- * @package    theme_iiitdwd
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_googlemeet
+ * @copyright   2020 Rone Santos <ronefel@hotmail.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'theme_iiitdwd';
-$plugin->version = 2026101306;
-$plugin->requires = 2025041400;
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->release = '0.7.3';
-$plugin->dependencies = ['theme_boost' => 2025041400];
+$tasks = [
+    [
+        'classname' => 'mod_googlemeet\task\notify_event',
+        'blocking' => 0,
+        'minute' => '*/5',
+        'hour' => '*',
+        'day' => '*',
+        'dayofweek' => '*',
+        'month' => '*'
+    ]
+];

@@ -33,7 +33,7 @@ use stdClass;
  */
 class teacher_dashboard_data {
     /** @var string[] Modules whose calendar events count as live classes. */
-    const LIVE_MODULES = ['zoom', 'bigbluebuttonbn'];
+    const LIVE_MODULES = ['zoom', 'googlemeet', 'bigbluebuttonbn'];
 
     /** @var stdClass The teacher. */
     protected $user;
@@ -274,7 +274,7 @@ class teacher_dashboard_data {
     }
 
     /**
-     * Today's live classes: Zoom and BigBlueButton calendar events in the teaching courses.
+     * Today's live classes: Zoom, Google Meet and BigBlueButton calendar events in the teaching courses.
      *
      * Recurring Zoom meetings have one calendar event per occurrence, so they are included.
      *
