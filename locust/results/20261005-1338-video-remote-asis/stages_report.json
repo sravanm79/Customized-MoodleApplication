@@ -1,0 +1,383 @@
+[
+  {
+    "users": 100,
+    "window_s": 60,
+    "requests": 200,
+    "rps": 3.3,
+    "errors": 0,
+    "pass": true,
+    "checks": [
+      {
+        "check": "video stalls /100 chunks",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "video stall s total",
+        "value": 0.0,
+        "limit": null,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 0.9,
+        "limit": 90,
+        "pass": true
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 0.9,
+      "host_cpu_max": 2.2,
+      "mem_avail_min_gb": 47.7,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 6,
+      "fpm_max": 32,
+      "db_conn_max": 9,
+      "jupyter_servers": 0,
+      "moodle_app_cpu_avg": 17.0,
+      "moodle_db_cpu_avg": 4.0,
+      "jobe_cpu_max": 0.0,
+      "jupyterhub_mib_max": 146,
+      "moodle_app_mib_max": 485,
+      "locust_cpu_avg": 0,
+      "net_tx_mbps_avg": 34,
+      "net_tx_mbps_max": 172
+    },
+    "per_request": {
+      "video: chunk": {
+        "count": 200,
+        "p50": 69,
+        "p95": 96,
+        "p99": 101,
+        "max": 104
+      }
+    }
+  },
+  {
+    "users": 250,
+    "window_s": 60,
+    "requests": 343,
+    "rps": 5.7,
+    "errors": 0,
+    "pass": true,
+    "checks": [
+      {
+        "check": "page loads p95",
+        "value": 44,
+        "limit": 2500,
+        "pass": true
+      },
+      {
+        "check": "video start p95",
+        "value": 181,
+        "limit": 3000,
+        "pass": true
+      },
+      {
+        "check": "video stalls /100 chunks",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "video stall s total",
+        "value": 0.0,
+        "limit": null,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 1.0,
+        "limit": 90,
+        "pass": true
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 1.0,
+      "host_cpu_max": 2.0,
+      "mem_avail_min_gb": 47.6,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 2,
+      "fpm_max": 37,
+      "db_conn_max": 5,
+      "jupyter_servers": 1,
+      "moodle_app_cpu_avg": 3.0,
+      "moodle_db_cpu_avg": 1.0,
+      "jobe_cpu_max": 0.0,
+      "jupyterhub_mib_max": 146,
+      "moodle_app_mib_max": 538,
+      "locust_cpu_avg": 0,
+      "net_tx_mbps_avg": 125,
+      "net_tx_mbps_max": 373
+    },
+    "per_request": {
+      "page: video lecture": {
+        "count": 9,
+        "p50": 40,
+        "p95": 44,
+        "p99": 44,
+        "max": 44
+      },
+      "video: chunk": {
+        "count": 325,
+        "p50": 34,
+        "p95": 145,
+        "p99": 981,
+        "max": 1391
+      },
+      "video: start after seek": {
+        "count": 2,
+        "p50": 15,
+        "p95": 18,
+        "p99": 18,
+        "max": 18
+      },
+      "video: start playback": {
+        "count": 7,
+        "p50": 18,
+        "p95": 181,
+        "p99": 181,
+        "max": 181
+      }
+    }
+  },
+  {
+    "users": 500,
+    "window_s": 60,
+    "requests": 1088,
+    "rps": 18.0,
+    "errors": 0,
+    "pass": true,
+    "checks": [
+      {
+        "check": "page loads p95",
+        "value": 187,
+        "limit": 2500,
+        "pass": true
+      },
+      {
+        "check": "video start p95",
+        "value": 347,
+        "limit": 3000,
+        "pass": true
+      },
+      {
+        "check": "video stalls /100 chunks",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "video stall s total",
+        "value": 0.0,
+        "limit": null,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.0,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 1.8,
+        "limit": 90,
+        "pass": true
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 1.8,
+      "host_cpu_max": 4.6,
+      "mem_avail_min_gb": 47.4,
+      "swap_in_avg": 0.0,
+      "apache_busy_max": 9,
+      "fpm_max": 44,
+      "db_conn_max": 10,
+      "jupyter_servers": 0,
+      "moodle_app_cpu_avg": 15.0,
+      "moodle_db_cpu_avg": 2.0,
+      "jobe_cpu_max": 0.0,
+      "jupyterhub_mib_max": 146,
+      "moodle_app_mib_max": 577,
+      "locust_cpu_avg": 0,
+      "net_tx_mbps_avg": 207,
+      "net_tx_mbps_max": 398
+    },
+    "per_request": {
+      "login: form": {
+        "count": 36,
+        "p50": 17,
+        "p95": 22,
+        "p99": 23,
+        "max": 23
+      },
+      "login: submit": {
+        "count": 36,
+        "p50": 168,
+        "p95": 209,
+        "p99": 216,
+        "max": 216
+      },
+      "page: video lecture": {
+        "count": 57,
+        "p50": 44,
+        "p95": 65,
+        "p99": 66,
+        "max": 68
+      },
+      "video: chunk": {
+        "count": 902,
+        "p50": 43,
+        "p95": 340,
+        "p99": 679,
+        "max": 1215
+      },
+      "video: start after seek": {
+        "count": 31,
+        "p50": 290,
+        "p95": 346,
+        "p99": 348,
+        "max": 348
+      },
+      "video: start playback": {
+        "count": 26,
+        "p50": 340,
+        "p95": 348,
+        "p99": 349,
+        "max": 349
+      }
+    }
+  },
+  {
+    "users": 1000,
+    "window_s": 59,
+    "requests": 2899,
+    "rps": 48.8,
+    "errors": 0,
+    "pass": true,
+    "checks": [
+      {
+        "check": "page loads p95",
+        "value": 52,
+        "limit": 2500,
+        "pass": true
+      },
+      {
+        "check": "video start p95",
+        "value": 1182,
+        "limit": 3000,
+        "pass": true
+      },
+      {
+        "check": "video stalls /100 chunks",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "video stall s total",
+        "value": 0.0,
+        "limit": null,
+        "pass": true
+      },
+      {
+        "check": "error rate %",
+        "value": 0.0,
+        "limit": 1,
+        "pass": true
+      },
+      {
+        "check": "swap-in pages/s",
+        "value": 0.1,
+        "limit": 50,
+        "pass": true
+      },
+      {
+        "check": "host CPU avg %",
+        "value": 3.7,
+        "limit": 90,
+        "pass": true
+      }
+    ],
+    "host": {
+      "host_cpu_avg": 3.7,
+      "host_cpu_max": 6.1,
+      "mem_avail_min_gb": 45.9,
+      "swap_in_avg": 0.1,
+      "apache_busy_max": 7,
+      "fpm_max": 88,
+      "db_conn_max": 9,
+      "jupyter_servers": 0,
+      "moodle_app_cpu_avg": 29.0,
+      "moodle_db_cpu_avg": 5.0,
+      "jobe_cpu_max": 0.0,
+      "jupyterhub_mib_max": 146,
+      "moodle_app_mib_max": 863,
+      "locust_cpu_avg": 0,
+      "net_tx_mbps_avg": 452,
+      "net_tx_mbps_max": 804
+    },
+    "per_request": {
+      "page: video lecture": {
+        "count": 52,
+        "p50": 38,
+        "p95": 52,
+        "p99": 56,
+        "max": 62
+      },
+      "video: chunk": {
+        "count": 2795,
+        "p50": 94,
+        "p95": 2011,
+        "p99": 2799,
+        "max": 4403
+      },
+      "video: start after seek": {
+        "count": 33,
+        "p50": 19,
+        "p95": 679,
+        "p99": 1483,
+        "max": 1483
+      },
+      "video: start playback": {
+        "count": 19,
+        "p50": 19,
+        "p95": 1746,
+        "p99": 1922,
+        "max": 1922
+      }
+    }
+  }
+]

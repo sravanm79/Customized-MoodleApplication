@@ -21,3 +21,7 @@ tls/server/
 
 # Mailpit secrets (mailpit/configure.sh): web inbox password hash and SMTP relay credentials.
 mailpit/secrets/
+
+# Local assistant tooling (Claude Code settings, graphify knowledge graph)
+.claude/
+graphify-out/

@@ -1,0 +1,76 @@
+[
+  {
+    "user": "lt26_0991",
+    "page_load_ms": 1206,
+    "play": "ok",
+    "first_frame_ms": 1,
+    "freezes": 0,
+    "freeze_ms": 0,
+    "seek_ms": 66,
+    "played_s": 671.3,
+    "width": 1280,
+    "height": 720,
+    "dropped": 0,
+    "frames": 1037,
+    "error": null,
+    "events": [
+      [
+        "playing",
+        1
+      ],
+      [
+        "seeking",
+        15005
+      ],
+      [
+        "waiting",
+        15006
+      ],
+      [
+        "seeked",
+        15071
+      ],
+      [
+        "playing",
+        15071
+      ]
+    ]
+  },
+  {
+    "user": "lt26_0992",
+    "page_load_ms": 1193,
+    "play": "ok",
+    "first_frame_ms": 1,
+    "freezes": 0,
+    "freeze_ms": 0,
+    "seek_ms": 71,
+    "played_s": 671.3,
+    "width": 1280,
+    "height": 720,
+    "dropped": 0,
+    "frames": 1037,
+    "error": null,
+    "events": [
+      [
+        "playing",
+        1
+      ],
+      [
+        "seeking",
+        15003
+      ],
+      [
+        "waiting",
+        15003
+      ],
+      [
+        "seeked",
+        15074
+      ],
+      [
+        "playing",
+        15074
+      ]
+    ]
+  }
+]

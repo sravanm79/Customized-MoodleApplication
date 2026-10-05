@@ -1,0 +1,29 @@
+Count,Message,Traceback,Nodes
+5,argument of type 'NoneType' is not iterable,"  File ""/home/vocab/moodle-locust/.venv/lib/python3.12/site-packages/locust/user/task.py"", line 363, in run
+    self.execute_next_task()
+  File ""/home/vocab/moodle-locust/.venv/lib/python3.12/site-packages/locust/user/task.py"", line 396, in execute_next_task
+    self.execute_task(self._task_queue.popleft())
+  File ""/home/vocab/moodle-locust/.venv/lib/python3.12/site-packages/locust/user/task.py"", line 513, in execute_task
+    task(self.user)
+  File ""/home/vocab/moodle-locust/locustfile.py"", line 354, in watch
+    r = self.get(f""/mod/resource/view.php?id={COURSE['video']}"", ""page: video lecture"", expect=""<video"")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/home/vocab/moodle-locust/locustfile.py"", line 126, in get
+    self._check(r, expect)
+  File ""/home/vocab/moodle-locust/locustfile.py"", line 138, in _check
+    elif ""/login/index.php"" in r.url:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+","vocab_044c7a5a7c7545ad821f5e5ee1f2bdb2, vocab_27b669e5214d4507b2b1d3af3e179b20, vocab_8df09d947b6040feb4e92521b2743c1d, vocab_cf8312f985fb41118bd0c147255d1d34"
+1,object of type 'NoneType' has no len(),"  File ""/home/vocab/moodle-locust/.venv/lib/python3.12/site-packages/locust/user/task.py"", line 363, in run
+    self.execute_next_task()
+  File ""/home/vocab/moodle-locust/.venv/lib/python3.12/site-packages/locust/user/task.py"", line 396, in execute_next_task
+    self.execute_task(self._task_queue.popleft())
+  File ""/home/vocab/moodle-locust/.venv/lib/python3.12/site-packages/locust/user/task.py"", line 513, in execute_task
+    task(self.user)
+  File ""/home/vocab/moodle-locust/locustfile.py"", line 365, in watch
+    dt, ok = self.fetch(offset, ""video: chunk"")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/home/vocab/moodle-locust/locustfile.py"", line 348, in fetch
+    r.failure(f""HTTP {r.status_code}, {len(r.content)} bytes"")
+                                       ^^^^^^^^^^^^^^
+",vocab_cf8312f985fb41118bd0c147255d1d34

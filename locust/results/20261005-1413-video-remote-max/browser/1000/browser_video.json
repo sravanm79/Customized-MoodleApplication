@@ -1,0 +1,242 @@
+[
+  {
+    "user": "lt26_3991",
+    "page_load_ms": 1349,
+    "play": "ok",
+    "first_frame_ms": 1,
+    "freezes": 0,
+    "freeze_ms": 0,
+    "seek_ms": 35,
+    "played_s": 1878.2,
+    "width": 1720,
+    "height": 1080,
+    "dropped": 0,
+    "frames": 1512,
+    "error": null,
+    "events": [
+      [
+        "playing",
+        1
+      ],
+      [
+        "seeking",
+        30007
+      ],
+      [
+        "waiting",
+        30007
+      ],
+      [
+        "seeked",
+        30042
+      ],
+      [
+        "playing",
+        30042
+      ]
+    ],
+    "frames_painted": 1498,
+    "frame_gap_p50_ms": 33.4,
+    "frame_gap_p95_ms": 66.6,
+    "frame_gap_p99_ms": 66.7,
+    "frame_gap_max_ms": 83,
+    "late_frames": 1,
+    "frames_skipped": 0,
+    "playback_lag_ms": 7,
+    "video_requests": 1,
+    "video_ttfb_p50_ms": 18.1,
+    "video_ttfb_max_ms": 18
+  },
+  {
+    "user": "lt26_3992",
+    "page_load_ms": 1544,
+    "play": "ok",
+    "first_frame_ms": 1,
+    "freezes": 0,
+    "freeze_ms": 0,
+    "seek_ms": 69,
+    "played_s": 1878.2,
+    "width": 1720,
+    "height": 1080,
+    "dropped": 0,
+    "frames": 1511,
+    "error": null,
+    "events": [
+      [
+        "playing",
+        1
+      ],
+      [
+        "seeking",
+        30003
+      ],
+      [
+        "waiting",
+        30004
+      ],
+      [
+        "seeked",
+        30072
+      ],
+      [
+        "playing",
+        30072
+      ]
+    ],
+    "frames_painted": 1498,
+    "frame_gap_p50_ms": 33.4,
+    "frame_gap_p95_ms": 66.6,
+    "frame_gap_p99_ms": 66.7,
+    "frame_gap_max_ms": 67,
+    "late_frames": 0,
+    "frames_skipped": 0,
+    "playback_lag_ms": 7,
+    "video_requests": 1,
+    "video_ttfb_p50_ms": 8.4,
+    "video_ttfb_max_ms": 8
+  },
+  {
+    "user": "lt26_3993",
+    "page_load_ms": 1426,
+    "play": "ok",
+    "first_frame_ms": 1,
+    "freezes": 0,
+    "freeze_ms": 0,
+    "seek_ms": 68,
+    "played_s": 1878.2,
+    "width": 1720,
+    "height": 1080,
+    "dropped": 0,
+    "frames": 1511,
+    "error": null,
+    "events": [
+      [
+        "playing",
+        1
+      ],
+      [
+        "seeking",
+        30004
+      ],
+      [
+        "waiting",
+        30004
+      ],
+      [
+        "seeked",
+        30072
+      ],
+      [
+        "playing",
+        30072
+      ]
+    ],
+    "frames_painted": 1498,
+    "frame_gap_p50_ms": 33.4,
+    "frame_gap_p95_ms": 66.6,
+    "frame_gap_p99_ms": 66.7,
+    "frame_gap_max_ms": 67,
+    "late_frames": 0,
+    "frames_skipped": 0,
+    "playback_lag_ms": 8,
+    "video_requests": 1,
+    "video_ttfb_p50_ms": 6.3,
+    "video_ttfb_max_ms": 6
+  },
+  {
+    "user": "lt26_3994",
+    "page_load_ms": 1276,
+    "play": "ok",
+    "first_frame_ms": 1,
+    "freezes": 0,
+    "freeze_ms": 0,
+    "seek_ms": 74,
+    "played_s": 1878.2,
+    "width": 1720,
+    "height": 1080,
+    "dropped": 0,
+    "frames": 1511,
+    "error": null,
+    "events": [
+      [
+        "playing",
+        1
+      ],
+      [
+        "seeking",
+        30003
+      ],
+      [
+        "waiting",
+        30003
+      ],
+      [
+        "seeked",
+        30077
+      ],
+      [
+        "playing",
+        30077
+      ]
+    ],
+    "frames_painted": 1497,
+    "frame_gap_p50_ms": 33.4,
+    "frame_gap_p95_ms": 66.6,
+    "frame_gap_p99_ms": 66.7,
+    "frame_gap_max_ms": 83,
+    "late_frames": 1,
+    "frames_skipped": 0,
+    "playback_lag_ms": 31,
+    "video_requests": 1,
+    "video_ttfb_p50_ms": 5.5,
+    "video_ttfb_max_ms": 6
+  },
+  {
+    "user": "lt26_3995",
+    "page_load_ms": 1551,
+    "play": "ok",
+    "first_frame_ms": 3,
+    "freezes": 0,
+    "freeze_ms": 0,
+    "seek_ms": 38,
+    "played_s": 1878.2,
+    "width": 1720,
+    "height": 1080,
+    "dropped": 0,
+    "frames": 1512,
+    "error": null,
+    "events": [
+      [
+        "playing",
+        3
+      ],
+      [
+        "seeking",
+        30007
+      ],
+      [
+        "waiting",
+        30007
+      ],
+      [
+        "seeked",
+        30044
+      ],
+      [
+        "playing",
+        30044
+      ]
+    ],
+    "frames_painted": 1499,
+    "frame_gap_p50_ms": 33.4,
+    "frame_gap_p95_ms": 66.6,
+    "frame_gap_p99_ms": 66.7,
+    "frame_gap_max_ms": 83,
+    "late_frames": 1,
+    "frames_skipped": 0,
+    "playback_lag_ms": 0,
+    "video_requests": 1,
+    "video_ttfb_p50_ms": 16.1,
+    "video_ttfb_max_ms": 16
+  }
+]

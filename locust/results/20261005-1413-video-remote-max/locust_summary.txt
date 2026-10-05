@@ -1,0 +1,40 @@
+[2026-10-05 14:24:04,168] vocab/INFO/locust.main: Shutting down (exit code 0)
+[2026-10-05 14:24:04,168] vocab/INFO/locust.runners: Worker 'vocab_5ae645beb8bc43ab87316ae1b4591346' (index 0) quit. 0 workers ready.
+[2026-10-05 14:24:04,170] vocab/INFO/locust.main: Shutting down (exit code 0)
+[2026-10-05 14:24:04,170] vocab/INFO/locust.runners: Worker 'vocab_243d6b3c544640cbb9976d9747f8a06f' (index 7) quit. 0 workers ready.
+[2026-10-05 14:24:04,173] vocab/INFO/locust.main: Shutting down (exit code 0)
+[2026-10-05 14:24:04,173] vocab/INFO/locust.runners: Worker 'vocab_3351fd73ea3e4f1988f9c12d0e205f2c' (index 5) quit. 0 workers ready.
+[2026-10-05 14:24:04,179] vocab/INFO/locust.main: Shutting down (exit code 0)
+[2026-10-05 14:24:04,179] vocab/INFO/locust.runners: Worker 'vocab_7529c6963355462087a3d2384941fef4' (index 2) quit. 0 workers ready.
+[2026-10-05 14:24:04,195] vocab/INFO/locust.main: Shutting down (exit code 0)
+[2026-10-05 14:24:04,195] vocab/INFO/locust.runners: Worker 'vocab_b1d2bc2f8de34edaa998204b2f33c949' (index 3) quit. 0 workers ready.
+[2026-10-05 14:24:04,195] vocab/INFO/locust.runners: The last worker quit, stopping test.
+[2026-10-05 14:24:04,540] vocab/INFO/locust.main: Shape test completed, shutting down
+[2026-10-05 14:24:05,593] vocab/INFO/locust.main: Shutting down (exit code 1)
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      login: form                                                                     2250     0(0.00%) |     34       9    1452     17 |    3.49        0.00
+POST     login: submit                                                                   2250     0(0.00%) |    141      80    1407    120 |    3.49        0.00
+GET      page: video lecture                                                             4566     0(0.00%) |    111      26    2779     44 |    7.08        0.00
+GET      video: chunk                                                                   56132     0(0.00%) |   2249      12   24254   1100 |   87.07        0.00
+VIDEO    video: chunk first byte                                                        56132     0(0.00%) |     69       3    3781     16 |   87.07        0.00
+VIDEO    video: stall                                                                     595     0(0.00%) |   2013      11    8891   1600 |    0.92        0.00
+VIDEO    video: start after seek                                                         2200     0(0.00%) |   1926      13   15967    400 |    3.41        0.00
+VIDEO    video: start playback                                                           2275     0(0.00%) |   1942      13   17037    400 |    3.53        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                    126400     0(0.00%) |   1114       3   24254    100 |  196.06        0.00
+
+Response time percentiles (approximated)
+Type     Name                                                                                  50%    66%    75%    80%    90%    95%    98%    99%  99.9% 99.99%   100% # reqs
+--------|--------------------------------------------------------------------------------|--------|------|------|------|------|------|------|------|------|------|------|------
+GET      login: form                                                                            17     19     20     21     29    100    330    390   1200   1500   1500   2250
+POST     login: submit                                                                         120    130    140    160    200    250    440    540   1100   1400   1400   2250
+GET      page: video lecture                                                                    44     66     83     94    180    430   1100   1200   2500   2800   2800   4566
+GET      video: chunk                                                                         1100   2800   3700   4400   5800   7300  10000  12000  16000  18000  24000  56132
+VIDEO    video: chunk first byte                                                                16     28     43     53    130    320    760   1100   2100   2600   3800  56132
+VIDEO    video: stall                                                                         1600   2400   2900   3200   4400   5200   6400   7100   8900   8900   8900    595
+VIDEO    video: start after seek                                                               400   2300   3200   4000   5300   6400   8600  11000  14000  16000  16000   2200
+VIDEO    video: start playback                                                                 400   2300   3100   3800   5300   6700   9200  11000  15000  17000  17000   2275
+--------|--------------------------------------------------------------------------------|--------|------|------|------|------|------|------|------|------|------|------|------
+         Aggregated                                                                            100    280   1100   1900   4200   5700   7700  10000  15000  17000  24000 126400
+

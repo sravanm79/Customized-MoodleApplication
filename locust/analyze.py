@@ -5,6 +5,8 @@ SLA (all must hold for a stage to PASS):
   graded submissions (quiz submit & grade)         p95 < 5000 ms
   jupyter: open activity (spawn)                   p95 < 10000 ms
   jupyter: run cell                                p95 < 5000 ms
+  video: start playback / after seek               p95 < 3000 ms
+  video: stalls (picture freezes) per 100 chunks   < 1
   error rate                                       < 1 %
   host not swapping (avg swap-in)                  < 50 pages/s
   host not CPU-pegged (avg host CPU)               < 90 %
@@ -25,6 +27,7 @@ LIMITS = [  # (label, predicate on request name, p95 limit ms)
     ("graded submit", lambda n: n.endswith("submit & grade"), 5000),
     ("jupyter spawn", lambda n: n == "jupyter: open activity (spawn server)", 10000),
     ("jupyter cell", lambda n: n == "jupyter: run cell", 5000),
+    ("video start", lambda n: n.startswith("video: start"), 3000),
 ]
 
 
@@ -57,7 +60,15 @@ for i, (start, users) in enumerate(stages):
         if vals:
             p95 = pct(vals, 95)
             checks.append({"check": f"{label} p95", "value": round(p95), "limit": limit, "pass": p95 < limit})
-    err_rate = errors / len(rows) * 100
+    chunks = sum(1 for r in rows if r["name"] == "video: chunk")
+    if chunks:
+        stalls = [float(r["ms"]) for r in rows if r["name"] == "video: stall"]
+        rate = len(stalls) / chunks * 100
+        checks.append({"check": "video stalls /100 chunks", "value": round(rate, 2), "limit": 1, "pass": rate < 1})
+        checks.append({"check": "video stall s total", "value": round(sum(stalls) / 1000, 1), "limit": None,
+                       "pass": True})
+    # Derived timings (first byte of a chunk) are not requests of their own; keep them out of the error-rate base.
+    err_rate = errors / max(1, sum(1 for r in rows if r["name"] != "video: chunk first byte")) * 100
     checks.append({"check": "error rate %", "value": round(err_rate, 2), "limit": 1, "pass": err_rate < 1})
     m = [x for x in mon if lo <= float(x["ts"]) < stop]
     host = {}
@@ -74,6 +85,8 @@ for i, (start, users) in enumerate(stages):
             "jobe_cpu_max": round(mx("moodle_jobe_cpu"), 0), "jupyterhub_mib_max": round(mx("moodle_jupyterhub_mib")),
             "moodle_app_mib_max": round(mx("moodle_app_mib")),
             "locust_cpu_avg": round(avg("locust_cpu")) if "locust_cpu" in m[0] else -1,
+            "net_tx_mbps_avg": round(avg("net_tx_mbps")) if "net_tx_mbps" in m[0] else -1,
+            "net_tx_mbps_max": round(mx("net_tx_mbps")) if "net_tx_mbps" in m[0] else -1,
         }
         checks.append({"check": "swap-in pages/s", "value": host["swap_in_avg"], "limit": 50,
                        "pass": host["swap_in_avg"] < 50})
@@ -105,10 +118,10 @@ for s in report:
     print(f"| {s['users']} | {s['rps']} | {s['errors']} | " + " | ".join(cells) + f" | {'PASS' if s['pass'] else 'FAIL'} |")
 if report and report[0]["host"]:
     print("\n| users | apache busy max | php-fpm procs max (/112) | db conn max | moodle_app CPU avg % | db CPU avg % | jobe CPU max % "
-          "| moodle_app MiB max | locust CPU avg % | min MemAvailable GB |")
-    print("|---|---|---|---|---|---|---|---|---|---|")
+          "| moodle_app MiB max | locust CPU avg % | min MemAvailable GB | NIC out Mbps avg / max |")
+    print("|---|---|---|---|---|---|---|---|---|---|---|")
     for s in report:
         h = s["host"]
         print(f"| {s['users']} | {h['apache_busy_max']} | {h['fpm_max']} | {h['db_conn_max']} | {h['moodle_app_cpu_avg']} | "
               f"{h['moodle_db_cpu_avg']} | {h['jobe_cpu_max']} | {h['moodle_app_mib_max']} | {h['locust_cpu_avg']} | "
-              f"{h['mem_avail_min_gb']} |")
+              f"{h['mem_avail_min_gb']} | {h.get('net_tx_mbps_avg', -1)} / {h.get('net_tx_mbps_max', -1)} |")

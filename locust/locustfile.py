@@ -3,8 +3,14 @@
   TRACK=browse   Normal students: dashboard, course, page, forum, multiple-choice quiz (DB/PHP bound)
   TRACK=coding   CodeRunner quiz: answers are run in the Jobe sandbox on submit
   TRACK=jupyter  mod_jupyter: each user gets a Jupyter server + kernel that runs code
+  TRACK=video    Uploaded lecture video (setup/setup_video.php): open the lecture page, then play it like a
+                 browser player does, in HTTP Range chunks paced at the video's bitrate, recording start-up
+                 time and stalls (moments a real player would freeze and show the buffering spinner)
 
-Env: TRACK, STAGES="25,50,100", STAGE_SECONDS=180, SPAWN_RATE=10, OUT=results/<run>, MEM_GUARD_GB=6
+Env: TRACK, STAGES="25,50,100", STAGE_SECONDS=180, SPAWN_RATE=10, OUT=results/<run>, MEM_GUARD_GB=6,
+     HOST=https://192.168.30.239, CA=<CA certificate file> (default: the LMS CA from tls/public or ./lms-ca.crt)
+Video: VIDEO_KBPS (pace as if the video had this bitrate; default its real bitrate), CHUNK_KB=1024,
+       WATCH_MIN="2,8" (minutes watched per sitting), BUFFER_S="10,30" (player refills below 10 s up to 30 s)
 """
 import csv
 import json
@@ -19,8 +25,11 @@ import websocket
 from locust import HttpUser, LoadTestShape, between, events, task
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-COURSE = json.load(open(os.path.join(HERE, "setup", "course.json")))
 TRACK = os.environ.get("TRACK", "browse")
+COURSE = json.load(open(os.path.join(HERE, "setup", "video.json" if TRACK == "video" else "course.json")))
+HOST = os.environ.get("HOST", "https://192.168.30.239")
+CA = os.environ.get("CA") or next((p for p in (os.path.join(HERE, "..", "tls", "public", "iiitdwd-lms-ca.crt"),
+                                               os.path.join(HERE, "lms-ca.crt")) if os.path.exists(p)), False)
 STAGES = [int(s) for s in os.environ.get("STAGES", "25,50,100").split(",")]
 STAGE_SECONDS = int(os.environ.get("STAGE_SECONDS", "180"))
 SPAWN_RATE = float(os.environ.get("SPAWN_RATE", "10"))
@@ -97,9 +106,10 @@ TEXTAREA_RE = re.compile(r'<textarea[^>]*name="([^"]+)"')
 
 class MoodleUser(HttpUser):
     abstract = True
-    host = "http://localhost:9999"
+    host = HOST
 
     def on_start(self):
+        self.client.verify = CA
         # Unique account per virtual user, also across Locust worker processes (--processes N).
         runner = self.environment.runner
         index = getattr(runner, "worker_index", 0) or 0
@@ -298,7 +308,88 @@ class JupyterStudent(MoodleUser):
                                name="jupyter: stop kernel")
 
 
-_classes = {"browse": BrowseStudent, "coding": CodingStudent, "jupyter": JupyterStudent}
+# ---------- Track 4: uploaded lecture video ----------
+VIDEO_KBPS = float(os.environ.get("VIDEO_KBPS") or 0)
+CHUNK = int(os.environ.get("CHUNK_KB", "1024")) * 1024
+WATCH_MIN = [float(x) for x in os.environ.get("WATCH_MIN", "2,8").split(",")]
+LOW_BUFFER, FULL_BUFFER = (float(x) for x in os.environ.get("BUFFER_S", "10,30").split(","))
+STARTUP_BUFFER = 2.0  # seconds of video a player wants before it starts (and after a seek)
+VIDEO_URL_RE = re.compile(r'src="https?://[^/"]+(/pluginfile\.php/[^"]+\.mp4)"')
+
+
+def _fire(name, ms, exc=None, rtype="VIDEO"):
+    events.request.fire(request_type=rtype, name=name, response_time=ms, response_length=0, exception=exc, context={})
+
+
+class VideoStudent(MoodleUser):
+    """One student watching the lecture: a sitting of WATCH_MIN minutes from the start or from a seek point.
+
+    Modelled on how browser players fetch progressive MP4: they keep FULL_BUFFER seconds downloaded ahead of
+    the playhead and only fetch again when it drops to LOW_BUFFER. While a chunk downloads the playhead keeps
+    moving; if the buffer runs dry first the picture freezes ("video: stall", duration in ms).
+    """
+    wait_time = between(5, 20)
+
+    def on_start(self):
+        super().on_start()
+        self.url = COURSE["video_url"]
+        self.size = int(COURSE["video_bytes"])
+        kbps = VIDEO_KBPS or self.size * 8 / COURSE["video_seconds"] / 1000
+        self.chunk_s = CHUNK * 8 / (kbps * 1000)  # seconds of playback in one chunk
+
+    def fetch(self, offset, name):
+        """Range-request one chunk; returns (seconds taken, ok). Wraps to the start at the end of the file."""
+        offset %= self.size
+        end = min(offset + CHUNK, self.size) - 1
+        start = time.time()
+        with self.client.get(self.url, headers={"Range": f"bytes={offset}-{end}"}, name=name,
+                             catch_response=True) as r:
+            if r.status_code != 206 or len(r.content) != end - offset + 1:
+                r.failure(f"HTTP {r.status_code}, {len(r.content)} bytes")
+                return time.time() - start, False
+            # Until the response headers arrived: Apache/PHP queueing + Moodle's access checks, before any bytes flow.
+            _fire("video: chunk first byte", r.elapsed.total_seconds() * 1000)
+        return time.time() - start, True
+
+    @task
+    def watch(self):
+        r = self.get(f"/mod/resource/view.php?id={COURSE['video']}", "page: video lecture", expect="<video")
+        m = VIDEO_URL_RE.search(r.text or "")
+        if m:
+            self.url = m.group(1)
+        # Half the sittings resume/seek to a random point, which costs a fresh start-up.
+        seek = random.random() < 0.5
+        offset = random.randrange(0, self.size, CHUNK) if seek else 0
+        target = random.uniform(*WATCH_MIN) * 60
+        started = time.time()
+        buffer = 0.0
+        while buffer < STARTUP_BUFFER:  # nothing on screen until the first seconds are in
+            dt, ok = self.fetch(offset, "video: chunk")
+            if not ok:
+                return
+            offset += CHUNK
+            buffer += self.chunk_s
+        _fire("video: start after seek" if seek else "video: start playback", (time.time() - started) * 1000)
+        played = 0.0
+        while played < target:
+            if buffer > LOW_BUFFER:  # enough buffered: the player just plays
+                idle = min(buffer - LOW_BUFFER, target - played)
+                time.sleep(idle)
+                buffer -= idle
+                played += idle
+                continue
+            while buffer < FULL_BUFFER and played < target:
+                dt, ok = self.fetch(offset, "video: chunk")
+                if not ok:
+                    return
+                offset += CHUNK
+                if dt > buffer:
+                    _fire("video: stall", (dt - buffer) * 1000)
+                played += min(dt, buffer)
+                buffer = max(0.0, buffer - dt) + self.chunk_s
+
+
+_classes = {"browse": BrowseStudent, "coding": CodingStudent, "jupyter": JupyterStudent, "video": VideoStudent}
 for _name, _cls in _classes.items():
     if _name != TRACK:
         _cls.abstract = True

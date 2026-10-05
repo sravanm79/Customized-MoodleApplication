@@ -1,0 +1,9 @@
+5 viewers x 60s -> /media/vocab/ab36a93d-73ed-432d-98d0-e1e6926ff4257/kashyap/LMS/Moodle/locust/results/20261005-1353-browser
+
+| user | page load ms | press play → picture ms | freezes | frozen s | seek ms | played s | resolution | dropped frames | error |
+|---|---|---|---|---|---|---|---|---|---|
+| lt26_0991 | 1313 | 1 | 0 | 0.0 | 38 | 1878.2 | 1720x1080 | 0/1513 |  |
+| lt26_0992 | 1307 | 1 | 0 | 0.0 | 38 | 1878.2 | 1720x1080 | 0/1512 |  |
+| lt26_0993 | 1306 | 1 | 0 | 0.0 | 34 | 1878.2 | 1720x1080 | 0/1512 |  |
+| lt26_0994 | 1321 | 1 | 0 | 0.0 | 34 | 1878.2 | 1720x1080 | 0/1512 |  |
+| lt26_0995 | 1316 | 1 | 0 | 0.0 | 36 | 1878.2 | 1720x1080 | 0/1512 |  |

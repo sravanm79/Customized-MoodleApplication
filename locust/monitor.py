@@ -1,7 +1,8 @@
 """Sample host + container health every INTERVAL seconds into OUT/monitor.csv until killed.
 
 Columns: host CPU %, MemAvailable, swap used, swap-in/out pages/s, load, per-container CPU %/MiB,
-Apache busy workers (of 256), MariaDB connections, number of Jupyter single-user servers.
+Apache busy workers (of 256), MariaDB connections, number of Jupyter single-user servers,
+network Mbps out/in on the LAN interface (NIC env, default: the one with the default route).
 """
 import csv
 import shlex
@@ -57,6 +58,16 @@ def docker_stats():
     return res
 
 
+def lan_nic():
+    """Interface of the default route (the LAN), e.g. enp0s31f6."""
+    for line in open("/proc/net/route").readlines()[1:]:
+        f = line.split()
+        if f[1] == "00000000":
+            return f[0]
+    return "eth0"
+
+
+NIC = os.environ.get("NIC") or lan_nic()
 _procs = {}
 
 
@@ -77,12 +88,14 @@ def main():
     f = open(os.path.join(OUT, "monitor.csv"), "w", newline="")
     w = csv.writer(f)
     cols = ["ts", "host_cpu_pct", "mem_avail_gb", "swap_used_gb", "swap_in_pps", "swap_out_pps", "load1",
-            "apache_busy", "apache_idle", "fpm_procs", "db_conn", "db_running", "jupyter_servers", "locust_cpu"]
+            "apache_busy", "apache_idle", "fpm_procs", "db_conn", "db_running", "jupyter_servers", "locust_cpu",
+            "net_tx_mbps", "net_rx_mbps"]
     for c in CONTAINERS:
         cols += [f"{c}_cpu", f"{c}_mib"]
     w.writerow(cols)
     psutil.cpu_percent()
     last = psutil.swap_memory()
+    last_net = psutil.net_io_counters(pernic=True)[NIC]
     last_t = time.time()
     while True:
         time.sleep(INTERVAL)
@@ -91,7 +104,10 @@ def main():
         dt = now - last_t
         sin = (sw.sin - last.sin) / 4096 / dt
         sout = (sw.sout - last.sout) / 4096 / dt
-        last, last_t = sw, now
+        net = psutil.net_io_counters(pernic=True)[NIC]
+        tx = (net.bytes_sent - last_net.bytes_sent) * 8 / 1e6 / dt
+        rx = (net.bytes_recv - last_net.bytes_recv) * 8 / 1e6 / dt
+        last, last_t, last_net = sw, now, net
         busy, idle = apache_busy()
         fpm = int(sh("docker exec moodle_app pgrep -fc 'php-fpm: pool'").strip() or 0)
         conn, running = db_conns()
@@ -99,7 +115,7 @@ def main():
         ds = docker_stats()
         row = [f"{now:.0f}", psutil.cpu_percent(), round(psutil.virtual_memory().available / 2**30, 2),
                round(sw.used / 2**30, 2), round(sin, 1), round(sout, 1), os.getloadavg()[0],
-               busy, idle, fpm, conn, running, servers, locust_cpu()]
+               busy, idle, fpm, conn, running, servers, locust_cpu(), round(tx, 1), round(rx, 1)]
         for c in CONTAINERS:
             row += list(ds.get(c, (-1, -1)))
         w.writerow(row)

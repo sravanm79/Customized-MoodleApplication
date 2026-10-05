@@ -1,0 +1,187 @@
+[
+  {
+    "user": "lt26_0991",
+    "page_load_ms": 1322,
+    "play": "ok",
+    "first_frame_ms": 1,
+    "freezes": 0,
+    "freeze_ms": 0,
+    "seek_ms": 34,
+    "played_s": 1878.2,
+    "width": 1720,
+    "height": 1080,
+    "dropped": 0,
+    "frames": 1512,
+    "error": null,
+    "events": [
+      [
+        "playing",
+        1
+      ],
+      [
+        "seeking",
+        30003
+      ],
+      [
+        "waiting",
+        30003
+      ],
+      [
+        "seeked",
+        30037
+      ],
+      [
+        "playing",
+        30037
+      ]
+    ]
+  },
+  {
+    "user": "lt26_0992",
+    "page_load_ms": 1317,
+    "play": "ok",
+    "first_frame_ms": 1,
+    "freezes": 0,
+    "freeze_ms": 0,
+    "seek_ms": 41,
+    "played_s": 1878.2,
+    "width": 1720,
+    "height": 1080,
+    "dropped": 0,
+    "frames": 1512,
+    "error": null,
+    "events": [
+      [
+        "playing",
+        1
+      ],
+      [
+        "seeking",
+        30002
+      ],
+      [
+        "waiting",
+        30003
+      ],
+      [
+        "seeked",
+        30043
+      ],
+      [
+        "playing",
+        30044
+      ]
+    ]
+  },
+  {
+    "user": "lt26_0993",
+    "page_load_ms": 1287,
+    "play": "ok",
+    "first_frame_ms": 1,
+    "freezes": 0,
+    "freeze_ms": 0,
+    "seek_ms": 36,
+    "played_s": 1878.2,
+    "width": 1720,
+    "height": 1080,
+    "dropped": 0,
+    "frames": 1513,
+    "error": null,
+    "events": [
+      [
+        "playing",
+        1
+      ],
+      [
+        "seeking",
+        30004
+      ],
+      [
+        "waiting",
+        30004
+      ],
+      [
+        "seeked",
+        30040
+      ],
+      [
+        "playing",
+        30040
+      ]
+    ]
+  },
+  {
+    "user": "lt26_0994",
+    "page_load_ms": 1319,
+    "play": "ok",
+    "first_frame_ms": 1,
+    "freezes": 0,
+    "freeze_ms": 0,
+    "seek_ms": 33,
+    "played_s": 1878.2,
+    "width": 1720,
+    "height": 1080,
+    "dropped": 0,
+    "frames": 1512,
+    "error": null,
+    "events": [
+      [
+        "playing",
+        1
+      ],
+      [
+        "seeking",
+        30007
+      ],
+      [
+        "waiting",
+        30007
+      ],
+      [
+        "seeked",
+        30040
+      ],
+      [
+        "playing",
+        30040
+      ]
+    ]
+  },
+  {
+    "user": "lt26_0995",
+    "page_load_ms": 1290,
+    "play": "ok",
+    "first_frame_ms": 1,
+    "freezes": 0,
+    "freeze_ms": 0,
+    "seek_ms": 46,
+    "played_s": 1878.2,
+    "width": 1720,
+    "height": 1080,
+    "dropped": 0,
+    "frames": 1512,
+    "error": null,
+    "events": [
+      [
+        "playing",
+        1
+      ],
+      [
+        "seeking",
+        30003
+      ],
+      [
+        "waiting",
+        30003
+      ],
+      [
+        "seeked",
+        30049
+      ],
+      [
+        "playing",
+        30049
+      ]
+    ]
+  }
+]
