@@ -131,7 +131,8 @@ Notes: ______________________________________________
 ### 2.1 Login page design (logged out)
 Open `https://192.168.30.239/login/index.php` in a private window (the design is the same in Day and Night mode).
 
-- [ ] Full-screen IIIT Dharwad campus photo; a navy card in the middle with the white IIIT Dharwad logo.
+- [ ] Full-screen photo of the IIIT Dharwad building (the emblem tower stays visible on the left); a navy card in the
+      middle with the white IIIT Dharwad logo.
 - [ ] **USERNAME** and **PASSWORD** labels above white fields; the focused field gets a blue ring.
 - [ ] **Show password** reveals the typed password (changes to **Hide password**); **Forgot password?** opens the
       reset page.
@@ -140,7 +141,7 @@ Open `https://192.168.30.239/login/index.php` in a private window (the design is
       and the support contact `support.dsai@iiitdwd.ac.in` (opens a new email).
 - [ ] No "Access as a guest" (guest login is off; the site requires an account).
 - [ ] Optional: *Site administration › Appearance › Themes › IIIT Dharwad* › **Login page background**: upload another
-      photo → it replaces the campus photo; delete it to go back.
+      photo → it replaces the building photo; delete it to go back.
 
 ### 2.2 Login errors
 1. Log in with a wrong password.

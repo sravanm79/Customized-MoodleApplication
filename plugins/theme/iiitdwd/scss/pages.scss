@@ -15,7 +15,8 @@ $login-navy-deep: #082247;
         min-height: 100vh;
         background:
             linear-gradient(180deg, rgba(3, 14, 32, .25), rgba(3, 14, 32, .35)),
-            var(--iiitdwd-login-bg, none) center / cover no-repeat fixed,
+            // Anchored left: the tower with the IIIT Dharwad emblem stays in view on any screen width.
+            var(--iiitdwd-login-bg, none) left center / cover no-repeat fixed,
             #0b2c5f;
     }
 
