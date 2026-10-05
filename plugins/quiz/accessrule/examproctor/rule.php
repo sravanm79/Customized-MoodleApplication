@@ -176,7 +176,10 @@ class quizaccess_examproctor extends access_rule_base {
             'attemptid' => $attemptid,
             'violations' => $violations,
             'maxviolations' => $max,
-            'requirefullscreen' => !$inseb && !empty($this->quiz->examproctor_requirefullscreen),
+            // Not on the summary page: it only confirms "Submit all and finish", and opening it has already left
+            // fullscreen (every page load does), so asking again there would only get in the student's way.
+            'requirefullscreen' => !$inseb && $page->pagetype !== 'mod-quiz-summary'
+                && !empty($this->quiz->examproctor_requirefullscreen),
             'blockcopypaste' => !empty($this->quiz->examproctor_blockcopypaste),
             'detectblur' => !$inseb && !empty($this->quiz->examproctor_detectblur),
             'seb' => $inseb,
