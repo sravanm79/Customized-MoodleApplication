@@ -219,7 +219,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $context = [
             'homeurl' => (new \moodle_url('/my/'))->out(false),
             'institutionname' => get_string('institutionname', 'theme_iiitdwd'),
-            'institutionlogourl' => $this->page->theme->setting_file_url('institutionlogo', 'institutionlogo') ?? '',
+            'institutionlogourl' => $this->institution_logo_url(),
             'rolebadge' => $this->role_badge_context('sidebar'),
             'items' => [],
         ];
@@ -232,6 +232,17 @@ class core_renderer extends \theme_boost\output\core_renderer {
             ];
         }
         return $this->render_from_template('theme_iiitdwd/app_sidebar', $context);
+    }
+
+    /**
+     * The institution logo: the one uploaded in the theme settings, else the IIIT Dharwad logo bundled with the theme
+     * (pix/institution_logo.png).
+     *
+     * @return string
+     */
+    protected function institution_logo_url(): string {
+        $uploaded = $this->page->theme->setting_file_url('institutionlogo', 'institutionlogo');
+        return $uploaded ?: $this->image_url('institution_logo', 'theme_iiitdwd')->out(false);
     }
 
     /**
@@ -276,7 +287,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
         if ($templatename === 'core/loginform' && is_object($context)) {
             $context->institutionname = get_string('institutionname', 'theme_iiitdwd');
-            $context->institutionlogourl = $this->page->theme->setting_file_url('institutionlogo', 'institutionlogo') ?? '';
+            $context->institutionlogourl = $this->institution_logo_url();
             // Until the setting is saved, get_config() returns false: use its default.
             $email = get_config('theme_iiitdwd', 'loginsupportemail');
             $context->supportemail = clean_param($email === false ? self::LOGIN_SUPPORT_EMAIL : $email, PARAM_EMAIL);

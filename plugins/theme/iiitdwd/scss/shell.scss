@@ -54,8 +54,14 @@ $app-sidebar-width: 248px;
 .iiitdwd-app-logo {
     display: block;
     max-width: 100%;
-    max-height: calc(#{$navbar-height} - 1rem);
+    max-height: calc(#{$navbar-height} - .5rem);
     object-fit: contain;
+}
+
+// The logo is navy on a transparent background: in Night mode show it in white on the navy surfaces.
+[data-theme="dark"] .iiitdwd-app-logo,
+[data-theme="dark"] .iiitdwd-login-logo {
+    filter: brightness(0) invert(1);
 }
 
 // Fallback when no logo is set: the institution name as a small-caps wordmark.

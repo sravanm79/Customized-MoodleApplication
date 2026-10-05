@@ -19,7 +19,6 @@ real Zoom meeting).
 - [ ] A phone on the campus Wi-Fi (for the mobile checks).
 - [ ] **Safe Exam Browser** 3.x installed on one Windows or macOS computer (for section 13).
 - [ ] The sample files in [`docs/test-data/`](test-data/).
-- [ ] The IIIT Dharwad logo as a PNG or SVG file.
 
 ### 0.2 Addresses
 
@@ -133,8 +132,7 @@ Notes: ______________________________________________
 Open `https://192.168.30.239/login/index.php` in a private window.
 
 - [ ] Dark navy background; the form sits on a darker card.
-- [ ] Institution name/logo centred above the form. Until the logo is uploaded (3.1), the text
-      "INDIAN INSTITUTE OF INFORMATION TECHNOLOGY" shows instead.
+- [ ] The IIIT Dharwad logo centred above the form (in white on the dark card; navy in Day mode).
 - [ ] Username and password fields are rounded (pill-shaped) with a subtle border; the focused field gets a blue ring.
 - [ ] The **Log in** button is blue and as wide as the form.
 - [ ] Link **Forgotten your username or password?**
@@ -170,16 +168,15 @@ Notes: ______________________________________________
 
 ## 3. Theme, branding and layout (`theme_iiitdwd`)
 
-### 3.1 Upload the logo (admin)
-1. *Site administration › Appearance › Themes › IIIT Dharwad*
-   (or `https://192.168.30.239/admin/settings.php?section=themesettingiiitdwd`).
-2. **Institution logo**: add your logo file. **Login page support email**: leave `support.dsai@iiitdwd.ac.in`.
-3. **Save changes**.
+### 3.1 Logo
+The IIIT Dharwad logo ships with the theme (`pix/institution_logo.png`, transparent background).
 
-- [ ] The settings page opens (this was broken before 2026-10-04: the page was hidden).
-- [ ] "Changes saved".
-- [ ] The logo shows at the top of the left sidebar on every page, and centred on the login page (private window).
-- [ ] Changing the support email and saving changes the address on the login page (then set it back).
+- [ ] Top of the left sidebar on every page: the logo, navy in Day mode and white in Night mode (toggle to check).
+- [ ] Login page: the logo above the form, readable on the dark card.
+- [ ] Optional override: *Site administration › Appearance › Themes › IIIT Dharwad* › **Institution logo** › upload
+      another image › Save → it replaces the bundled logo everywhere; delete it there to go back to the bundled one.
+- [ ] **Login page support email** on the same page: change it and save → the login page shows the new address
+      (then set it back to `support.dsai@iiitdwd.ac.in`).
 
 ### 3.2 App shell (as admin, teacher and s1)
 On `/my/` (Dashboard):
