@@ -24,8 +24,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'theme_iiitdwd';
-$plugin->version = 2026101308;
+$plugin->version = 2026101309;
 $plugin->requires = 2025041400;
 $plugin->maturity = MATURITY_ALPHA;
-$plugin->release = '0.8.1';
+$plugin->release = '0.8.2';
 $plugin->dependencies = ['theme_boost' => 2025041400];

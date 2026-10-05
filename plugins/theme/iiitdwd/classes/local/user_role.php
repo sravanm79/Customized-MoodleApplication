@@ -19,10 +19,10 @@ namespace theme_iiitdwd\local;
 /**
  * The role shown in the user's role badge (sidebar and Dashboard heading).
  *
- * Teachers (editing or non-editing teacher archetype in any course where they are actively enrolled) are shown
- * as "Teacher". Everyone else gets their highest-ranked active role, by the site's role order (Site
- * administration > Users > Define roles): roles at system, category or user level, and course roles with an
- * active enrolment. Site admins with no role are shown as "Administrator".
+ * Site admins are shown as "Administrator", even when they also teach a course. Teachers (editing or non-editing
+ * teacher archetype in any course where they are actively enrolled) are shown as "Teacher". Everyone else gets
+ * their highest-ranked active role, by the site's role order (Site administration > Users > Define roles): roles
+ * at system, category or user level, and course roles with an active enrolment.
  *
  * @package    theme_iiitdwd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -58,6 +58,9 @@ class user_role {
         if (!$userid || isguestuser($userid)) {
             return null;
         }
+        if (is_siteadmin($userid)) {
+            return ['key' => 'admin', 'label' => get_string('administrator')];
+        }
         $roles = self::active_roles($userid);
         foreach ($roles as $role) {
             if (in_array($role->archetype, self::TEACHER_ARCHETYPES, true)) {
@@ -68,9 +71,6 @@ class user_role {
             $role = reset($roles);
             $key = in_array($role->archetype, ['student', 'manager'], true) ? $role->archetype : 'other';
             return ['key' => $key, 'label' => role_get_name($role)];
-        }
-        if (is_siteadmin($userid)) {
-            return ['key' => 'admin', 'label' => get_string('administrator')];
         }
         return null;
     }
