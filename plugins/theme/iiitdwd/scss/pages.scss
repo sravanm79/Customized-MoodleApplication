@@ -2,55 +2,87 @@
 // (plain CSS, so the preset variables do not reach them), plus the login page and the course listing.
 
 //
-// Login page (/login/index.php, templates/core/loginform.mustache). Card colours come from the $login* preset
-// variables; everything uses the runtime tokens, so it follows the Day/Night mode (Night by default).
+// Login page (/login/index.php, templates/core/loginform.mustache), matching IIIT Dharwad's learning portal: the
+// campus photo full screen (--iiitdwd-login-bg, set by core_renderer::standard_head_html()), a navy card with the logo,
+// white fields and a blue gradient "Sign in". It looks the same in Day and Night mode.
 //
 
+$login-navy: #0b2c5f;
+$login-navy-deep: #082247;
+
 .pagelayout-login {
-    // Deep navy with a soft blue glow behind the card.
     #page {
-        background: radial-gradient(ellipse at 50% 0%, rgba($iiitdwd-blue, .18), transparent 60%), var(--iiitdwd-bg);
+        min-height: 100vh;
+        background:
+            linear-gradient(180deg, rgba(3, 14, 32, .25), rgba(3, 14, 32, .35)),
+            var(--iiitdwd-login-bg, none) center / cover no-repeat fixed,
+            #0b2c5f;
+    }
+
+    #page-wrapper,
+    #page,
+    #topofscroll,
+    .main-inner,
+    #region-main,
+    [role="main"] {
+        background-color: transparent !important;
+    }
+
+    #page-footer,
+    .footer-popover {
+        display: none;
+    }
+
+    .login-wrapper {
+        min-height: calc(100vh - 6rem);
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .login-container {
-        width: 440px !important; // Boost sets 500px !important from md up.
-        max-width: 100%;
-        border: 1px solid var(--iiitdwd-border);
-        border-radius: var(--iiitdwd-radius-lg);
+        width: 380px !important; // Boost sets 500px !important from md up.
+        max-width: calc(100vw - 2rem);
+        padding: 2rem 2rem 1.75rem !important;
+        background: linear-gradient(180deg, $login-navy, $login-navy-deep) !important;
+        border: 0 !important;
+        border-radius: 4px !important;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, .45);
+        color: $white;
     }
 
     .login-divider {
-        margin: 1.5rem 0;
-        border-color: var(--iiitdwd-border);
+        margin: 1.25rem 0;
+        border-color: rgba($white, .15);
     }
 
     @include media-breakpoint-down(md) {
         .login-container {
-            margin: 0 1rem;
-            padding: 2rem 1.25rem;
+            padding: 1.75rem 1.25rem 1.5rem !important;
         }
     }
 }
 
 .iiitdwd-login {
-    // Institution logo, centred above the form.
+    color: $white;
+
     .iiitdwd-login-brand {
         display: flex;
         justify-content: center;
         margin-bottom: 1.5rem;
     }
 
+    // The logo is navy on transparent: always white on the navy card.
     .iiitdwd-login-logo {
         max-width: 100%;
-        max-height: 88px;
+        max-height: 92px;
         object-fit: contain;
+        filter: brightness(0) invert(1);
     }
 
-    // Fallback when no logo is set.
     .iiitdwd-login-wordmark {
         max-width: 18rem;
-        color: var(--iiitdwd-text);
-        font-size: .8125rem;
+        font-size: .875rem;
         font-weight: 700;
         line-height: 1.4;
         letter-spacing: .08em;
@@ -58,103 +90,134 @@
         text-transform: uppercase;
     }
 
-    .iiitdwd-login-title {
-        margin: 0;
-        color: var(--iiitdwd-text);
-        font-size: 1.5rem;
-        font-weight: 700;
-        text-align: center;
-    }
+    // "Your session has timed out", errors, maintenance: a thin accent line, no box.
+    .iiitdwd-login-notice {
+        display: flex;
+        align-items: flex-start;
+        gap: .35rem;
+        margin: 0 0 1.25rem;
+        padding: .15rem 0 .15rem .75rem;
+        border-left: 2px solid #f0ad4e;
+        color: rgba($white, .9);
+        font-size: .8125rem;
+        line-height: 1.4;
 
-    .iiitdwd-login-subtitle {
-        margin: .25rem 0 1.5rem;
-        color: var(--iiitdwd-text-secondary);
-        font-size: .875rem;
-        text-align: center;
-    }
-
-    // Pill-shaped inputs (core keeps the labels visually hidden and shows placeholders).
-    .login-form .form-control {
-        height: 3.25rem;
-        padding: 0 1.25rem;
-        background-color: var(--iiitdwd-bg);
-        border: 1px solid var(--iiitdwd-border);
-        border-radius: 999px;
-        color: var(--iiitdwd-text);
-        font-size: 1rem;
-        transition: border-color .15s ease, box-shadow .15s ease;
-
-        &::placeholder {
-            color: var(--iiitdwd-text-muted);
+        .icon {
+            margin: .1rem 0 0;
+            color: #f0ad4e;
+            font-size: .85rem;
         }
 
-        &:hover {
-            border-color: color-mix(in srgb, var(--iiitdwd-border) 60%, var(--iiitdwd-text-muted));
-        }
+        &.is-error {
+            border-left-color: #ff6b6b;
 
-        &:focus {
-            border-color: var(--iiitdwd-blue);
-            box-shadow: 0 0 0 3px rgba($iiitdwd-blue, .3);
-        }
-
-        // Browser autofill paints its own (light) fill.
-        &:-webkit-autofill {
-            -webkit-text-fill-color: var(--iiitdwd-text);
-            box-shadow: 0 0 0 1000px var(--iiitdwd-bg) inset;
-            caret-color: var(--iiitdwd-text);
-        }
-    }
-
-    // core/togglesensitive wraps the password in an input group with a show/hide button, shown below 576px.
-    // Boost squares the input's corners for the group (with high specificity), so the pill needs !important.
-    .login-form-password .toggle-sensitive-wrapper {
-        > .form-control {
-            border-radius: 999px !important;
-        }
-
-        > .toggle-sensitive-btn {
-            padding: 0 1.1rem;
-            background-color: var(--iiitdwd-bg);
-            border: 1px solid var(--iiitdwd-border);
-            border-left: 0;
-            border-radius: 0 999px 999px 0;
-            color: var(--iiitdwd-text-secondary);
-        }
-
-        @include media-breakpoint-down(sm) {
-            > .form-control {
-                border-top-right-radius: 0 !important;
-                border-bottom-right-radius: 0 !important;
-                border-right: 0;
+            .icon {
+                color: #ff6b6b;
             }
         }
     }
 
-    .login-form-submit {
-        margin-top: 1.5rem;
+    .iiitdwd-login-label {
+        display: block;
+        margin: 0 0 .4rem;
+        color: rgba($white, .85);
+        font-size: .75rem;
+        font-weight: 600;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+    }
 
-        .btn {
-            height: 3.25rem;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
+    .login-form-username {
+        margin-bottom: 1.1rem;
+    }
+
+    .login-form .form-control {
+        height: 3rem;
+        padding: 0 1rem;
+        background-color: $white;
+        border: 1px solid transparent;
+        border-radius: 3px;
+        color: #1d2125;
+        font-size: 1rem;
+        transition: border-color .15s ease, box-shadow .15s ease;
+
+        &:focus {
+            border-color: #4da3ff;
+            box-shadow: 0 0 0 3px rgba(77, 163, 255, .45);
+        }
+
+        &:-webkit-autofill {
+            -webkit-text-fill-color: #1d2125;
+            box-shadow: 0 0 0 1000px $white inset;
+            caret-color: #1d2125;
         }
     }
 
-    .login-form-forgotpassword {
-        margin-top: 1rem;
-        font-size: .875rem;
-        text-align: center;
+    // "Show password" and "Forgot password?" under the password field.
+    .iiitdwd-login-links {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: .45rem 0 1.5rem;
+        font-size: .8125rem;
+
+        a,
+        .btn-link {
+            padding: 0;
+            border: 0;
+            color: rgba($white, .85) !important; // The theme's link colour is blue elsewhere.
+            font-size: .8125rem;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+
+            &:hover,
+            &:focus {
+                color: $white;
+            }
+        }
     }
 
-    a:not(.btn) {
-        color: var(--iiitdwd-link);
-        text-decoration: none;
+    .login-form-submit .btn {
+        height: 3.25rem;
+        border: 0;
+        border-radius: 12px;
+        background: linear-gradient(180deg, #2b8cff, #0a5fdc);
+        box-shadow: 0 8px 24px rgba(10, 95, 220, .55);
+        color: $white;
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: .02em;
+        transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
 
         &:hover,
         &:focus {
-            text-decoration: underline;
+            filter: brightness(1.08);
+            box-shadow: 0 10px 28px rgba(10, 95, 220, .7);
         }
+
+        &:active {
+            transform: translateY(1px);
+        }
+    }
+
+    // Other sign-in options (shown only when enabled).
+    .login-heading {
+        color: rgba($white, .85);
+        font-size: .875rem;
+        font-weight: 600;
+    }
+
+    .login-identityprovider-btn,
+    .login-signup .btn {
+        background-color: rgba($white, .08);
+        border: 1px solid rgba($white, .25);
+        border-radius: 3px;
+        color: $white;
+    }
+
+    .login-instructions {
+        color: rgba($white, .85);
+        font-size: .875rem;
     }
 
     .iiitdwd-login-guest {
@@ -162,23 +225,13 @@
         flex-wrap: wrap;
         align-items: center;
         justify-content: space-between;
-        gap: .75rem;
-        color: var(--iiitdwd-text-secondary);
-        font-size: .875rem;
-    }
-
-    .iiitdwd-login-footer {
-        color: var(--iiitdwd-text-secondary);
+        gap: .5rem;
+        color: rgba($white, .8);
         font-size: .8125rem;
-        text-align: center;
-    }
 
-    .iiitdwd-login-support {
-        margin-bottom: .75rem;
-
-        a {
-            font-weight: 600;
-            overflow-wrap: anywhere;
+        .btn {
+            border-color: rgba($white, .35);
+            color: $white;
         }
     }
 
@@ -186,23 +239,45 @@
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        justify-content: center;
-        gap: .5rem 1rem;
-    }
+        justify-content: space-between;
+        gap: .5rem;
+        margin-top: 1.25rem;
 
-    .iiitdwd-login-cookies {
-        padding: 0;
-        color: var(--iiitdwd-text-muted);
-        font-size: .8125rem;
-        text-decoration: none;
-
-        &:hover,
-        &:focus {
-            color: var(--iiitdwd-text-secondary);
-            text-decoration: underline;
+        .btn-link,
+        .dropdown-toggle {
+            padding: 0;
+            color: rgba($white, .65);
+            font-size: .75rem;
         }
     }
 }
+
+// Copyright and support contact at the foot of the page, over the photo.
+.iiitdwd-login-copyright {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: .75rem;
+    text-align: center;
+    color: rgba($white, .9);
+    font-size: .75rem;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, .6);
+
+    p {
+        margin: 0;
+    }
+
+    a {
+        color: $white !important;
+        text-decoration: underline;
+    }
+
+    @include media-breakpoint-down(md) {
+        position: static;
+        margin: 1.5rem 1rem 1rem;
+    }
+}
+
 
 //
 // Activity pages

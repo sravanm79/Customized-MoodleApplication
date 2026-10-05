@@ -85,7 +85,23 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 'strings' => $strings,
             ]]);
         }
-        return parent::standard_head_html();
+        $html = parent::standard_head_html();
+        if ($this->page->pagelayout === 'login') {
+            // The login page's full-screen photo (scss/pages.scss reads it from this variable).
+            $html .= '<style>:root{--iiitdwd-login-bg:url("' . s($this->login_background_url()) . '")}</style>';
+        }
+        return $html;
+    }
+
+    /**
+     * The login page background: the one uploaded in the theme settings, else the IIIT Dharwad campus photo bundled
+     * with the theme (pix/login_background.jpg).
+     *
+     * @return string
+     */
+    public function login_background_url(): string {
+        $uploaded = $this->page->theme->setting_file_url('loginbackground', 'loginbackground');
+        return $uploaded ?: $this->image_url('login_background', 'theme_iiitdwd')->out(false);
     }
 
     /**
@@ -288,6 +304,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         if ($templatename === 'core/loginform' && is_object($context)) {
             $context->institutionname = get_string('institutionname', 'theme_iiitdwd');
             $context->institutionlogourl = $this->institution_logo_url();
+            $context->copyrightyear = userdate(time(), '%Y');
             // Until the setting is saved, get_config() returns false: use its default.
             $email = get_config('theme_iiitdwd', 'loginsupportemail');
             $context->supportemail = clean_param($email === false ? self::LOGIN_SUPPORT_EMAIL : $email, PARAM_EMAIL);

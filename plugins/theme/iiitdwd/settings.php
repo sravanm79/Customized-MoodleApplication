@@ -35,6 +35,13 @@ if ($ADMIN->fulltree) {
     $setting->set_updatedcallback('theme_reset_all_caches');
     $settings->add($setting);
 
+    $setting = new admin_setting_configstoredfile('theme_iiitdwd/loginbackground',
+        new lang_string('loginbackground', 'theme_iiitdwd'),
+        new lang_string('loginbackground_desc', 'theme_iiitdwd'),
+        'loginbackground', 0, ['maxfiles' => 1, 'accepted_types' => ['.jpg', '.jpeg', '.png', '.webp']]);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $settings->add($setting);
+
     $settings->add(new admin_setting_configtext('theme_iiitdwd/loginsupportemail',
         new lang_string('loginsupportemail', 'theme_iiitdwd'),
         new lang_string('loginsupportemail_desc', 'theme_iiitdwd'),

@@ -66,7 +66,7 @@ function theme_iiitdwd_get_extra_scss($theme) {
  * @return bool
  */
 function theme_iiitdwd_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = []) {
-    if ($context->contextlevel == CONTEXT_SYSTEM && $filearea === 'institutionlogo') {
+    if ($context->contextlevel == CONTEXT_SYSTEM && in_array($filearea, ['institutionlogo', 'loginbackground'], true)) {
         $theme = theme_config::load('iiitdwd');
         // Theme files are public and cacheable by browsers and proxies (the login page has no session).
         if (!array_key_exists('cacheability', $options)) {

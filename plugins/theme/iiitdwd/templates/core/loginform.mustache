@@ -34,6 +34,7 @@
         "sitename": "IIIT Dharwad",
         "institutionname": "INDIAN INSTITUTE OF INFORMATION TECHNOLOGY",
         "institutionlogourl": "",
+        "copyrightyear": "2026",
         "supportemail": "support.dsai@iiitdwd.ac.in",
         "showloginform": true,
         "loginurl": "#",
@@ -46,6 +47,7 @@
     }
 }}
 <div class="loginform iiitdwd-login">
+    {{! Matches IIIT Dharwad's learning portal: logo on a navy card over the campus photo. }}
     <div class="iiitdwd-login-brand">
         {{#institutionlogourl}}
             <img src="{{institutionlogourl}}" class="iiitdwd-login-logo" alt="{{institutionname}}">
@@ -54,21 +56,18 @@
             <span class="iiitdwd-login-wordmark">{{institutionname}}</span>
         {{/institutionlogourl}}
     </div>
-    <h1 class="iiitdwd-login-title">{{#str}}login{{/str}}</h1>
-    <p class="iiitdwd-login-subtitle">{{#str}} loginto, core, {{sitename}} {{/str}}</p>
+    <h1 class="visually-hidden">{{#str}} loginto, core, {{sitename}} {{/str}}</h1>
 
     {{#maintenance}}
-        <div class="alert alert-danger login-maintenance">
-            {{{maintenance}}}
-        </div>
+        <div class="iiitdwd-login-notice is-error login-maintenance">{{{maintenance}}}</div>
     {{/maintenance}}
     {{#error}}
         <a href="#" id="loginerrormessage" class="visually-hidden">{{error}}</a>
-        <div class="alert alert-danger" role="alert">{{error}}</div>
+        <div class="iiitdwd-login-notice is-error" role="alert">{{#pix}}i/warning, core{{/pix}}{{error}}</div>
     {{/error}}
     {{#info}}
         <a href="#" id="logininfomessage" class="visually-hidden">{{info}}</a>
-        <div class="alert alert-info" role="alert">{{info}}</div>
+        <div class="iiitdwd-login-notice" role="alert">{{#pix}}i/warning, core{{/pix}}{{info}}</div>
     {{/info}}
     {{#cansignup}}
         <a href="{{signupurl}}" class="visually-hidden">{{#str}} tocreatenewaccount {{/str}}</a>
@@ -78,28 +77,22 @@
             <input id="anchor" type="hidden" name="anchor" value="">
             <script>document.getElementById('anchor').value = location.hash;</script>
             <input type="hidden" name="logintoken" value="{{logintoken}}">
-            <div class="login-form-username mb-3">
-                <label for="username" class="visually-hidden">
-                    {{^canloginbyemail}}
-                        {{#str}} username {{/str}}
-                    {{/canloginbyemail}}
-                    {{#canloginbyemail}}
-                        {{#str}} usernameemail {{/str}}
-                    {{/canloginbyemail}}
+            <div class="login-form-username">
+                <label for="username" class="iiitdwd-login-label">
+                    {{^canloginbyemail}}{{#str}} username {{/str}}{{/canloginbyemail}}
+                    {{#canloginbyemail}}{{#str}} usernameemail {{/str}}{{/canloginbyemail}}
                 </label>
-                <input type="text" name="username" id="username" {{!
-                    !}}class="form-control form-control-lg" {{!
-                    !}}value="{{username}}" {{!
-                    !}}placeholder="{{^canloginbyemail}}{{#cleanstr}}username{{/cleanstr}}{{/canloginbyemail}}{{!
-                    !}}{{#canloginbyemail}}{{#cleanstr}}usernameemail{{/cleanstr}}{{/canloginbyemail}}" {{!
-                    !}}autocomplete="username">
+                <input type="text" name="username" id="username" class="form-control" value="{{username}}" autocomplete="username">
             </div>
-            <div class="login-form-password mb-3">
-                <label for="password" class="visually-hidden">{{#str}} password {{/str}}</label>
-                <input type="password" name="password" id="password" value="" {{!
-                    !}}class="form-control form-control-lg" {{!
-                    !}}placeholder="{{#cleanstr}}password{{/cleanstr}}" {{!
-                    !}}autocomplete="current-password">
+            <div class="login-form-password">
+                <label for="password" class="iiitdwd-login-label">{{#str}} password {{/str}}</label>
+                <input type="password" name="password" id="password" value="" class="form-control" autocomplete="current-password">
+            </div>
+            <div class="iiitdwd-login-links">
+                <button type="button" class="btn btn-link iiitdwd-login-showpassword" data-action="iiitdwd-show-password"
+                        aria-controls="password" aria-pressed="false"
+                        data-show="{{#str}}showpassword, theme_iiitdwd{{/str}}" data-hide="{{#str}}hidepassword, theme_iiitdwd{{/str}}">{{#str}}showpassword, theme_iiitdwd{{/str}}</button>
+                <a href="{{forgotpasswordurl}}">{{#str}}forgotpassword, theme_iiitdwd{{/str}}</a>
             </div>
             {{#recaptcha}}
                 <div class="login-form-recaptcha mb-3">
@@ -107,10 +100,7 @@
                 </div>
             {{/recaptcha}}
             <div class="login-form-submit">
-                <button class="btn btn-primary btn-lg w-100" type="submit" id="loginbtn">{{#str}}login{{/str}}</button>
-            </div>
-            <div class="login-form-forgotpassword">
-                <a href="{{forgotpasswordurl}}">{{#str}}forgotten{{/str}}</a>
+                <button class="btn btn-primary w-100" type="submit" id="loginbtn">{{#str}}signin, theme_iiitdwd{{/str}}</button>
             </div>
         </form>
     {{/showloginform}}
@@ -150,28 +140,25 @@
             <button class="btn btn-outline-secondary" type="submit" id="loginguestbtn">{{#str}}loginguest{{/str}}</button>
         </form>
     {{/canloginasguest}}
-    <div class="login-divider"></div>
-    <div class="iiitdwd-login-footer">
-        {{#supportemail}}
-            <p class="iiitdwd-login-support">
-                {{#str}}loginsupport, theme_iiitdwd{{/str}}
-                <a href="mailto:{{supportemail}}">{{supportemail}}</a>
-            </p>
-        {{/supportemail}}
-        <div class="iiitdwd-login-meta">
-            {{#languagemenu}}
-                <div class="login-languagemenu">
-                    {{>core/action_menu}}
-                </div>
-            {{/languagemenu}}
-            <button type="button" class="btn btn-link iiitdwd-login-cookies" {{!
-            }} data-modal="alert"{{!
-            }} data-modal-title-str='["cookiesenabled", "core"]' {{!
-            }} data-modal-content-str='["cookiesenabled_help_html", "core"]'{{!
-            }}>{{#str}}cookiesnotice{{/str}}</button>
-        </div>
+    <div class="iiitdwd-login-meta">
+        {{#languagemenu}}
+            <div class="login-languagemenu">
+                {{>core/action_menu}}
+            </div>
+        {{/languagemenu}}
+        <button type="button" class="btn btn-link iiitdwd-login-cookies" {{!
+        }} data-modal="alert"{{!
+        }} data-modal-title-str='["cookiesenabled", "core"]' {{!
+        }} data-modal-content-str='["cookiesenabled_help_html", "core"]'{{!
+        }}>{{#str}}cookiesnotice{{/str}}</button>
     </div>
 </div>
+<footer class="iiitdwd-login-copyright">
+    <p>{{#str}}logincopyright, theme_iiitdwd, {{copyrightyear}}{{/str}}</p>
+    {{#supportemail}}
+        <p>{{#str}}loginsupport, theme_iiitdwd{{/str}} <a href="mailto:{{supportemail}}">{{supportemail}}</a></p>
+    {{/supportemail}}
+</footer>
 
 {{#js}}
     {{^error}}
@@ -193,11 +180,21 @@
     {{#error}}
         document.getElementById('loginerrormessage').focus();
     {{/error}}
-    {{#togglepassword}}
-        require(['core/togglesensitive'], function(ToggleSensitive) {
-            ToggleSensitive.init("password", {{smallscreensonly}});
+    {{! "Show password" link under the field (replaces core's eye button, which only appears on small screens). }}
+    (function() {
+        var button = document.querySelector('[data-action="iiitdwd-show-password"]');
+        var field = document.getElementById('password');
+        if (!button || !field) {
+            return;
+        }
+        button.addEventListener('click', function() {
+            var show = field.type === 'password';
+            field.type = show ? 'text' : 'password';
+            button.textContent = show ? button.dataset.hide : button.dataset.show;
+            button.setAttribute('aria-pressed', show ? 'true' : 'false');
+            field.focus();
         });
-    {{/togglepassword}}
+    })();
     require(['core_form/submit'], function(Submit) {
         Submit.init("loginbtn");
         {{#canloginasguest}}

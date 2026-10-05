@@ -129,19 +129,23 @@ Notes: ______________________________________________
 ## 2. Login page and accounts
 
 ### 2.1 Login page design (logged out)
-Open `https://192.168.30.239/login/index.php` in a private window.
+Open `https://192.168.30.239/login/index.php` in a private window (the design is the same in Day and Night mode).
 
-- [ ] Dark navy background; the form sits on a darker card.
-- [ ] The IIIT Dharwad logo centred above the form (in white on the dark card; navy in Day mode).
-- [ ] Username and password fields are rounded (pill-shaped) with a subtle border; the focused field gets a blue ring.
-- [ ] The **Log in** button is blue and as wide as the form.
-- [ ] Link **Forgotten your username or password?**
-- [ ] Support contact at the bottom: `support.dsai@iiitdwd.ac.in` (clicking opens a new email).
+- [ ] Full-screen IIIT Dharwad campus photo; a navy card in the middle with the white IIIT Dharwad logo.
+- [ ] **USERNAME** and **PASSWORD** labels above white fields; the focused field gets a blue ring.
+- [ ] **Show password** reveals the typed password (changes to **Hide password**); **Forgot password?** opens the
+      reset page.
+- [ ] Blue gradient **Sign in** button across the card.
+- [ ] At the bottom of the page: "© <year> Indian Institute of Information Technology Dharwad. All rights reserved."
+      and the support contact `support.dsai@iiitdwd.ac.in` (opens a new email).
+- [ ] No "Access as a guest" (guest login is off; the site requires an account).
+- [ ] Optional: *Site administration › Appearance › Themes › IIIT Dharwad* › **Login page background**: upload another
+      photo → it replaces the campus photo; delete it to go back.
 
 ### 2.2 Login errors
 1. Log in with a wrong password.
 
-- [ ] Expected: a red "Invalid login" message; the page stays styled.
+- [ ] Expected: "Invalid login, please try again" inside the card, with a red line on its left.
 
 ### 2.3 Login works for each role
 - [ ] `admin` (password from `.env`) → Dashboard.
