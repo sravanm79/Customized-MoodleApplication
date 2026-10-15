@@ -1222,6 +1222,36 @@ function zoom_get_meeting_recordings_grouped($zoomid = null) {
 }
 
 /**
+ * Schedule an adhoc task to import cloud recordings shortly after a meeting ends.
+ *
+ * Skipped for recurring meetings (handled by the scheduled get_meeting_recordings task)
+ * and for meetings with no fixed start time. Safe to call on every save — uses
+ * reschedule_or_queue_adhoc_task so rescheduling a meeting updates the existing task.
+ *
+ * @param stdClass $zoom Zoom DB record with id, start_time, duration, option_auto_recording, recurring.
+ * @return void
+ */
+function zoom_schedule_recording_import(stdClass $zoom) {
+    if (!empty($zoom->recurring) || empty($zoom->start_time)) {
+        return;
+    }
+    if (empty($zoom->option_auto_recording) || $zoom->option_auto_recording !== ZOOM_AUTORECORDING_CLOUD) {
+        return;
+    }
+
+    $meetingend  = intval($zoom->start_time) + intval($zoom->duration);
+    // Wait 30 minutes after meeting end for Zoom to finish processing the cloud recording.
+    $importafter = $meetingend + 30 * MINSECS;
+    // Never schedule in the past; run at least 60 s from now if the meeting already ended.
+    $nextrun = max(time() + 60, $importafter);
+
+    $task = new \mod_zoom\task\import_meeting_recording();
+    $task->set_custom_data(['zoomid' => $zoom->id]);
+    $task->set_next_run_time($nextrun);
+    \core\task\manager::reschedule_or_queue_adhoc_task($task);
+}
+
+/**
  * Singleton for Zoom webservice class.
  *
  * @return \mod_zoom\webservice

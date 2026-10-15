@@ -121,6 +121,7 @@ function zoom_add_instance(stdClass $zoom, ?mod_zoom_mod_form $mform = null) {
     }
 
     $zoom->id = $DB->insert_record('zoom', $zoom);
+    zoom_schedule_recording_import($zoom);
     if (!empty($zoom->breakoutrooms)) {
         // We ignore the API response and save the local data for breakout rooms to support dynamic users and groups.
         zoom_insert_instance_breakout_rooms($zoom->id, $breakoutrooms['db']);
@@ -206,6 +207,7 @@ function zoom_update_instance(stdClass $zoom, ?mod_zoom_mod_form $mform = null) 
     $response = zoom_webservice()->get_meeting_webinar_info($zoom->meeting_id, $zoom->webinar);
     $zoom = populate_zoom_from_response($zoom, $response);
     $DB->update_record('zoom', $zoom);
+    zoom_schedule_recording_import($zoom);
 
     // Update tracking field data for meeting.
     zoom_sync_meeting_tracking_fields($zoom->id, $response->tracking_fields ?? []);

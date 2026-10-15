@@ -54,6 +54,7 @@ $zoom = populate_zoom_from_response($zoom, $response);
 $zoom->exists_on_zoom = ZOOM_MEETING_EXISTS;
 $zoom->timemodified = time();
 $DB->update_record('zoom', $zoom);
+zoom_schedule_recording_import($zoom);
 
 // Return to Zoom page.
 redirect(

@@ -778,17 +778,34 @@ class mod_zoom_mod_form extends moodleform_mod {
             }
         }
 
-        // Adding option for Recording Visiblity by default.
+        // Adding option for Recording Visibility by default.
         if (!empty($config->viewrecordings)) {
             $mform->addElement('header', 'recording', get_string('recording', 'mod_zoom'));
-            $mform->addElement(
-                'advcheckbox',
-                'recordings_visible_default',
-                get_string('recordingvisibility', 'mod_zoom'),
-                get_string('yes')
-            );
-            $mform->setDefault('recordings_visible_default', 1);
-            $mform->addHelpButton('recordings_visible_default', 'recordingvisibility', 'mod_zoom');
+            // When cloud recording is enforced site-wide, recordings are always auto-imported and visible —
+            // hide the per-meeting toggle to eliminate instructor overhead.
+            $cloudforced = ($config->recordingoption === ZOOM_AUTORECORDING_CLOUD
+                && empty($config->allowrecordingchangeoption));
+            if ($cloudforced) {
+                $mform->addElement('hidden', 'recordings_visible_default', 1);
+                $mform->setType('recordings_visible_default', PARAM_INT);
+                $autotext = html_writer::div(
+                    html_writer::tag('i', '', ['class' => 'fa fa-check-circle me-2 text-success']) .
+                    get_string('recordingvisibility_autocloud', 'mod_zoom'),
+                    'alert alert-info mb-0 py-2 px-3'
+                );
+                $mform->addElement('static', 'recordings_visible_info',
+                    get_string('recordingvisibility', 'mod_zoom'),
+                    $autotext);
+            } else {
+                $mform->addElement(
+                    'advcheckbox',
+                    'recordings_visible_default',
+                    get_string('recordingvisibility', 'mod_zoom'),
+                    get_string('yes')
+                );
+                $mform->setDefault('recordings_visible_default', 1);
+                $mform->addHelpButton('recordings_visible_default', 'recordingvisibility', 'mod_zoom');
+            }
         }
 
         // Add meeting id.

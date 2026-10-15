@@ -166,7 +166,10 @@ class get_meeting_recordings extends scheduled_task {
                 $record->passcode = $meetingpasscodes[$recording->meetinguuid];
                 $record->recordingtype = $recordingtype;
                 $record->recordingstart = $recording->recordingstart;
-                $record->showrecording = $zoom->recordings_visible_default;
+                // Cloud-recorded meetings are always visible immediately; others respect the per-meeting default.
+                $record->showrecording = ($zoom->option_auto_recording === ZOOM_AUTORECORDING_CLOUD)
+                    ? 1
+                    : $zoom->recordings_visible_default;
                 $record->timecreated = $now;
                 $record->timemodified = $now;
 
