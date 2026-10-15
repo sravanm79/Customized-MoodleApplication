@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/helpdesk/db" VERSION="20261016" COMMENT="XMLDB file for local_helpdesk"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
+  <TABLES>
+
+    <TABLE NAME="local_helpdesk_ticket" COMMENT="Support tickets submitted by users">
+      <FIELDS>
+        <FIELD NAME="id"          TYPE="int"  LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid"      TYPE="int"  LENGTH="10" NOTNULL="true" COMMENT="Submitter"/>
+        <FIELD NAME="subject"     TYPE="char" LENGTH="255" NOTNULL="true"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="true"/>
+        <FIELD NAME="type"        TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="other" COMMENT="bug|feature|other"/>
+        <FIELD NAME="status"      TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="open"
+                                  COMMENT="open|assigned|in_progress|resolved|closed"/>
+        <FIELD NAME="priority"    TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="normal"
+                                  COMMENT="low|normal|high|urgent"/>
+        <FIELD NAME="assigneeid"  TYPE="int"  LENGTH="10" NOTNULL="false" COMMENT="Staff member assigned"/>
+        <FIELD NAME="pageurl"     TYPE="char" LENGTH="1333" NOTNULL="false" COMMENT="URL where the ticket was submitted"/>
+        <FIELD NAME="userroles"   TYPE="char" LENGTH="255"  NOTNULL="false" COMMENT="Comma-separated role shortnames"/>
+        <FIELD NAME="useragent"   TYPE="char" LENGTH="1333" NOTNULL="false"/>
+        <FIELD NAME="timecreated"  TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="idx_userid"   UNIQUE="false" FIELDS="userid"/>
+        <INDEX NAME="idx_status"   UNIQUE="false" FIELDS="status"/>
+        <INDEX NAME="idx_assignee" UNIQUE="false" FIELDS="assigneeid"/>
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="local_helpdesk_reply" COMMENT="Replies and internal notes on support tickets">
+      <FIELDS>
+        <FIELD NAME="id"         TYPE="int"  LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="ticketid"   TYPE="int"  LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="userid"     TYPE="int"  LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="message"    TYPE="text" NOTNULL="true"/>
+        <FIELD NAME="isprivate"  TYPE="int"  LENGTH="1"  NOTNULL="true" DEFAULT="0"
+                                 COMMENT="1 = internal staff note, not shown to the submitter"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary"   TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_ticket" TYPE="foreign" FIELDS="ticketid" REFTABLE="local_helpdesk_ticket" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="idx_ticketid" UNIQUE="false" FIELDS="ticketid"/>
+      </INDEXES>
+    </TABLE>
+
+  </TABLES>
+</XMLDB>
