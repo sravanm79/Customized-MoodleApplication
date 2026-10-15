@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/notifier/db" VERSION="20261016" COMMENT="XMLDB file for local_notifier"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
+  <TABLES>
+
+    <!-- Tracks which notifications have already been sent to avoid duplicates. -->
+    <TABLE NAME="local_notifier_sent" COMMENT="Sent notification log for deduplication">
+      <FIELDS>
+        <FIELD NAME="id"         TYPE="int"  LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid"     TYPE="int"  LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="component"  TYPE="char" LENGTH="20" NOTNULL="true" COMMENT="assign|zoom|quiz"/>
+        <FIELD NAME="instanceid" TYPE="int"  LENGTH="10" NOTNULL="true" COMMENT="cmid for assign/quiz, zoom.id for zoom"/>
+        <FIELD NAME="leadmins"   TYPE="int"  LENGTH="10" NOTNULL="true" COMMENT="Lead time in minutes that triggered this send"/>
+        <FIELD NAME="timesent"   TYPE="int"  LENGTH="10" NOTNULL="true"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <!-- Fast dedup lookup. -->
+        <INDEX NAME="idx_dedup" UNIQUE="true" FIELDS="userid, component, instanceid, leadmins"/>
+        <INDEX NAME="idx_userid" UNIQUE="false" FIELDS="userid"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Google Calendar OAuth tokens per user. -->
+    <TABLE NAME="local_notifier_gcal" COMMENT="Google Calendar OAuth tokens">
+      <FIELDS>
+        <FIELD NAME="id"           TYPE="int"  LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid"       TYPE="int"  LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="accesstoken"  TYPE="text" NOTNULL="true"/>
+        <FIELD NAME="refreshtoken" TYPE="text" NOTNULL="true"/>
+        <FIELD NAME="tokenexpiry"  TYPE="int"  LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="timecreated"  TYPE="int"  LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="timemodified" TYPE="int"  LENGTH="10" NOTNULL="true"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="idx_userid" UNIQUE="true" FIELDS="userid"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Maps Moodle events to Google Calendar event IDs so we can update rather than duplicate. -->
+    <TABLE NAME="local_notifier_gcal_events" COMMENT="Moodle event → Google Calendar event ID mapping">
+      <FIELDS>
+        <FIELD NAME="id"          TYPE="int"  LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid"      TYPE="int"  LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="component"   TYPE="char" LENGTH="20" NOTNULL="true"/>
+        <FIELD NAME="instanceid"  TYPE="int"  LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="gcaleventid" TYPE="char" LENGTH="255" NOTNULL="true"/>
+        <FIELD NAME="timecreated" TYPE="int"  LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="idx_event" UNIQUE="true" FIELDS="userid, component, instanceid"/>
+      </INDEXES>
+    </TABLE>
+
+  </TABLES>
+</XMLDB>
