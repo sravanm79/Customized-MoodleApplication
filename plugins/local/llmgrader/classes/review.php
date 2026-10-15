@@ -121,6 +121,45 @@ class review {
     }
 
     /**
+     * Maps a percentage score to a letter grade (A, A-, B, B-, C, D, F).
+     *
+     * @param float $score Marks awarded.
+     * @param float $maxscore Total marks available.
+     * @return string Letter grade.
+     */
+    public static function score_to_letter(float $score, float $maxscore): string {
+        if ($maxscore <= 0) {
+            return 'F';
+        }
+        $pct = ($score / $maxscore) * 100;
+        if ($pct >= 90) return 'A';
+        if ($pct >= 85) return 'A-';
+        if ($pct >= 80) return 'B';
+        if ($pct >= 75) return 'B-';
+        if ($pct >= 65) return 'C';
+        if ($pct >= 50) return 'D';
+        return 'F';
+    }
+
+    /**
+     * Bootstrap badge class for a letter grade.
+     *
+     * @param string $letter From score_to_letter().
+     * @return string CSS classes for a badge element.
+     */
+    public static function letter_badge_class(string $letter): string {
+        return [
+            'A'  => 'bg-success',
+            'A-' => 'bg-success',
+            'B'  => 'bg-primary',
+            'B-' => 'bg-primary',
+            'C'  => 'bg-warning text-dark',
+            'D'  => 'bg-secondary',
+            'F'  => 'bg-danger',
+        ][$letter] ?? 'bg-secondary';
+    }
+
+    /**
      * Feedback for the student: overall comment, per-criterion marks and comments, and a footer.
      *
      * @param array $result From evaluator::evaluate().
@@ -129,7 +168,11 @@ class review {
      * @return string HTML
      */
     public static function feedback_html(array $result, float $maxgrade, float $grade): string {
-        $html = \html_writer::tag('p', s($result['feedback']));
+        $letter = self::score_to_letter($result['score'], $result['maxscore']);
+        $badge = \html_writer::span($letter, 'badge ' . self::letter_badge_class($letter) . ' fs-6 align-middle ms-1');
+        $html = \html_writer::tag('p',
+            \html_writer::tag('strong', get_string('lettergrade', 'local_llmgrader')) . $badge);
+        $html .= \html_writer::tag('p', s($result['feedback']));
         $items = '';
         foreach ($result['tasks'] as $t) {
             $icon = $t['awarded'] >= $t['out_of'] ? '✅' : ($t['awarded'] > 0 ? '🟡' : '❌');

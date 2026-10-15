@@ -66,8 +66,10 @@ class local_llmgrader_review_form extends moodleform {
         $mform->addElement('editor', 'feedback', get_string('feedbackforstudent', 'local_llmgrader'), ['rows' => 12]);
         $mform->setType('feedback', PARAM_RAW);
         $buttons = [
-            $mform->createElement('submit', 'approve', get_string('approverelease', 'local_llmgrader')),
-            $mform->createElement('submit', 'reject', get_string('reject', 'local_llmgrader')),
+            $mform->createElement('submit', 'approve', get_string('approverelease', 'local_llmgrader'),
+                ['class' => 'btn btn-primary']),
+            $mform->createElement('submit', 'reject', get_string('reject', 'local_llmgrader'),
+                ['class' => 'btn btn-danger']),
             $mform->createElement('cancel'),
         ];
         $mform->addGroup($buttons, 'buttonar', '', ' ', false);
@@ -129,7 +131,15 @@ $table->data[] = [html_writer::tag('strong', get_string('total')), html_writer::
     format_float($job->score, -1) . ' / ' . format_float($job->maxscore, -1)), get_string('scaledto', 'local_llmgrader',
     format_float($job->appliedgrade, -1) . ' / ' . format_float($maxgrade, -1))];
 echo $OUTPUT->heading(get_string('llmsuggestion', 'local_llmgrader'), 3);
-echo html_writer::table($table);
+if ($job->score !== null && $job->maxscore > 0) {
+    $letter = review::score_to_letter((float) $job->score, (float) $job->maxscore);
+    echo html_writer::div(
+        html_writer::tag('strong', get_string('lettergrade', 'local_llmgrader')) . ' ' .
+        html_writer::span($letter, 'badge ' . review::letter_badge_class($letter) . ' fs-5'),
+        'mb-3'
+    );
+}
+echo html_writer::div(html_writer::table($table), 'table-responsive');
 if ($job->metadatajson && ($meta = json_decode($job->metadatajson))) {
     echo html_writer::div(get_string('metadata', 'local_llmgrader', $meta), 'small text-muted mb-3');
 }

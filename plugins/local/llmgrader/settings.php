@@ -31,7 +31,7 @@ if ($hassiteconfig) {
         $settings->add(new admin_setting_configcheckbox('local_llmgrader/enabled',
             get_string('enabled', 'local_llmgrader'), get_string('enabled_desc', 'local_llmgrader'), 1));
         $settings->add(new admin_setting_configcheckbox('local_llmgrader/requirereview',
-            get_string('requirereviewdefault', 'local_llmgrader'), get_string('requirereviewdefault_desc', 'local_llmgrader'), 1));
+            get_string('requirereviewdefault', 'local_llmgrader'), get_string('requirereviewdefault_desc', 'local_llmgrader'), 0));
         $providers = [];
         foreach (\local_llmgrader\provider\factory::available() as $name => $class) {
             $providers[$name] = $class::get_name();

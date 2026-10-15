@@ -163,8 +163,12 @@ $table->head = [get_string('fullname'), get_string('submission', 'local_llmgrade
 $table->attributes['class'] = 'generaltable local-llmgrader-review';
 $users = user_get_users_by_id(array_keys($latest));
 foreach ($latest as $userid => $job) {
+    $letter = ($job->score !== null && $job->maxscore > 0)
+        ? review::score_to_letter((float) $job->score, (float) $job->maxscore)
+        : null;
     $grade = $job->appliedgrade !== null
-        ? html_writer::tag('strong', format_float($job->appliedgrade, -1) . ' / ' . format_float($instance->grade, -1))
+        ? ($letter ? html_writer::span($letter, 'badge ' . review::letter_badge_class($letter) . ' me-1') : '')
+            . html_writer::tag('strong', format_float($job->appliedgrade, -1) . ' / ' . format_float($instance->grade, -1))
             . html_writer::div('(' . format_float($job->score, -1) . ' / ' . format_float($job->maxscore, -1)
             . ' ' . get_string('marks', 'local_llmgrader') . ')', 'small text-muted')
         : '—';
@@ -212,5 +216,5 @@ foreach ($latest as $userid => $job) {
         html_writer::div($actions, 'd-flex flex-wrap gap-1'),
     ];
 }
-echo html_writer::table($table);
+echo html_writer::div(html_writer::table($table), 'table-responsive');
 echo $OUTPUT->footer();
