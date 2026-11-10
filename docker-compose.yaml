@@ -1,6 +1,7 @@
 services:
   mariadb:
-    image: bitnami/mariadb:latest
+    # MariaDB 13.1.1, pinned to the exact image in use (a new digest only after testing an upgrade).
+    image: bitnami/mariadb@sha256:7f9727e5fe4fdad4ee22298c63a6d42e31237389b31917b58a8b6cf6e7a44dd6
     container_name: moodle_db
     restart: unless-stopped
     environment:
@@ -14,7 +15,8 @@ services:
       - mariadb_data:/bitnami/mariadb
 
   moodle:
-    image: bitnamilegacy/moodle:latest
+    # Moodle 5.0.1 (Build 20250609), pinned: the plugins are tested against this exact version.
+    image: bitnamilegacy/moodle@sha256:a7bd6bf34b736dad22ee22168d4bfd830b7bedf9e34b89732d92d437317cb1d0
     container_name: moodle_app
     restart: unless-stopped
     ports:
@@ -46,7 +48,8 @@ services:
       - mariadb
 
   jobe:
-    image: trampgeek/jobeinabox:latest
+    # Jobe in a box (Ubuntu 24.04, built 2026-08-27), pinned.
+    image: trampgeek/jobeinabox@sha256:e4f68101e5f830468751d5573f9aa4f001788436a608433c14e02c0698353214
     container_name: moodle_jobe
     restart: unless-stopped
 

@@ -212,7 +212,7 @@ if ($isadmin || $isowner) {
                     'name' => 'isprivate', 'id' => 'isprivate', 'value' => '1']) .
                 html_writer::tag('label', get_string('isprivate', 'local_helpdesk'),
                     ['class' => 'form-check-label', 'for' => 'isprivate']),
-                'form-check'
+                ['class' => 'form-check']
             ),
             'mb-3'
         );

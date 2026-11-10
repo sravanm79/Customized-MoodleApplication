@@ -1,0 +1,172 @@
+<?php
+// This file is part of the customcert module for Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * This file contains the customcert element userfield's core interaction API.
+ *
+ * @package    customcertelement_userfield
+ * @copyright  2013 Mark Nelson <mdjnelson@gmail.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+namespace customcertelement_userfield;
+
+use core_user\fields;
+
+/**
+ * The customcert element userfield's core interaction API.
+ *
+ * @package    customcertelement_userfield
+ * @copyright  2013 Mark Nelson <mdjnelson@gmail.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class element extends \mod_customcert\element {
+    /**
+     * Core user table fields that may be displayed.
+     */
+    private const USER_FIELDS = [
+        'firstname', 'lastname', 'username', 'email', 'city', 'country', 'url',
+        'idnumber', 'institution', 'department', 'phone1', 'phone2', 'address',
+    ];
+
+    /**
+     * This function renders the form elements when adding a customcert element.
+     *
+     * @param \MoodleQuickForm $mform the edit_form instance
+     */
+    public function render_form_elements($mform) {
+        global $CFG;
+
+        require_once($CFG->dirroot . '/user/profile/lib.php');
+
+        // Get the user profile fields.
+        $userfields = [];
+        foreach (self::USER_FIELDS as $userfield) {
+            $userfields[$userfield] = fields::get_display_name($userfield);
+        }
+        // Get the user custom fields, excluding ones the configuring user isn't permitted to disclose.
+        $arrcustomfields = \availability_profile\condition::get_custom_profile_fields();
+        $customfields = [];
+        $canviewalldetails = has_capability('moodle/user:viewalldetails', \context_system::instance());
+        foreach ($arrcustomfields as $key => $customfield) {
+            if ($customfield->visible == PROFILE_VISIBLE_NONE && !$canviewalldetails) {
+                continue;
+            }
+            $customfields[$customfield->id] = $customfield->name;
+        }
+        // Combine the two.
+        $fields = $userfields + $customfields;
+        \core_collator::asort($fields);
+
+        // Create the select box where the user field is selected.
+        $mform->addElement('select', 'userfield', get_string('userfield', 'customcertelement_userfield'), $fields);
+        $mform->setType('userfield', PARAM_ALPHANUM);
+        $mform->addHelpButton('userfield', 'userfield', 'customcertelement_userfield');
+
+        parent::render_form_elements($mform);
+    }
+
+    /**
+     * This will handle how form data will be saved into the data column in the
+     * customcert_elements table.
+     *
+     * @param \stdClass $data the form data
+     * @return string the text
+     */
+    public function save_unique_data($data) {
+        return $data->userfield;
+    }
+
+    /**
+     * Handles rendering the element on the pdf.
+     *
+     * @param \pdf $pdf the pdf object
+     * @param bool $preview true if it is a preview, false otherwise
+     * @param \stdClass $user the user we are rendering this for
+     */
+    public function render($pdf, $preview, $user) {
+        \mod_customcert\element_helper::render_content($pdf, $this, $this->get_user_field_value($user, $preview));
+    }
+
+    /**
+     * Render the element in html.
+     *
+     * This function is used to render the element when we are using the
+     * drag and drop interface to position it.
+     */
+    public function render_html() {
+        global $USER;
+
+        return \mod_customcert\element_helper::render_html_content($this, $this->get_user_field_value($USER, true));
+    }
+
+    /**
+     * Sets the data on the form when editing an element.
+     *
+     * @param \MoodleQuickForm $mform the edit_form instance
+     */
+    public function definition_after_data($mform) {
+        if (!empty($this->get_data())) {
+            $element = $mform->getElement('userfield');
+            $element->setValue($this->get_data());
+        }
+        parent::definition_after_data($mform);
+    }
+
+    /**
+     * Helper function that returns the text.
+     *
+     * @param \stdClass $user the user we are rendering this for
+     * @param bool $preview Is this a preview?
+     * @return string
+     */
+    protected function get_user_field_value(\stdClass $user, bool $preview): string {
+        global $CFG, $DB;
+
+        // The user field to display.
+        $field = $this->get_data();
+        // The value to display - we always want to show a value here so it can be repositioned.
+        if ($preview) {
+            $value = $field;
+        } else {
+            $value = '';
+        }
+
+        $context = \mod_customcert\element_helper::get_context($this->get_id());
+
+        if (is_number($field)) { // Must be a custom user profile field.
+            if ($field = $DB->get_record('user_info_field', ['id' => $field])) {
+                // Found the field name, let's update the value to display.
+                $value = $field->name;
+                $file = $CFG->dirroot . '/user/profile/field/' . $field->datatype . '/field.class.php';
+                if (file_exists($file)) {
+                    require_once($CFG->dirroot . '/user/profile/lib.php');
+                    require_once($file);
+                    $class = "profile_field_{$field->datatype}";
+                    $field = new $class($field->id, $user->id);
+                    // Only disclose the value if the field is visible to the current viewer.
+                    if ($field->is_visible($context)) {
+                        $value = $field->display_data();
+                    }
+                }
+            }
+        } else if (in_array($field, self::USER_FIELDS, true) && !empty($user->$field)) { // Field in the user table.
+            $value = $user->$field;
+        }
+
+        return format_string($value, true, ['context' => $context]);
+    }
+}

@@ -1,0 +1,236 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * A scheduled task for issuing certificates that have requested someone get emailed.
+ *
+ * @package    mod_customcert
+ * @copyright  2024 Oscar Nadjar <oscar.nadjar@moodle.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+namespace mod_customcert\task;
+
+/**
+ * A scheduled task for issuing certificates that have requested someone get emailed.
+ *
+ * @package    mod_customcert
+ * @copyright  2024 Oscar Nadjar <oscar.nadjar@moodle.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class issue_certificates_task extends \core\task\scheduled_task {
+    /**
+     * Get a descriptive name for this task (shown to admins).
+     *
+     * @return string
+     */
+    public function get_name(): string {
+        return get_string('taskissuecertificate', 'customcert');
+    }
+
+    /**
+     * Execute.
+     */
+    public function execute() {
+        global $DB;
+
+        // Get the certificatesperrun, includeinnotvisiblecourses, and certificateexecutionperiod configurations.
+        $certificatesperrun = (int)get_config('customcert', 'certificatesperrun');
+        $includeinnotvisiblecourses = (bool)get_config('customcert', 'includeinnotvisiblecourses');
+        $certificateexecutionperiod = (int)get_config('customcert', 'certificateexecutionperiod');
+        $offset = (int)get_config('customcert', 'certificate_offset');
+        $emailothersselect = "c.emailothers";
+        $emailotherslengthsql = $DB->sql_length('c.emailothers');
+
+        $sql = "SELECT DISTINCT c.id, c.templateid, c.course, c.requiredtime, c.emailstudents, c.emailteachers, $emailothersselect,
+                       c.issueautomatically,
+                       ct.id AS templateid, ct.name AS templatename, ct.contextid, co.id AS courseid,
+                       co.fullname AS coursefullname, co.shortname AS courseshortname
+                  FROM {customcert} c
+                  JOIN {customcert_templates} ct
+                    ON c.templateid = ct.id
+                  JOIN {course} co
+                    ON c.course = co.id
+             LEFT JOIN {course_categories} cat
+                    ON co.category = cat.id
+             LEFT JOIN {customcert_issues} ci
+                    ON c.id = ci.customcertid
+                 WHERE (c.emailstudents = :emailstudents
+                    OR c.emailteachers = :emailteachers
+                    OR $emailotherslengthsql >= 3)";
+
+        $params = ['emailstudents' => 1, 'emailteachers' => 1];
+
+        // Check the includeinnotvisiblecourses configuration.
+        if (!$includeinnotvisiblecourses) {
+            // Exclude certificates from hidden courses.
+            $sql .= " AND co.visible = 1 AND (cat.visible = 1 OR cat.id IS NULL)";
+        }
+
+        // Add condition based on certificate execution period.
+        if ($certificateexecutionperiod > 0) {
+            // Include courses with no end date or end date greater than the specified period.
+            $sql .= " AND (co.enddate > :enddate OR (co.enddate = 0 AND (ci.timecreated > :enddate2 OR ci.timecreated IS NULL)))";
+            $params['enddate'] = time() - $certificateexecutionperiod;
+            $params['enddate2'] = $params['enddate'];
+        }
+
+        // Execute the SQL query.
+        $customcerts = $DB->get_records_sql($sql, $params, $offset, $certificatesperrun);
+
+        // When we get to the end of the list, reset the offset.
+        set_config('certificate_offset', !empty($customcerts) ? $offset + $certificatesperrun : 0, 'customcert');
+
+        if (empty($customcerts)) {
+            return;
+        }
+
+        foreach ($customcerts as $customcert) {
+            // Check if the certificate is hidden, quit early.
+            $cm = get_course_and_cm_from_instance($customcert->id, 'customcert', $customcert->course)[1];
+            if (!$cm->visible) {
+                continue;
+            }
+
+            // Do not process an empty certificate.
+            $sql = "SELECT ce.*
+                      FROM {customcert_elements} ce
+                      JOIN {customcert_pages} cp
+                        ON cp.id = ce.pageid
+                      JOIN {customcert_templates} ct
+                        ON ct.id = cp.templateid
+                     WHERE ct.contextid = :contextid";
+            if (!$DB->record_exists_sql($sql, ['contextid' => $customcert->contextid])) {
+                continue;
+            }
+
+            // Get the context.
+            $context = \context::instance_by_id($customcert->contextid);
+
+            // Users who need no further email processing (skip these users): once emailstudents is
+            // enabled, only studentemailed = 0 remains a retry candidate.
+            $sql = "SELECT u.id
+                      FROM {customcert_issues} ci
+                      JOIN {user} u
+                        ON ci.userid = u.id
+                     WHERE ci.customcertid = :customcertid
+                           AND ci.emailed = 1";
+            if (!empty($customcert->emailstudents)) {
+                $sql .= " AND (ci.studentemailed = 1 OR ci.studentemailed IS NULL)";
+            }
+            $issuedusers = $DB->get_records_sql($sql, ['customcertid' => $customcert->id]);
+
+            // Now, get a list of users who can Manage the certificate.
+            $userswithmanage = get_users_by_capability($context, 'mod/customcert:manage', 'u.id');
+
+            // Get the context of the Custom Certificate module.
+            $cmcontext = \context_module::instance($cm->id);
+
+            // Get users with the mod/customcert:receiveissue capability in the Custom Certificate module context.
+            // Outside the site home, only actively enrolled users are eligible, so a capability granted
+            // at system level does not issue certificates to users who are not in the course.
+            if ((int)$customcert->courseid === SITEID) {
+                $userswithissue = get_users_by_capability($cmcontext, 'mod/customcert:receiveissue');
+            } else {
+                $userswithissue = get_enrolled_users($cmcontext, 'mod/customcert:receiveissue', 0, 'u.*', null, 0, 0, true);
+            }
+            // Get users with mod/customcert:view capability.
+            $userswithview = get_users_by_capability($cmcontext, 'mod/customcert:view');
+            // Users with both mod/customcert:view and mod/customcert:receiveissue capabilities.
+            $userswithissueview = array_intersect_key($userswithissue, $userswithview);
+
+            // Filter remaining users by availability conditions.
+            $infomodule = new \core_availability\info_module($cm);
+            $filteredusers = $infomodule->filter_user_list($userswithissueview);
+
+            // Auto-issue only for "Email students", or when this certificate's own "Issue
+            // certificates automatically" setting is enabled (#672, #904).
+            $autoissue = !empty($customcert->emailstudents) || !empty($customcert->issueautomatically);
+
+            foreach ($filteredusers as $filtereduser) {
+                // Do not issue certs to suspended users.
+                if ($filtereduser->suspended) {
+                    continue;
+                }
+
+                // Skip if the user has already been issued and emailed.
+                if (in_array($filtereduser->id, array_keys((array)$issuedusers))) {
+                    continue;
+                }
+
+                // Require mod/customcert:receiveissue capability.
+                if (!in_array($filtereduser->id, array_keys($userswithissue))) {
+                    continue;
+                }
+
+                // Check the CM is visible and genuinely available, as uservisible alone is true for users
+                // who can ignore availability restrictions (e.g. admins and managers).
+                $usercm = get_fast_modinfo($customcert->courseid, $filtereduser->id)->instances['customcert'][$customcert->id];
+                if (!$usercm->uservisible || !$usercm->available) {
+                    continue;
+                }
+
+                // Check required time (if any).
+                if (!empty($customcert->requiredtime)) {
+                    if (
+                        \mod_customcert\certificate::get_course_time(
+                            $customcert->courseid,
+                            $filtereduser->id
+                        ) < ($customcert->requiredtime * 60)
+                    ) {
+                        continue;
+                    }
+                }
+
+                // Check whether the cert has already been issued.
+                $issue = $DB->get_record(
+                    'customcert_issues',
+                    ['userid' => $filtereduser->id, 'customcertid' => $customcert->id],
+                    'id, emailed, studentemailed'
+                );
+
+                $issueid = null;
+                $emailed = 0;
+                $studentemailed = 0;
+                if (!empty($issue)) {
+                    $issueid = (int)$issue->id;
+                    $emailed = (int)$issue->emailed;
+                    // Preserve NULL rather than casting to int, which would collapse it into 0.
+                    $studentemailed = $issue->studentemailed === null ? null : (int)$issue->studentemailed;
+                } else if ($autoissue) {
+                    // A newly created issue is always explicitly 0 (known, retryable), never NULL
+                    // -- see \mod_customcert\certificate::issue_certificate().
+                    $issueid = \mod_customcert\certificate::issue_certificate($customcert->id, $filtereduser->id);
+                    $emailed = 0;
+                    $studentemailed = 0;
+                }
+
+                // If we have an issue and it still needs email processing, send it now.
+                $needsemail = $emailed === 0
+                    || (!empty($customcert->emailstudents) && $studentemailed === 0);
+                if (!empty($issueid) && $needsemail) {
+                    $task = new \mod_customcert\task\email_certificate_task();
+                    $task->set_custom_data(['issueid' => $issueid, 'customcertid' => $customcert->id]);
+                    $useadhoc = get_config('customcert', 'useadhoc');
+                    if ($useadhoc) {
+                        \core\task\manager::queue_adhoc_task($task);
+                    } else {
+                        $task->execute();
+                    }
+                }
+            }
+        }
+    }
+}

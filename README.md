@@ -115,15 +115,32 @@ name, date, code); in a course, add *Custom certificate*, load the template and 
 | Live monitor | Quiz with Proctored exam mode and Record webcam video = Yes. Start an attempt as a student (allow the camera; the bar shows **● REC**). As the teacher, open *Live exam monitor*: the student is *Active* with *Recording*; switch tabs as the student and the violation appears within 15 s. After a minute, *Video* plays the recording |
 | Meet sync | Needs Google OAuth (see above): after a Meet class with a recording, the recording appears on the activity within the hour without pressing *Sync with Google Drive* |
 
-### First start on a new server
+### First start on a new server (fresh clone)
+
+Requirements: Linux with Docker Engine 24+ and Docker Compose v2, `git`, `openssl`, `bash`. Optional dev tools:
+Node.js 20+ (theme lint), Python 3.11+ (load tests). Every image and package version is pinned: Docker images by digest in
+`docker-compose.yaml` (Moodle 5.0.1, MariaDB 13.1.1, Jobe, Mailpit 1.31.4), Python packages in the Dockerfiles and
+`requirements.txt` files, Node packages in `plugins/theme/iiitdwd/package.json` + `package-lock.json`. PHP libraries
+needed at runtime are committed inside the plugins (Moodle does not run Composer).
 
 ```bash
+git clone https://github.com/sravanm79/Customized-MoodleApplication.git && cd Customized-MoodleApplication
 cp .env.example .env                       # fill in the passwords and tokens
 tls/make-certs.sh 192.168.30.239           # LMS CA + server certificate (use the server's fixed IP or DNS name)
 mailpit/configure.sh                       # Mailpit inbox password (+ optional SMTP relay)
 docker compose --profile build-only build jupyter-singleuser   # image of each student's Jupyter server
-docker compose up -d --build
+docker compose up -d --build               # first start installs Moodle (a few minutes)
+tools/deploy-plugins.sh                    # copy every plugin in plugins/ into Moodle, upgrade, purge caches
+
+# Dev tooling (optional)
+(cd plugins/theme/iiitdwd && npm ci)       # stylelint for the theme SCSS
+python3 -m venv locust/.venv && locust/.venv/bin/pip install -r locust/requirements.txt -r loadtest/requirements.txt
 ```
+
+What is in git: the Docker stack, the Moodle plugins (ours and vendored upstream ones, kept as upstream ships them),
+deploy and setup scripts, load-test scripts, documentation and test data. Not in git (see `.gitignore`): secrets
+(`.env`, `tls/ca/`, `tls/server/`, `mailpit/secrets/`), database backups, installed dependencies (`node_modules/`,
+`.venv/`, `loadtest/k6`), load-test results and generated report files, local editor and assistant settings.
 
 On first install also set in `/bitnami/moodle/config.php`: `$CFG->wwwroot = 'https://192.168.30.239';`, and in
 Moodle: *Outgoing mail* SMTP host `mailpit:1025`, `mod_jupyter | hubinternalurl` = `http://jupyterhub:8000/jupyter`,

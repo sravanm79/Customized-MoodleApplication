@@ -1,0 +1,8 @@
+# Load tests (locust/). Python 3.11+ (tested with 3.13.5).
+#   python3 -m venv locust/.venv && locust/.venv/bin/pip install -r locust/requirements.txt
+#   locust/.venv/bin/playwright install chromium     # browser for browser_video_check.py
+locust==2.46.6
+openpyxl==3.1.5
+playwright==1.63.0
+psutil==7.2.2
+websocket-client==1.9.2
