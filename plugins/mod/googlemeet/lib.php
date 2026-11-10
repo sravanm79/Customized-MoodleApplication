@@ -313,12 +313,13 @@ function sync_recordings($googlemeetid, $files) {
 
     foreach ($googlemeetrecordings as $googlemeetrecording) {
         if (!in_array($googlemeetrecording->recordingid, $fileids)) {
-            $deleterecordings['id'] = $googlemeetrecording->id;
+            $deleterecordings[] = $googlemeetrecording->id;
         }
     }
 
     if ($deleterecordings) {
-        $DB->delete_records('googlemeet_recordings', $deleterecordings);
+        // IIIT Dharwad fix: upstream kept only the last id, so one stale recording was removed per sync.
+        $DB->delete_records_list('googlemeet_recordings', 'id', $deleterecordings);
     }
 
     if ($updaterecordings) {

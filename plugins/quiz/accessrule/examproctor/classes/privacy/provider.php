@@ -23,6 +23,7 @@ use core_privacy\local\request\contextlist;
 use core_privacy\local\request\transform;
 use core_privacy\local\request\userlist;
 use core_privacy\local\request\writer;
+use quizaccess_examproctor\local\video;
 
 /**
  * Privacy provider for quizaccess_examproctor.
@@ -43,6 +44,7 @@ class provider implements
             'details' => 'privacy:metadata:log:details',
             'timecreated' => 'privacy:metadata:log:timecreated',
         ], 'privacy:metadata:log');
+        $collection->add_subsystem_link('core_files', [], 'privacy:metadata:video');
         return $collection;
     }
 
@@ -55,6 +57,10 @@ class provider implements
         $contextlist = new contextlist();
         $contextlist->add_from_sql("SELECT ctx.id FROM {context} ctx " . self::CONTEXT_JOIN . " WHERE l.userid = :userid",
                 ['contextlevel' => CONTEXT_MODULE, 'userid' => $userid]);
+        // Webcam video, even when no event was logged.
+        $contextlist->add_from_sql("SELECT f.contextid FROM {files} f
+                                     WHERE f.component = 'quizaccess_examproctor' AND f.filearea = :filearea
+                                       AND f.userid = :userid", ['filearea' => video::FILEAREA, 'userid' => $userid]);
         return $contextlist;
     }
 
@@ -65,6 +71,10 @@ class provider implements
         }
         $userlist->add_from_sql('userid', "SELECT l.userid FROM {context} ctx " . self::CONTEXT_JOIN . " WHERE ctx.id = :ctxid",
                 ['contextlevel' => CONTEXT_MODULE, 'ctxid' => $context->id]);
+        $userlist->add_from_sql('userid', "SELECT f.userid FROM {files} f
+                                            WHERE f.contextid = :ctxid AND f.component = 'quizaccess_examproctor'
+                                              AND f.filearea = :filearea",
+                ['ctxid' => $context->id, 'filearea' => video::FILEAREA]);
     }
 
     public static function export_user_data(approved_contextlist $contextlist) {
@@ -73,6 +83,12 @@ class provider implements
         foreach ($contextlist->get_contexts() as $context) {
             if (!$quizid = self::quizid($context)) {
                 continue;
+            }
+            foreach ($DB->get_fieldset_select('quiz_attempts', 'id', 'quiz = ? AND userid = ?', [$quizid, $userid])
+                    as $attemptid) {
+                writer::with_context($context)->export_area_files(
+                    [get_string('pluginname', 'quizaccess_examproctor'), get_string('mon_video', 'quizaccess_examproctor'),
+                        $attemptid], 'quizaccess_examproctor', video::FILEAREA, $attemptid);
             }
             $events = $DB->get_records('quizaccess_examproctor_log', ['quizid' => $quizid, 'userid' => $userid],
                     'timecreated, id', 'id, attemptid, eventtype, details, timecreated');
@@ -96,6 +112,7 @@ class provider implements
         global $DB;
         if ($quizid = self::quizid($context)) {
             $DB->delete_records('quizaccess_examproctor_log', ['quizid' => $quizid]);
+            video::delete_for_context($context);
         }
     }
 
@@ -105,6 +122,7 @@ class provider implements
         foreach ($contextlist->get_contexts() as $context) {
             if ($quizid = self::quizid($context)) {
                 $DB->delete_records('quizaccess_examproctor_log', ['quizid' => $quizid, 'userid' => $userid]);
+                self::delete_videos($context, $quizid, [$userid]);
             }
         }
     }
@@ -117,6 +135,26 @@ class provider implements
         [$insql, $params] = $DB->get_in_or_equal($userlist->get_userids(), SQL_PARAMS_NAMED);
         $params['quizid'] = $quizid;
         $DB->delete_records_select('quizaccess_examproctor_log', "quizid = :quizid AND userid $insql", $params);
+        self::delete_videos($userlist->get_context(), $quizid, $userlist->get_userids());
+    }
+
+    /**
+     * Deletes the webcam video of these users' attempts.
+     *
+     * @param \context $context
+     * @param int $quizid
+     * @param int[] $userids
+     */
+    private static function delete_videos(\context $context, int $quizid, array $userids): void {
+        global $DB;
+        if (!$userids) {
+            return;
+        }
+        [$insql, $params] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
+        $params['quizid'] = $quizid;
+        foreach ($DB->get_fieldset_select('quiz_attempts', 'id', "quiz = :quizid AND userid $insql", $params) as $attemptid) {
+            video::delete_for_attempt($context, (int) $attemptid);
+        }
     }
 
     /**

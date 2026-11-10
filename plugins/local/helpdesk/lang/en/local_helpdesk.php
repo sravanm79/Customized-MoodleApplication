@@ -75,11 +75,17 @@ $string['filter_type']     = 'Type';
 $string['filter_priority'] = 'Priority';
 $string['filter_all']      = 'All';
 $string['mytickets']       = 'My Tickets';
+$string['mytickets_intro'] = 'Tickets you have raised. Open one to read staff replies or add more information.';
+$string['nomytickets']     = 'You have not raised any tickets yet.';
+$string['newticket']       = 'Raise a ticket';
+$string['viewticket']      = 'View ticket';
+$string['priority']        = 'Priority';
 $string['newtickets']      = 'New (open)';
 
 // Ticket detail page.
 $string['ticketdetail']    = 'Ticket #{$a}';
 $string['backtolist']      = '← Back to dashboard';
+$string['backtomytickets'] = '← Back to My Tickets';
 $string['context']         = 'Context';
 $string['pageurl']         = 'Page';
 $string['userroles']       = 'User roles';
@@ -103,5 +109,7 @@ $string['notify_new_subject']   = 'New support ticket #{$a->id}: {$a->subject}';
 $string['notify_new_body']      = "A new support ticket has been submitted.\n\nTicket: #{$a->id}\nType: {$a->type}\nFrom: {$a->username}\nPage: {$a->pageurl}\n\nSubject: {$a->subject}\n\n{$a->description}\n\nView: {$a->url}";
 $string['notify_reply_subject'] = 'Reply on your ticket #{$a->id}: {$a->subject}';
 $string['notify_reply_body']    = "A staff member has replied to your support ticket #{$a->id}.\n\nSubject: {$a->subject}\n\n---\n{$a->reply}\n---\n\nView your ticket: {$a->url}";
+$string['notify_userreply_subject'] = 'New reply from {$a->username} on ticket #{$a->id}: {$a->subject}';
+$string['notify_userreply_body']    = "{$a->username} replied to support ticket #{$a->id}.\n\nSubject: {$a->subject}\n\n---\n{$a->reply}\n---\n\nView: {$a->url}";
 $string['notify_assigned_subject'] = 'Ticket #{$a->id} assigned to you: {$a->subject}';
 $string['notify_assigned_body']    = "Support ticket #{$a->id} has been assigned to you.\n\nSubject: {$a->subject}\nFrom: {$a->username}\n\nView: {$a->url}";

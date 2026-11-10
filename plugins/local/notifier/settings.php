@@ -36,7 +36,7 @@ if ($hassiteconfig) {
         ));
 
         $settings->add(new admin_setting_heading('local_notifier/lead_times_heading',
-            get_string('assign_lead_times', 'local_notifier'), ''));
+            get_string('lead_times_heading', 'local_notifier'), get_string('lead_times_heading_desc', 'local_notifier')));
 
         $settings->add(new admin_setting_configtext(
             'local_notifier/assign_lead_times',
@@ -47,9 +47,9 @@ if ($hassiteconfig) {
         ));
 
         $settings->add(new admin_setting_configtext(
-            'local_notifier/zoom_lead_times',
-            get_string('zoom_lead_times', 'local_notifier'),
-            get_string('zoom_lead_times_desc', 'local_notifier'),
+            'local_notifier/live_lead_times',
+            get_string('live_lead_times', 'local_notifier'),
+            get_string('live_lead_times_desc', 'local_notifier'),
             '30,15',
             PARAM_TEXT
         ));
@@ -63,7 +63,7 @@ if ($hassiteconfig) {
         ));
 
         $settings->add(new admin_setting_heading('local_notifier/gcal_heading',
-            get_string('gcal_client_id', 'local_notifier'), ''));
+            get_string('gcalheading', 'local_notifier'), get_string('gcal_heading_desc', 'local_notifier')));
 
         $settings->add(new admin_setting_configtext(
             'local_notifier/gcal_client_id',

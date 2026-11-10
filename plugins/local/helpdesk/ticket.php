@@ -38,27 +38,28 @@ if (!$isadmin && (int) $ticket->userid !== (int) $USER->id) {
 }
 
 $url        = new moodle_url('/local/helpdesk/ticket.php', ['id' => $id]);
-$dashurl    = new moodle_url('/local/helpdesk/dashboard.php');
+$isowner    = (int) $ticket->userid === (int) $USER->id;
+$dashurl    = $isadmin ? new moodle_url('/local/helpdesk/dashboard.php') : new moodle_url('/local/helpdesk/my.php');
 $PAGE->set_url($url);
 $PAGE->set_context($syscontext);
 $PAGE->set_title(get_string('ticketdetail', 'local_helpdesk', $id));
 $PAGE->set_heading(format_string($SITE->fullname));
 $PAGE->set_pagelayout($isadmin ? 'admin' : 'standard');
 
-// ---- Handle admin actions (POST) ----
-if ($isadmin && $_SERVER['REQUEST_METHOD'] === 'POST' && confirm_sesskey()) {
+// ---- Handle actions (POST): replies from staff or the submitter, updates from staff ----
+if (($isadmin || $isowner) && $_SERVER['REQUEST_METHOD'] === 'POST' && confirm_sesskey()) {
     $action = optional_param('action', '', PARAM_ALPHA);
 
     if ($action === 'reply') {
         $message   = required_param('replymessage', PARAM_RAW);
-        $isprivate = optional_param('isprivate', 0, PARAM_INT);
+        $isprivate = $isadmin ? optional_param('isprivate', 0, PARAM_INT) : 0;
         if (trim($message) !== '') {
             ticket_manager::add_reply($id, (int) $USER->id, clean_text(trim($message)), (bool) $isprivate);
         }
         redirect($url, get_string('replysent', 'local_helpdesk'), null, notification::NOTIFY_SUCCESS);
     }
 
-    if ($action === 'update') {
+    if ($isadmin && $action === 'update') {
         $newstatus   = optional_param('status',    '',  PARAM_ALPHA);
         $newpriority = optional_param('priority',  '',  PARAM_ALPHA);
         $newassignee = optional_param('assigneeid', 0,  PARAM_INT);
@@ -76,7 +77,7 @@ $ticket  = $DB->get_record('local_helpdesk_ticket', ['id' => $id], '*', MUST_EXI
 $replies = $DB->get_records('local_helpdesk_reply', ['ticketid' => $id], 'timecreated ASC');
 
 echo $OUTPUT->header();
-echo html_writer::link($dashurl, get_string('backtolist', 'local_helpdesk'), ['class' => 'd-inline-block mb-3 text-decoration-none']);
+echo html_writer::link($dashurl, get_string($isadmin ? 'backtolist' : 'backtomytickets', 'local_helpdesk'), ['class' => 'd-inline-block mb-3 text-decoration-none']);
 echo $OUTPUT->heading(get_string('ticketdetail', 'local_helpdesk', $id));
 
 // ---- Ticket header card ----
@@ -189,8 +190,8 @@ if (empty($replies)) {
     }
 }
 
-// ---- Reply form (admin only) ----
-if ($isadmin) {
+// ---- Reply form (staff, or the submitter answering staff) ----
+if ($isadmin || $isowner) {
     echo html_writer::start_div('card mt-3 border-success');
     echo html_writer::div(html_writer::tag('h6', get_string('addreply', 'local_helpdesk'), ['class' => 'mb-0']),
         'card-header bg-success bg-opacity-10');
@@ -204,16 +205,18 @@ if ($isadmin) {
             'name' => 'replymessage', 'rows' => 4, 'required' => 'required']),
         'mb-3'
     );
-    echo html_writer::div(
-        html_writer::tag('div',
-            html_writer::empty_tag('input', ['class' => 'form-check-input', 'type' => 'checkbox',
-                'name' => 'isprivate', 'id' => 'isprivate', 'value' => '1']) .
-            html_writer::tag('label', get_string('isprivate', 'local_helpdesk'),
-                ['class' => 'form-check-label', 'for' => 'isprivate']),
-            'form-check'
-        ),
-        'mb-3'
-    );
+    if ($isadmin) {
+        echo html_writer::div(
+            html_writer::tag('div',
+                html_writer::empty_tag('input', ['class' => 'form-check-input', 'type' => 'checkbox',
+                    'name' => 'isprivate', 'id' => 'isprivate', 'value' => '1']) .
+                html_writer::tag('label', get_string('isprivate', 'local_helpdesk'),
+                    ['class' => 'form-check-label', 'for' => 'isprivate']),
+                'form-check'
+            ),
+            'mb-3'
+        );
+    }
     echo html_writer::tag('button', get_string('postreply', 'local_helpdesk'),
         ['type' => 'submit', 'class' => 'btn btn-success']);
     echo html_writer::end_tag('form');

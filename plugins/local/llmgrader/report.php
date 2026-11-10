@@ -164,7 +164,7 @@ $table->attributes['class'] = 'generaltable local-llmgrader-review';
 $users = user_get_users_by_id(array_keys($latest));
 foreach ($latest as $userid => $job) {
     $letter = ($job->score !== null && $job->maxscore > 0)
-        ? review::score_to_letter((float) $job->score, (float) $job->maxscore)
+        ? review::score_to_letter((float) $job->score, (float) $job->maxscore, $context)
         : null;
     $grade = $job->appliedgrade !== null
         ? ($letter ? html_writer::span($letter, 'badge ' . review::letter_badge_class($letter) . ' me-1') : '')

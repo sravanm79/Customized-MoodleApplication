@@ -60,15 +60,15 @@ class ticket_manager {
         $type = in_array($type, self::TYPES) ? $type : 'other';
         $id   = $DB->insert_record('local_helpdesk_ticket', (object) [
             'userid'       => $userid,
-            'subject'      => core_text::substr($subject, 0, 255),
+            'subject'      => \core_text::substr($subject, 0, 255),
             'description'  => $description,
             'type'         => $type,
             'status'       => 'open',
             'priority'     => 'normal',
             'assigneeid'   => null,
-            'pageurl'      => core_text::substr($pageurl, 0, 1333),
-            'userroles'    => core_text::substr($userroles, 0, 255),
-            'useragent'    => core_text::substr($useragent, 0, 1333),
+            'pageurl'      => \core_text::substr($pageurl, 0, 1333),
+            'userroles'    => \core_text::substr($userroles, 0, 255),
+            'useragent'    => \core_text::substr($useragent, 0, 1333),
             'timecreated'  => $now,
             'timemodified' => $now,
         ]);
@@ -134,13 +134,47 @@ class ticket_manager {
         ]);
         $DB->set_field('local_helpdesk_ticket', 'timemodified', time(), ['id' => $ticketid]);
 
-        if (!$isprivate) {
-            $ticket = $DB->get_record('local_helpdesk_ticket', ['id' => $ticketid]);
-            if ($ticket) {
-                self::notify_reply($ticket, $message);
+        $ticket = $DB->get_record('local_helpdesk_ticket', ['id' => $ticketid]);
+        if ($ticket && (int) $ticket->userid === $userid) {
+            // The submitter answered: reopen a resolved ticket and tell staff.
+            if (in_array($ticket->status, ['resolved', 'closed'])) {
+                self::update_status($ticketid, 'open');
             }
+            self::notify_staff_reply($ticket, $message);
+        } else if ($ticket && !$isprivate) {
+            self::notify_reply($ticket, $message);
         }
         return $id;
+    }
+
+    /**
+     * The current user's own tickets, newest activity first, with the number of replies they can see.
+     *
+     * @param int $userid
+     * @return \stdClass[]
+     */
+    public static function for_user(int $userid): array {
+        global $DB;
+        $sql = "SELECT t.id, t.subject, t.type, t.status, t.priority, t.timecreated, t.timemodified,
+                       (SELECT COUNT(1) FROM {local_helpdesk_reply} r
+                         WHERE r.ticketid = t.id AND r.isprivate = 0) AS replies
+                  FROM {local_helpdesk_ticket} t
+                 WHERE t.userid = :userid
+              ORDER BY t.timemodified DESC, t.id DESC";
+        return array_values($DB->get_records_sql($sql, ['userid' => $userid]));
+    }
+
+    /**
+     * Adds "My Tickets" to the user menu (Site administration > Appearance > Navigation > User menu items), once.
+     */
+    public static function add_user_menu_item(): void {
+        global $CFG;
+        $line  = 'mytickets,local_helpdesk|/local/helpdesk/my.php';
+        $items = (string) ($CFG->customusermenuitems ?? '');
+        if (strpos($items, '/local/helpdesk/my.php') !== false) {
+            return;
+        }
+        set_config('customusermenuitems', trim($items) === '' ? $line : rtrim($items) . "\n" . $line);
     }
 
     // -------------------------------------------------------------------------
@@ -186,7 +220,7 @@ class ticket_manager {
         if (!$ticket) {
             return;
         }
-        $submitter = core_user::get_user($ticket->userid);
+        $submitter = \core_user::get_user($ticket->userid);
         $url       = new \moodle_url('/local/helpdesk/ticket.php', ['id' => $ticketid]);
         $a = (object) [
             'id'          => $ticketid,
@@ -221,6 +255,27 @@ class ticket_manager {
             get_string('notify_reply_body',    'local_helpdesk', $a),
             $url
         );
+    }
+
+    private static function notify_staff_reply(\stdClass $ticket, string $reply): void {
+        $submitter = \core_user::get_user($ticket->userid);
+        $url       = new \moodle_url('/local/helpdesk/ticket.php', ['id' => $ticket->id]);
+        $a         = (object) [
+            'id'       => $ticket->id,
+            'subject'  => $ticket->subject,
+            'username' => $submitter ? fullname($submitter) : '?',
+            'reply'    => $reply,
+            'url'      => $url->out(false),
+        ];
+        $recipients = $ticket->assigneeid ? [(int) $ticket->assigneeid] : array_keys(get_admins());
+        foreach ($recipients as $userid) {
+            self::send_notification(
+                (int) $userid,
+                get_string('notify_userreply_subject', 'local_helpdesk', $a),
+                get_string('notify_userreply_body',    'local_helpdesk', $a),
+                $url
+            );
+        }
     }
 
     private static function notify_assigned(\stdClass $ticket, int $assigneeid): void {

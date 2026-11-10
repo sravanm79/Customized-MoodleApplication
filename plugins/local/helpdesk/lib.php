@@ -107,6 +107,8 @@ function local_helpdesk_before_footer() {
         </form>
       </div>
       <div class="modal-footer">
+        <a class="me-auto" href="' . (new moodle_url('/local/helpdesk/my.php'))->out() . '">' .
+            get_string('mytickets', 'local_helpdesk') . '</a>
         <button type="button" class="btn btn-secondary"
                 data-bs-dismiss="modal">' . get_string('cancel', 'local_helpdesk') . '</button>
         <button type="button" class="btn btn-primary" id="local-helpdesk-submit">' .

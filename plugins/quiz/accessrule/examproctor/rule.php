@@ -31,7 +31,8 @@ class quizaccess_examproctor extends access_rule_base {
     const VIOLATION_TYPES = ['tabhidden', 'windowblur', 'fullscreenexit'];
 
     /** @var string[] Event types that are only recorded. */
-    const INFO_TYPES = ['returned', 'fullscreenenter', 'copy', 'cut', 'paste', 'contextmenu'];
+    const INFO_TYPES = ['returned', 'fullscreenenter', 'copy', 'cut', 'paste', 'contextmenu',
+        'videostart', 'videofailed', 'videostopped'];
 
     public static function make(quiz_settings $quizobj, $timenow, $canignoretimelimits) {
         if (empty($quizobj->get_quiz()->examproctor_enabled)) {
@@ -50,8 +51,11 @@ class quizaccess_examproctor extends access_rule_base {
 
         $context = $this->quizobj->get_context();
         if (has_capability('mod/quiz:viewreports', $context)) {
-            $url = new moodle_url('/mod/quiz/accessrule/examproctor/report.php', ['cmid' => $this->quizobj->get_cmid()]);
-            $messages[] = html_writer::link($url, get_string('viewreport', 'quizaccess_examproctor'));
+            $cmid = $this->quizobj->get_cmid();
+            $messages[] = html_writer::link(new moodle_url('/mod/quiz/accessrule/examproctor/monitor.php', ['cmid' => $cmid]),
+                    get_string('monitor_link', 'quizaccess_examproctor'), ['class' => 'btn btn-primary btn-sm']) . ' ' .
+                html_writer::link(new moodle_url('/mod/quiz/accessrule/examproctor/report.php', ['cmid' => $cmid]),
+                    get_string('viewreport', 'quizaccess_examproctor'));
         }
         return $messages;
     }
@@ -76,6 +80,9 @@ class quizaccess_examproctor extends access_rule_base {
         }
         if (!empty($this->quiz->examproctor_blockcopypaste)) {
             $items[] = get_string('rulecopypaste', 'quizaccess_examproctor');
+        }
+        if (!empty($this->quiz->examproctor_recordvideo)) {
+            $items[] = get_string('rulerecordvideo', 'quizaccess_examproctor');
         }
         $max = (int) $this->quiz->examproctor_maxviolations;
         $items[] = $max > 0
@@ -186,6 +193,21 @@ class quizaccess_examproctor extends access_rule_base {
             'ispreview' => $this->quizobj->is_preview_user(),
             'strings' => $strings,
         ]]);
+
+        if (!empty($this->quiz->examproctor_recordvideo)) {
+            $page->requires->js_call_amd('quizaccess_examproctor/recorder', 'init', [[
+                'attemptid' => $attemptid,
+                'uploadurl' => (new moodle_url('/mod/quiz/accessrule/examproctor/video_upload.php'))->out(false),
+                'sesskey' => sesskey(),
+                'bitrate' => \quizaccess_examproctor\local\video::bitrate(),
+                'chunkms' => \quizaccess_examproctor\local\video::CHUNK_SECONDS * 1000,
+                'segmentms' => \quizaccess_examproctor\local\video::SEGMENT_SECONDS * 1000,
+                'strings' => [
+                    'recording' => get_string('js_recording', 'quizaccess_examproctor'),
+                    'notrecording' => get_string('js_notrecording', 'quizaccess_examproctor'),
+                ],
+            ]]);
+        }
     }
 
     public static function add_settings_form_fields(mod_quiz_mod_form $quizform, MoodleQuickForm $mform) {
@@ -200,9 +222,9 @@ class quizaccess_examproctor extends access_rule_base {
         $mform->addHelpButton('examproctor_maxviolations', 'maxviolations', 'quizaccess_examproctor');
         $mform->hideIf('examproctor_maxviolations', 'examproctor_enabled', 'eq', 0);
 
-        foreach (['requirefullscreen', 'detectblur', 'blockcopypaste'] as $field) {
+        foreach (['requirefullscreen', 'detectblur', 'blockcopypaste', 'recordvideo'] as $field) {
             $mform->addElement('selectyesno', 'examproctor_' . $field, get_string($field, 'quizaccess_examproctor'));
-            $mform->setDefault('examproctor_' . $field, 1);
+            $mform->setDefault('examproctor_' . $field, $field === 'recordvideo' ? 0 : 1);
             $mform->addHelpButton('examproctor_' . $field, $field, 'quizaccess_examproctor');
             $mform->hideIf('examproctor_' . $field, 'examproctor_enabled', 'eq', 0);
         }
@@ -230,6 +252,7 @@ class quizaccess_examproctor extends access_rule_base {
             'requirefullscreen' => (int) !empty($quiz->examproctor_requirefullscreen),
             'detectblur' => (int) !empty($quiz->examproctor_detectblur),
             'blockcopypaste' => (int) !empty($quiz->examproctor_blockcopypaste),
+            'recordvideo' => (int) !empty($quiz->examproctor_recordvideo),
         ];
         if ($existing = $DB->get_record('quizaccess_examproctor', ['quizid' => $quiz->id])) {
             $record->id = $existing->id;
@@ -243,6 +266,9 @@ class quizaccess_examproctor extends access_rule_base {
         global $DB;
         $DB->delete_records('quizaccess_examproctor', ['quizid' => $quiz->id]);
         $DB->delete_records('quizaccess_examproctor_log', ['quizid' => $quiz->id]);
+        if ($cm = get_coursemodule_from_instance('quiz', $quiz->id, 0, false, IGNORE_MISSING)) {
+            \quizaccess_examproctor\local\video::delete_for_context(context_module::instance($cm->id));
+        }
     }
 
     public static function get_settings_sql($quizid) {
@@ -252,7 +278,8 @@ class quizaccess_examproctor extends access_rule_base {
                 . 'COALESCE(examproctor.maxviolations, 3) AS examproctor_maxviolations, '
                 . 'COALESCE(examproctor.requirefullscreen, 1) AS examproctor_requirefullscreen, '
                 . 'COALESCE(examproctor.detectblur, 1) AS examproctor_detectblur, '
-                . 'COALESCE(examproctor.blockcopypaste, 1) AS examproctor_blockcopypaste',
+                . 'COALESCE(examproctor.blockcopypaste, 1) AS examproctor_blockcopypaste, '
+                . 'COALESCE(examproctor.recordvideo, 0) AS examproctor_recordvideo',
             'LEFT JOIN {quizaccess_examproctor} examproctor ON examproctor.quizid = quiz.id',
             [],
         ];

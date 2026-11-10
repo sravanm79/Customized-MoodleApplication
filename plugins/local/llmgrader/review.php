@@ -132,7 +132,7 @@ $table->data[] = [html_writer::tag('strong', get_string('total')), html_writer::
     format_float($job->appliedgrade, -1) . ' / ' . format_float($maxgrade, -1))];
 echo $OUTPUT->heading(get_string('llmsuggestion', 'local_llmgrader'), 3);
 if ($job->score !== null && $job->maxscore > 0) {
-    $letter = review::score_to_letter((float) $job->score, (float) $job->maxscore);
+    $letter = review::score_to_letter((float) $job->score, (float) $job->maxscore, $context);
     echo html_writer::div(
         html_writer::tag('strong', get_string('lettergrade', 'local_llmgrader')) . ' ' .
         html_writer::span($letter, 'badge ' . review::letter_badge_class($letter) . ' fs-5'),

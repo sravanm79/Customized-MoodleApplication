@@ -1,0 +1,129 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template quizaccess_examproctor/monitor_content
+
+    Live exam monitor content (replaced on each refresh): counts, attempts in progress and the latest violations.
+
+    Example context (json):
+    {
+        "updated": "10:15:02", "recordvideo": true,
+        "tiles": [{"label": "In progress", "value": 3, "variant": "primary"}],
+        "hasrows": true,
+        "rows": [{"attemptid": 5, "fullname": "Asha Rao", "idnumber": "21BCS001", "started": "10:00 AM", "timeleft": "45 mins",
+                  "page": 2, "violations": 1, "maxviolations": 3, "violationlevel": "some", "lastviolation": "Switched tab",
+                  "lastviolationago": "2 mins ago", "presence": "live", "presencetext": "Live", "lastactivityago": "5 seconds ago",
+                  "video": {"state": "recording", "text": "Recording", "size": "2.1 MB"}, "eventsurl": "#", "videourl": "#",
+                  "reviewurl": "#"}],
+        "feed": [{"fullname": "Asha Rao", "event": "Switched tab", "details": "12 s", "time": "10:12:40", "ago": "2 mins ago"}]
+    }
+}}
+<span class="d-none" data-region="updated-source">{{updated}}</span>
+<div class="row g-2 mb-3 examproctor-monitor-tiles">
+    {{#tiles}}
+    <div class="col-6 col-md">
+        <div class="card h-100 border-{{variant}}">
+            <div class="card-body py-2">
+                <div class="fs-3 fw-bold text-{{variant}}">{{value}}</div>
+                <div class="small text-muted">{{label}}</div>
+            </div>
+        </div>
+    </div>
+    {{/tiles}}
+</div>
+
+<div class="row g-3">
+    <div class="col-xl-9">
+        {{^hasrows}}
+            <div class="alert alert-info">{{#str}} mon_noattempts, quizaccess_examproctor {{/str}}</div>
+        {{/hasrows}}
+        {{#hasrows}}
+        <div class="table-responsive">
+            <table class="table table-sm align-middle examproctor-monitor-table">
+                <thead>
+                    <tr>
+                        <th scope="col">{{#str}} user {{/str}}</th>
+                        <th scope="col">{{#str}} mon_status, quizaccess_examproctor {{/str}}</th>
+                        <th scope="col">{{#str}} mon_timeleft, quizaccess_examproctor {{/str}}</th>
+                        <th scope="col">{{#str}} page {{/str}}</th>
+                        <th scope="col">{{#str}} violations, quizaccess_examproctor {{/str}}</th>
+                        {{#recordvideo}}<th scope="col">{{#str}} mon_video, quizaccess_examproctor {{/str}}</th>{{/recordvideo}}
+                        <th scope="col"><span class="visually-hidden">{{#str}} actions {{/str}}</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {{#rows}}
+                    <tr class="examproctor-row-{{violationlevel}}">
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                {{#photourl}}<img src="{{photourl}}" alt="" class="examproctor-monitor-photo rounded" loading="lazy">{{/photourl}}
+                                <div>
+                                    <div class="fw-semibold">{{fullname}}
+                                        {{#preview}}<span class="badge bg-info text-dark">{{#str}} preview, quiz {{/str}}</span>{{/preview}}
+                                        {{#overdue}}<span class="badge bg-warning text-dark">{{#str}} stateoverdue, quiz {{/str}}</span>{{/overdue}}
+                                    </div>
+                                    <div class="small text-muted">{{idnumber}} · {{#str}} mon_started, quizaccess_examproctor, {{started}} {{/str}}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="examproctor-presence examproctor-presence-{{presence}}">{{presencetext}}</span>
+                            <div class="small text-muted">{{lastactivityago}}</div>
+                        </td>
+                        <td>{{#timeleft}}<span class="{{#timeleftlow}}text-danger fw-semibold{{/timeleftlow}}">{{timeleft}}</span>{{/timeleft}}{{^timeleft}}–{{/timeleft}}</td>
+                        <td>{{page}}</td>
+                        <td>
+                            <span class="badge examproctor-violations-{{violationlevel}}">{{violations}}{{#maxviolations}} / {{maxviolations}}{{/maxviolations}}</span>
+                            {{#lastviolation}}<div class="small text-muted">{{lastviolation}} · {{lastviolationago}}</div>{{/lastviolation}}
+                        </td>
+                        {{#recordvideo}}
+                        <td>
+                            {{#video}}
+                            <span class="examproctor-videostate examproctor-videostate-{{state}}">{{text}}</span>
+                            {{#detail}}<div class="small text-muted">{{detail}}</div>{{/detail}}
+                            {{#size}}<div class="small text-muted">{{size}}</div>{{/size}}
+                            {{/video}}
+                        </td>
+                        {{/recordvideo}}
+                        <td class="text-nowrap">
+                            <a class="btn btn-sm btn-outline-secondary" href="{{eventsurl}}">{{#str}} mon_events, quizaccess_examproctor {{/str}}</a>
+                            {{#videourl}}<a class="btn btn-sm btn-outline-secondary" href="{{videourl}}">{{#str}} mon_video, quizaccess_examproctor {{/str}}</a>{{/videourl}}
+                        </td>
+                    </tr>
+                {{/rows}}
+                </tbody>
+            </table>
+        </div>
+        {{/hasrows}}
+    </div>
+    <div class="col-xl-3">
+        <div class="card">
+            <div class="card-header fw-semibold">{{#str}} mon_feed, quizaccess_examproctor {{/str}}</div>
+            <ul class="list-group list-group-flush examproctor-monitor-feed">
+                {{#feed}}
+                <li class="list-group-item small">
+                    <div><strong>{{fullname}}</strong> · {{event}}</div>
+                    <div class="text-muted">{{time}} ({{ago}}){{#details}} · {{details}}{{/details}}</div>
+                </li>
+                {{/feed}}
+                {{^feed}}
+                <li class="list-group-item small text-muted">{{#str}} mon_nofeed, quizaccess_examproctor {{/str}}</li>
+                {{/feed}}
+            </ul>
+        </div>
+    </div>
+</div>

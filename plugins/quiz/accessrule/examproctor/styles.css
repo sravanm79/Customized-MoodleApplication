@@ -226,3 +226,110 @@ body.quizaccess-examproctor-noselect #responseform .answer label {
 .examproctor-precheck-link {
     margin-top: .25rem;
 }
+
+/* Recording indicator on the attempt page. */
+.examproctor-rec {
+    margin-left: auto;
+    padding: .1rem .5rem;
+    border-radius: 1rem;
+    background: #c0392b;
+    color: #fff;
+    font-size: .8rem;
+    font-weight: 600;
+}
+
+.examproctor-rec-off {
+    background: #6c757d;
+}
+
+.examproctor-rec-floating {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 1040;
+}
+
+/* Live exam monitor. */
+.examproctor-live-dot {
+    display: inline-block;
+    width: .55rem;
+    height: .55rem;
+    margin-right: .25rem;
+    border-radius: 50%;
+    background: #3ec46d;
+    animation: examproctor-pulse 2s infinite;
+}
+
+.examproctor-live-dot-paused {
+    background: #8fa0b5;
+    animation: none;
+}
+
+.examproctor-live-dot-error {
+    background: #e74c3c;
+}
+
+.examproctor-monitor-photo {
+    width: 48px;
+    height: 36px;
+    object-fit: cover;
+}
+
+.examproctor-presence,
+.examproctor-videostate {
+    display: inline-block;
+    padding: .1rem .5rem;
+    border-radius: 1rem;
+    font-size: .8rem;
+    font-weight: 600;
+}
+
+.examproctor-presence-live,
+.examproctor-videostate-recording {
+    background: rgba(62, 196, 109, .2);
+    color: #3ec46d;
+}
+
+.examproctor-presence-idle,
+.examproctor-videostate-stalled {
+    background: rgba(240, 173, 78, .2);
+    color: #f0ad4e;
+}
+
+.examproctor-presence-offline,
+.examproctor-videostate-problem {
+    background: rgba(231, 76, 60, .2);
+    color: #e74c3c;
+}
+
+.examproctor-videostate-none {
+    background: rgba(143, 160, 181, .2);
+    color: #8fa0b5;
+}
+
+.examproctor-violations-none {
+    background: #6c757d;
+}
+
+.examproctor-violations-some {
+    background: #f0ad4e;
+    color: #1d2125;
+}
+
+.examproctor-violations-high {
+    background: #e74c3c;
+}
+
+.examproctor-monitor-table tr.examproctor-row-high > td {
+    background: rgba(231, 76, 60, .08);
+}
+
+.examproctor-video-player {
+    max-height: 70vh;
+    background: #000;
+}
+
+.examproctor-video-list {
+    max-height: 70vh;
+    overflow-y: auto;
+}

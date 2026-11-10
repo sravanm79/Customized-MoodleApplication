@@ -23,8 +23,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2026101500;
+$plugin->version   = 2026111000;
 $plugin->requires  = 2025040800; // Moodle 5.0.
 $plugin->component = 'local_llmgrader';
 $plugin->maturity  = MATURITY_ALPHA;
-$plugin->release   = '0.3.0';
+$plugin->release   = '0.4.0';

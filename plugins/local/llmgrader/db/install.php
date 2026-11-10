@@ -51,5 +51,8 @@ function xmldb_local_llmgrader_install() {
     role_assign($managerrole->id, $userid, context_system::instance()->id);
 
     set_config('graderuserid', $userid, 'local_llmgrader');
+
+    // Letter grades come from the gradebook; start from the institute scale.
+    \local_llmgrader\review::install_institute_letters();
     return true;
 }

@@ -37,6 +37,13 @@ the approving teacher (released under marking workflow). Drafts never touch the 
 responses") and `mock` (offline, deterministic test replies). Add one by dropping a class implementing the interface
 into `classes/provider`; it appears in Site administration > Plugins > Local plugins > LLM grader > LLM provider.
 
+## Letter grades
+
+The letter shown on the Auto Grade, Review and feedback pages comes from the **gradebook letters** of the course
+(Course > Grades > More > Letters, else Site administration > Grades > Letters), so the LLM feedback and the gradebook
+always show the same letter. Upgrading to 0.4.0 installs the institute scale as the site default letters
+(A 90, A- 85, B 80, B- 75, C 65, D 50, F 0) unless an admin had already customised them.
+
 ## Safety
 
 - The submission is fenced and labelled as data; the system prompt tells the model to ignore instructions in it.

@@ -51,6 +51,10 @@ if ($attemptid) {
 
     echo $OUTPUT->heading(get_string('reportdetail', 'quizaccess_examproctor', fullname($user)));
     echo html_writer::link($baseurl, get_string('backtoreport', 'quizaccess_examproctor'));
+    if (\quizaccess_examproctor\local\video::stats($context)[$attemptid] ?? null) {
+        echo ' · ' . html_writer::link(new moodle_url('/mod/quiz/accessrule/examproctor/video.php',
+            ['cmid' => $cmid, 'attempt' => $attemptid]), get_string('mon_video', 'quizaccess_examproctor'));
+    }
 
     $events = $DB->get_records('quizaccess_examproctor_log', ['attemptid' => $attemptid], 'timecreated, id');
     if (!$events) {
@@ -72,6 +76,8 @@ if ($attemptid) {
     }
 } else {
     echo $OUTPUT->heading(get_string('reporttitle', 'quizaccess_examproctor'));
+    echo html_writer::div(html_writer::link(new moodle_url('/mod/quiz/accessrule/examproctor/monitor.php', ['cmid' => $cmid]),
+        get_string('monitor_link', 'quizaccess_examproctor'), ['class' => 'btn btn-primary btn-sm']), 'mb-3');
 
     $userfields = \core_user\fields::for_name()->get_sql('u', false, '', '', false)->selects;
     $sql = "SELECT qa.id, qa.attempt, qa.state, qa.preview, qa.userid, $userfields,

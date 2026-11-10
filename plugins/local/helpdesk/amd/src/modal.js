@@ -33,13 +33,21 @@ define([], function() {
      * @param {string} type    Bootstrap alert type: 'success' | 'danger' | 'info'
      * @param {string} message
      */
-    function showAlert(type, message) {
+    function showAlert(type, message, url, linktext) {
         var el = document.getElementById('local-helpdesk-alert');
         if (!el) {
             return;
         }
         el.className = 'alert alert-' + type;
         el.textContent = message;
+        if (url) {
+            var link = document.createElement('a');
+            link.href = url;
+            link.className = 'alert-link ms-1';
+            link.textContent = linktext || url;
+            el.appendChild(document.createTextNode(' '));
+            el.appendChild(link);
+        }
     }
 
     function hideAlert() {
@@ -111,8 +119,8 @@ define([], function() {
         .then(function(data) {
             setSubmitBusy(false);
             if (data.success) {
-                showAlert('success', data.message);
-                // Auto-close after 2.5 s.
+                showAlert('success', data.message, data.url, data.linktext);
+                // Auto-close after 6 s, leaving time to follow the ticket link.
                 setTimeout(function() {
                     var modalEl = document.getElementById('local-helpdesk-modal');
                     if (modalEl && window.bootstrap && bootstrap.Modal) {
@@ -122,7 +130,7 @@ define([], function() {
                         }
                     }
                     resetForm();
-                }, 2500);
+                }, 6000);
             } else {
                 showAlert('danger', data.message || 'Could not submit your ticket. Please try again.');
             }

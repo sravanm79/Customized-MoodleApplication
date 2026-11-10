@@ -33,5 +33,15 @@ $tasks = [
         'day' => '*',
         'dayofweek' => '*',
         'month' => '*'
+    ],
+    [
+        // IIIT Dharwad addition: import recordings without a manual "Sync with Google Drive".
+        'classname' => 'mod_googlemeet\task\sync_recordings',
+        'blocking' => 0,
+        'minute' => '15',
+        'hour' => '*',
+        'day' => '*',
+        'dayofweek' => '*',
+        'month' => '*'
     ]
 ];

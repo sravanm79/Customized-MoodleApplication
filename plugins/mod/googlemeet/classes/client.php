@@ -315,79 +315,8 @@ class client {
         global $PAGE;
 
         if ($this->check_login()) {
-            $service = new rest($this->get_user_oauth_client());
-
-            $folderparams = [
-                'q' => 'name = "Meet Recordings" and
-                        trashed = false and
-                        mimeType = "application/vnd.google-apps.folder" and
-                        "me" in owners',
-                'pageSize' => 1000,
-                'fields' => 'nextPageToken, files(id,owners)'
-            ];
-
-            $folderresponse = helper::request($service, 'list', $folderparams, false);
-
-            $folders = $folderresponse->files;
-            $parents = '';
-            for ($i = 0; $i < count($folders); $i++) {
-                $parents .= 'parents="'.$folders[$i]->id.'"';
-                if ($i + 1 < count($folders)) {
-                    $parents .= ' or ';
-                }
-            }
-
-            $meetingcode = substr($googlemeet->url, 24, 12);
-            $name = $googlemeet->name;
-            $recordingparams = [
-                'q' => '('.$parents.') and
-                        trashed = false and
-                        mimeType = "video/mp4" and
-                        "me" in owners and
-                        (name contains "'.$meetingcode.'" or name contains "'.$name.'")',
-                'pageSize' => 1000,
-                'fields' => 'files(id,name,permissionIds,createdTime,videoMediaMetadata,webViewLink)'
-            ];
-
-            $recordingresponse = helper::request($service, 'list', $recordingparams, false);
-
-            $recordings = $recordingresponse->files;
-
-            if ($recordings && count($recordings) > 0) {
-                for ($i = 0; $i < count($recordings); $i++) {
-                    $recording = $recordings[$i];
-
-                    // If the recording has already been processed.
-                    if (isset($recording->videoMediaMetadata)) {
-                        if (!in_array('anyoneWithLink', $recording->permissionIds)) {
-                            $permissionparams = [
-                                'fileid' => $recording->id,
-                                'fields' => 'id'
-                            ];
-                            $permissionrawpost = [
-                                "role" => "reader",
-                                "type" => "anyone"
-                            ];
-                            helper::request($service, 'create_permission', $permissionparams, json_encode($permissionrawpost));
-                        }
-
-                        // Format it into a human-readable time.
-                        $duration = $this->formatseconds((int)$recording->videoMediaMetadata->durationMillis);
-
-                        $createdtime = new DateTime($recording->createdTime);
-
-                        $recordings[$i]->recordingId = $recording->id;
-                        $recordings[$i]->duration = $duration;
-                        $recordings[$i]->createdTime = $createdtime->getTimestamp();
-
-                        unset($recordings[$i]->id);
-                        unset($recordings[$i]->permissionIds);
-                        unset($recordings[$i]->videoMediaMetadata);
-                    } else {
-                        $recordings[$i]->unprocessed = true;
-                    }
-                }
-
+            $recordings = $this->fetch_recordings($googlemeet);
+            if ($recordings) {
                 sync_recordings($googlemeet->id, $recordings);
             }
 
@@ -404,6 +333,98 @@ class client {
             EOD;
             die($js);
         }
+    }
+
+    /**
+     * The meeting's recordings in the current user's Drive ("Meet Recordings" folders), shared with anyone with the
+     * link, in the shape sync_recordings() expects. Split out of syncrecordings() so the scheduled sync can use it
+     * (IIIT Dharwad addition).
+     *
+     * @param object $googlemeet An object instance.
+     * @return array Recordings; empty if there are none or the user is not logged in to Google.
+     */
+    public function fetch_recordings($googlemeet): array {
+        if (!$this->check_login()) {
+            return [];
+        }
+        $service = new rest($this->get_user_oauth_client());
+
+        $folderparams = [
+            'q' => 'name = "Meet Recordings" and
+                    trashed = false and
+                    mimeType = "application/vnd.google-apps.folder" and
+                    "me" in owners',
+            'pageSize' => 1000,
+            'fields' => 'nextPageToken, files(id,owners)'
+        ];
+
+        $folderresponse = helper::request($service, 'list', $folderparams, false);
+
+        $folders = $folderresponse->files;
+        if (empty($folders)) {
+            return [];
+        }
+        $parents = '';
+        for ($i = 0; $i < count($folders); $i++) {
+            $parents .= 'parents="'.$folders[$i]->id.'"';
+            if ($i + 1 < count($folders)) {
+                $parents .= ' or ';
+            }
+        }
+
+        $meetingcode = substr($googlemeet->url, 24, 12);
+        $name = $googlemeet->name;
+        $recordingparams = [
+            'q' => '('.$parents.') and
+                    trashed = false and
+                    mimeType = "video/mp4" and
+                    "me" in owners and
+                    (name contains "'.$meetingcode.'" or name contains "'.$name.'")',
+            'pageSize' => 1000,
+            'fields' => 'files(id,name,permissionIds,createdTime,videoMediaMetadata,webViewLink)'
+        ];
+
+        $recordingresponse = helper::request($service, 'list', $recordingparams, false);
+
+        $recordings = $recordingresponse->files;
+
+        if ($recordings && count($recordings) > 0) {
+            for ($i = 0; $i < count($recordings); $i++) {
+                $recording = $recordings[$i];
+
+                // If the recording has already been processed.
+                if (isset($recording->videoMediaMetadata)) {
+                    if (!in_array('anyoneWithLink', $recording->permissionIds)) {
+                        $permissionparams = [
+                            'fileid' => $recording->id,
+                            'fields' => 'id'
+                        ];
+                        $permissionrawpost = [
+                            "role" => "reader",
+                            "type" => "anyone"
+                        ];
+                        helper::request($service, 'create_permission', $permissionparams, json_encode($permissionrawpost));
+                    }
+
+                    // Format it into a human-readable time.
+                    $duration = $this->formatseconds((int)$recording->videoMediaMetadata->durationMillis);
+
+                    $createdtime = new DateTime($recording->createdTime);
+
+                    $recordings[$i]->recordingId = $recording->id;
+                    $recordings[$i]->duration = $duration;
+                    $recordings[$i]->createdTime = $createdtime->getTimestamp();
+
+                    unset($recordings[$i]->id);
+                    unset($recordings[$i]->permissionIds);
+                    unset($recordings[$i]->videoMediaMetadata);
+                } else {
+                    $recordings[$i]->unprocessed = true;
+                }
+            }
+        }
+
+        return $recordings ?: [];
     }
 
     /**

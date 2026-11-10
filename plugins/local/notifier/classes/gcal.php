@@ -204,7 +204,7 @@ class gcal {
             return;
         }
 
-        $tz = \core_date::get_user_timezone_object()->getName();
+        $tz = \core_date::get_user_timezone_object(\core_user::get_user($userid))->getName();
         $event = [
             'summary'     => $eventdata['summary'],
             'description' => $eventdata['description'],

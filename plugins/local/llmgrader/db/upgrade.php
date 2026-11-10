@@ -67,5 +67,11 @@ function xmldb_local_llmgrader_upgrade($oldversion) {
 
         upgrade_plugin_savepoint(true, 2026101300, 'local', 'llmgrader');
     }
+
+    if ($oldversion < 2026111000) {
+        // Letters now come from the gradebook: install the institute scale as the site default letters.
+        \local_llmgrader\review::install_institute_letters();
+        upgrade_plugin_savepoint(true, 2026111000, 'local', 'llmgrader');
+    }
     return true;
 }

@@ -26,31 +26,99 @@ defined('MOODLE_INTERNAL') || die();
  */
 class notifier {
 
+    /** Reminder types: site setting <type>_lead_times and course override column <type>_lead_times. */
+    const TYPES = ['assign', 'quiz', 'live'];
+
+    /** @var array Course overrides loaded in this request, by course id (false when the course has none). */
+    protected static $courseoverrides = [];
+
     /**
-     * Returns parsed lead times for the given event type.
+     * Lead times for a reminder type: the course's own, else the site default.
      *
-     * @param string $type  'assign' | 'zoom' | 'quiz'
-     * @return int[]  Sorted descending list of minute values (e.g. [1440, 60]).
+     * @param string $type  'assign' | 'quiz' | 'live' (Zoom and Google Meet classes)
+     * @param int    $courseid  0 for the site default.
+     * @return int[]  Sorted descending list of minute values (e.g. [1440, 60]); empty means no reminders.
      */
-    public static function get_lead_minutes(string $type): array {
-        $raw = get_config('local_notifier', $type . '_lead_times') ?: '';
+    public static function get_lead_minutes(string $type, int $courseid = 0): array {
+        $override = $courseid ? self::course_override($courseid) : null;
+        $column = $type . '_lead_times';
+        if ($override && $override->$column !== null && $override->$column !== '') {
+            return self::parse_leads($override->$column);
+        }
+        return self::parse_leads(get_config('local_notifier', $column) ?: '');
+    }
+
+    /**
+     * Parses "1440, 60" into [1440, 60]; "0" or "off" gives [] (no reminders).
+     *
+     * @param string $raw
+     * @return int[]
+     */
+    public static function parse_leads(string $raw): array {
         $mins = [];
         foreach (explode(',', $raw) as $part) {
             $v = (int) trim($part);
             if ($v > 0) {
-                $mins[] = $v;
+                $mins[$v] = $v;
             }
         }
         rsort($mins);
-        return $mins;
+        return array_values($mins);
+    }
+
+    /**
+     * Whether a lead-time field is valid: empty, "0"/"off", or comma-separated positive minutes.
+     *
+     * @param string $raw
+     * @return bool
+     */
+    public static function valid_leads(string $raw): bool {
+        $raw = trim($raw);
+        return $raw === '' || strtolower($raw) === 'off' || preg_match('/^\d+(\s*,\s*\d+)*$/', $raw);
+    }
+
+    /**
+     * The course's lead-time overrides, or null.
+     *
+     * @param int $courseid
+     * @return \stdClass|null
+     */
+    public static function course_override(int $courseid): ?\stdClass {
+        global $DB;
+        if (!array_key_exists($courseid, self::$courseoverrides)) {
+            self::$courseoverrides[$courseid] = $DB->get_record('local_notifier_course', ['courseid' => $courseid]) ?: false;
+        }
+        return self::$courseoverrides[$courseid] ?: null;
+    }
+
+    /**
+     * Saves the course's lead-time overrides (empty fields fall back to the site default).
+     *
+     * @param int $courseid
+     * @param array $leads type => raw text
+     */
+    public static function save_course_override(int $courseid, array $leads): void {
+        global $DB;
+        $record = $DB->get_record('local_notifier_course', ['courseid' => $courseid]) ?: (object) ['courseid' => $courseid];
+        foreach (self::TYPES as $type) {
+            $raw = trim($leads[$type] ?? '');
+            $record->{$type . '_lead_times'} = $raw === '' ? null : (strtolower($raw) === 'off' ? '0' : $raw);
+        }
+        $record->timemodified = time();
+        if (!empty($record->id)) {
+            $DB->update_record('local_notifier_course', $record);
+        } else {
+            $DB->insert_record('local_notifier_course', $record);
+        }
+        unset(self::$courseoverrides[$courseid]);
     }
 
     /**
      * Whether we have already sent this exact notification.
      *
      * @param int    $userid
-     * @param string $component  'assign'|'zoom'|'quiz'
-     * @param int    $instanceid  cmid for assign/quiz; zoom.id for zoom
+     * @param string $component  'assign'|'quiz'|'zoom'|'googlemeet'
+     * @param int    $instanceid  cmid for assign/quiz; calendar event id for live classes (one per occurrence)
      * @param int    $leadmins
      * @return bool
      */

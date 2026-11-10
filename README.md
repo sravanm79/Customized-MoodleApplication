@@ -24,6 +24,97 @@ Student onboarding (register students, share logins) and the student dashboard /
 Other guides: [Safe Exam Browser + proctoring](docs/seb-proctoring.md) ·
 [**Manual testing guide**](docs/MANUAL-TESTING.md) · load tests in `locust/` and `docs/`.
 
+## Plugins
+
+| Plugin (in `plugins/`) | Version | What it does |
+|---|---|---|
+| `theme/iiitdwd` | 0.8.2 | IIIT Dharwad theme, teacher and student dashboards, course hero, calendar ([README](plugins/theme/iiitdwd/README.md)) |
+| `local/studentportal` | 0.2.0 | Register students and share logins, announcements, My performance, class overview ([README](plugins/local/studentportal/README.md)) |
+| `local/llmgrader` | 0.4.0 | LLM grading of assignments with teacher review; letters from the gradebook ([README](plugins/local/llmgrader/README.md)) |
+| `local/gradesheet` | 0.1.1 | Upload CSV/Excel grade sheets; class statistics ([README](plugins/local/gradesheet/README.md)) |
+| `local/notifier` | 0.2.0 | Reminders before deadlines and live classes (Zoom, Google Meet), per-course lead times, Google Calendar sync |
+| `local/helpdesk` | 0.2.0 | "?" button on every page to raise a ticket; My Tickets; admin dashboard |
+| `plagiarism/similarity` | 0.1.0 | Compares assignment submissions with classmates' submissions (new) |
+| `quiz/accessrule/examproctor` | 0.3.0 | Proctored exam mode, webcam video recording, live exam monitor |
+| `quiz/accessrule/proctoring` | upstream | Webcam photos every 30 s, face matching (needs an API key) |
+| `mod/jupyter` | 0.1.0 | Jupyter notebook activity ([docs/jupyter.md](docs/jupyter.md)) |
+| `mod/zoom` | 5.5.2 | Zoom meetings; auto-import of cloud recordings |
+| `mod/googlemeet` | 2.1.1+iiitdwd.2 | Google Meet, one-click join, scheduled Drive recording sync |
+| `question/type/coderunner` + behaviour | upstream | Programming questions run in the `jobe` sandbox |
+
+## New in November 2026 (test matrix P-01 to P-15)
+
+| Task | What was built | Where to find it |
+|---|---|---|
+| P-04 Support tickets | **Fixed:** submitting a ticket always failed (namespace bug in `ticket_manager`). **New:** *My Tickets* page, link to the new ticket after submitting, students reply on their own tickets (reopens a resolved ticket, notifies staff) | User menu › **My Tickets** (`/local/helpdesk/my.php`); "?" button › *My Tickets* |
+| P-07 Reminder timers | Teachers set their own lead times per course (site defaults stay); reminders now also cover **Google Meet** and **every occurrence of recurring Zoom** classes; one reminder per lead time even after downtime | Course › More › **Reminder settings**; site defaults: Site administration › Plugins › Local plugins › Deadline Notifier |
+| P-12 Google Calendar | "Google Calendar Sync" link for every user once the OAuth client is set; events use the student's timezone | User menu › Preferences › **Google Calendar Sync** |
+| P-05 Meet recordings | Hourly task imports Drive recordings of meetings held in the last 3 days, as a teacher of the course who connected Google once | Scheduled task *Import Google Drive recordings of recent meetings* |
+| P-13 Letter grades | LLM letters now come from the **gradebook letters** of the course, so feedback and gradebook always agree. The upgrade sets the site default letters to the institute scale (A 90, A- 85, B 80, B- 75, C 65, D 50, F) unless they were customised | Site administration › Grades › Letters |
+| P-08 Plagiarism | New `plagiarism_similarity`: each submission (online text, code/text files, notebooks, Word, OpenDocument; not PDF) is compared with the classmates' submissions; % badge beside every submission, report, side-by-side comparison with shared passages highlighted. Starter code, the assignment description and passages most of the class shares are not counted. Nothing leaves the server | Assignment settings › **Similarity check**; badge in *View all submissions* |
+| P-09 Video proctoring | Quiz setting **Record webcam video**: 320×240 video, no sound, uploaded in 10-second pieces while the student writes (a page change loses at most ~10 s), replayed per attempt as one-minute segments. ~70 MB per student-hour at 150 kbps; deleted after 30 days (both configurable) | Quiz settings › Proctored exam; Site administration › Plugins › Activity modules › Quiz › Proctored exam |
+| P-10 Live exam monitor | One page with every student writing the exam: latest webcam photo, active / idle / offline, time left, page, violations, video status; counts (writing, with violations, offline, submitted, not started) and the latest violations; refreshes every 15 s | Quiz page › **Live exam monitor** (teachers), or the proctoring report |
+| P-02 Attendance, P-15 Certificates | Not vendored yet: add `mod_attendance` and `mod_customcert` (steps below) | |
+
+Still needs accounts or decisions outside the code: Zoom cloud recording plan (P-01, P-06), Google OAuth credentials,
+which need a domain name (P-05, P-12, Meet auto-record), the reference design (P-03), the Moodle app's Airnotifier key and
+a publicly reachable address (P-11), and a face-matching API key (P-14).
+
+## Deploy plugin changes
+
+`tools/deploy-plugins.sh` copies plugins into `moodle_app`, fixes ownership and permissions, then runs the Moodle
+upgrade and purges caches once (as `daemon`). With no arguments it deploys every plugin under `plugins/`.
+
+```bash
+# 1. Back up the database first (the upgrade adds tables and fields).
+docker exec moodle_db sh -c 'mariadb-dump -ubn_moodle -p"$MARIADB_PASSWORD" bitnami_moodle' | gzip > backup-$(date +%F).sql.gz
+
+# 2. Deploy what changed in November 2026.
+tools/deploy-plugins.sh local/helpdesk local/notifier local/llmgrader mod/googlemeet \
+    quiz/accessrule/examproctor plagiarism/similarity
+
+# 3. Settings for the new features.
+CFG="docker exec -u daemon moodle_app php /bitnami/moodle/admin/cli/cfg.php"
+$CFG --name=enableplagiarism --set=1                                  # plagiarism plugins on
+$CFG --component=plagiarism_similarity --name=enabled --set=1         # similarity check offered in assignments
+$CFG --component=zoom --name=viewrecordings --set=1                   # P-01: Zoom recordings shown and auto-imported
+$CFG --component=zoom --name=recordingoption --set=cloud              # P-01: new Zoom meetings record to the cloud
+docker exec -u daemon moodle_app php /bitnami/moodle/admin/cli/purge_caches.php
+```
+
+The upgrade prints each plugin it upgrades (`local_helpdesk` 0.2.0, `local_notifier` 0.2.0, `local_llmgrader` 0.4.0,
+`mod_googlemeet`, `quizaccess_examproctor` 0.3.0, and `plagiarism_similarity` as a new install). Check them under
+Site administration › Plugins › Plugins overview. Tasks that run later (reminders, similarity checks, video clean-up)
+need Moodle cron, which the Bitnami container runs every minute.
+
+### Add attendance (P-02) and certificates (P-15)
+
+Both are third-party plugins with Moodle 5.0 branches. Vendor them into `plugins/mod/` (their git metadata is not kept),
+then deploy:
+
+```bash
+git clone --depth 1 -b MOODLE_500_STABLE https://github.com/danmarsden/moodle-mod_attendance.git plugins/mod/attendance
+git clone --depth 1 -b MOODLE_500_STABLE https://github.com/mdjnelson/moodle-mod_customcert.git plugins/mod/customcert
+rm -rf plugins/mod/attendance/.git plugins/mod/customcert/.git
+tools/deploy-plugins.sh mod/attendance mod/customcert
+```
+
+Then: **Attendance**: in a course, *Add an activity › Attendance*, add sessions, take attendance (Present / Late /
+Excused / Absent) and use *Report* / *Export*. **Certificates**: Site administration › Plugins › Activity modules ›
+Custom certificate › *Manage templates* › add the IIIT Dharwad template (border, logo image, student name, course
+name, date, code); in a course, add *Custom certificate*, load the template and restrict access to course completion.
+
+### Test the new features
+
+| Feature | Test |
+|---|---|
+| Tickets | As a student: "?" › Bug report › Submit: the success message links to the ticket. User menu › My Tickets lists it. As admin: reply on the ticket; the student gets a notification, replies, and the admin is notified |
+| Reminders | As a teacher: course › More › Reminder settings › Assignments `30`. Create an assignment due in 25 min: within 5 min each student gets a "due in 30 minutes" notification. A Google Meet class starting within the live-class lead time is reminded too |
+| Letters | `/admin/` › Grades › Letters shows A 90 … F 0. Approve an LLM grade of 85 %: the LLM feedback and the gradebook both show **A-** |
+| Similarity | Assignment settings › Similarity check › Compare submissions = Yes. Two students submit the same text with small changes, a third different text. After a minute (or *Check now* on the report) *View all submissions* shows a red badge for the first two; *Compare* highlights the shared passages |
+| Live monitor | Quiz with Proctored exam mode and Record webcam video = Yes. Start an attempt as a student (allow the camera; the bar shows **● REC**). As the teacher, open *Live exam monitor*: the student is *Active* with *Recording*; switch tabs as the student and the violation appears within 15 s. After a minute, *Video* plays the recording |
+| Meet sync | Needs Google OAuth (see above): after a Meet class with a recording, the recording appears on the activity within the hour without pressing *Sync with Google Drive* |
+
 ### First start on a new server
 
 ```bash

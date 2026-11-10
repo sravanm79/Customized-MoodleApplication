@@ -1,0 +1,20 @@
+.plagiarism-similarity {
+    margin: .25rem 0;
+}
+
+.plagiarism-similarity-text {
+    max-height: 75vh;
+    overflow: auto;
+    padding: .75rem;
+    border: 1px solid rgba(143, 160, 181, .4);
+    border-radius: .5rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: .85rem;
+}
+
+.plagiarism-similarity-text mark {
+    padding: 0;
+    background: rgba(231, 76, 60, .35);
+    color: inherit;
+}

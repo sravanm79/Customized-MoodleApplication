@@ -120,43 +120,68 @@ class review {
             'reviewerid' => $reviewerid, 'timereviewed' => time(), 'timemodified' => time()]);
     }
 
+    /** Institute letter scale (lower boundary % => letter), installed as the site default gradebook letters. */
+    const INSTITUTE_LETTERS = ['90' => 'A', '85' => 'A-', '80' => 'B', '75' => 'B-', '65' => 'C', '50' => 'D', '0' => 'F'];
+
     /**
-     * Maps a percentage score to a letter grade (A, A-, B, B-, C, D, F).
+     * Maps a score to a letter using the gradebook letters of the course (Course > Grades > Letters, else the site
+     * default under Site administration > Grades > Letters), so LLM feedback and the gradebook always agree.
      *
      * @param float $score Marks awarded.
      * @param float $maxscore Total marks available.
+     * @param \context|null $context Any context in the course; null uses the site default letters.
      * @return string Letter grade.
      */
-    public static function score_to_letter(float $score, float $maxscore): string {
-        if ($maxscore <= 0) {
-            return 'F';
+    public static function score_to_letter(float $score, float $maxscore, ?\context $context = null): string {
+        global $CFG;
+        require_once($CFG->libdir . '/gradelib.php');
+        $letters = grade_get_letters($context ? $context->get_course_context(false) ?: $context
+            : \context_system::instance());
+        $pct = $maxscore > 0 ? ($score / $maxscore) * 100 : 0;
+        // Same rule as grade_format_gradevalue_letter(): the first boundary (highest first) the percentage reaches.
+        krsort($letters, SORT_NUMERIC);
+        foreach ($letters as $boundary => $letter) {
+            if (round($pct, 5) >= (float) $boundary) {
+                return format_string($letter);
+            }
         }
-        $pct = ($score / $maxscore) * 100;
-        if ($pct >= 90) return 'A';
-        if ($pct >= 85) return 'A-';
-        if ($pct >= 80) return 'B';
-        if ($pct >= 75) return 'B-';
-        if ($pct >= 65) return 'C';
-        if ($pct >= 50) return 'D';
-        return 'F';
+        return '-';
     }
 
     /**
-     * Bootstrap badge class for a letter grade.
+     * Bootstrap badge class for a letter grade, by its first letter so custom letters (A+, B-, E) work too.
      *
      * @param string $letter From score_to_letter().
      * @return string CSS classes for a badge element.
      */
     public static function letter_badge_class(string $letter): string {
         return [
-            'A'  => 'bg-success',
-            'A-' => 'bg-success',
-            'B'  => 'bg-primary',
-            'B-' => 'bg-primary',
-            'C'  => 'bg-warning text-dark',
-            'D'  => 'bg-secondary',
-            'F'  => 'bg-danger',
-        ][$letter] ?? 'bg-secondary';
+            'A' => 'bg-success',
+            'B' => 'bg-primary',
+            'C' => 'bg-warning text-dark',
+            'D' => 'bg-secondary',
+            'E' => 'bg-danger',
+            'F' => 'bg-danger',
+        ][strtoupper(substr($letter, 0, 1))] ?? 'bg-secondary';
+    }
+
+    /**
+     * Installs INSTITUTE_LETTERS as the site default gradebook letters, unless an admin already customised them.
+     *
+     * @return bool Whether the letters were installed.
+     */
+    public static function install_institute_letters(): bool {
+        global $DB;
+        $contextid = \context_system::instance()->id;
+        if ($DB->record_exists('grade_letters', ['contextid' => $contextid])) {
+            return false;
+        }
+        foreach (self::INSTITUTE_LETTERS as $boundary => $letter) {
+            $DB->insert_record('grade_letters',
+                (object) ['contextid' => $contextid, 'lowerboundary' => $boundary, 'letter' => $letter]);
+        }
+        \cache::make('core', 'grade_letters')->purge();
+        return true;
     }
 
     /**
@@ -165,10 +190,11 @@ class review {
      * @param array $result From evaluator::evaluate().
      * @param float $maxgrade
      * @param float $grade
+     * @param \context|null $context The assignment's context, for the course's grade letters.
      * @return string HTML
      */
-    public static function feedback_html(array $result, float $maxgrade, float $grade): string {
-        $letter = self::score_to_letter($result['score'], $result['maxscore']);
+    public static function feedback_html(array $result, float $maxgrade, float $grade, ?\context $context = null): string {
+        $letter = self::score_to_letter($result['score'], $result['maxscore'], $context);
         $badge = \html_writer::span($letter, 'badge ' . self::letter_badge_class($letter) . ' fs-6 align-middle ms-1');
         $html = \html_writer::tag('p',
             \html_writer::tag('strong', get_string('lettergrade', 'local_llmgrader')) . $badge);

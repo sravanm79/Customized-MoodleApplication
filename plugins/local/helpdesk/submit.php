@@ -64,6 +64,8 @@ try {
         'success'  => true,
         'ticketid' => $ticketid,
         'message'  => get_string('success_msg', 'local_helpdesk', $ticketid),
+        'url'      => (new moodle_url('/local/helpdesk/ticket.php', ['id' => $ticketid]))->out(false),
+        'linktext' => get_string('viewticket', 'local_helpdesk'),
     ]);
 } catch (Throwable $e) {
     echo json_encode(['success' => false, 'message' => get_string('error_msg', 'local_helpdesk')]);

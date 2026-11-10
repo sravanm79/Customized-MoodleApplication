@@ -100,6 +100,7 @@ $string['notify'] = 'Send notification to the student';
 $string['notify_help'] = 'If checked, a notification will be sent to the student about the start date of the event.';
 $string['notifycationexpanded_desc'] = 'Show the "Notification" settings as expanded by default when creating new Room.';
 $string['notifytask'] = 'Google Meet™ for Moodle notification task';
+$string['syncrecordingstask'] = 'Import Google Drive recordings of recent meetings';
 $string['or'] = 'or';
 $string['play'] = 'Play';
 $string['pluginadministration'] = 'Google Meet™ for Moodle administration';

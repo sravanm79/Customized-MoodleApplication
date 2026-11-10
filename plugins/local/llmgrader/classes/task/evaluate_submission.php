@@ -90,7 +90,7 @@ class evaluate_submission extends \core\task\adhoc_task {
             'score' => $result['score'],
             'maxscore' => $result['maxscore'],
             'appliedgrade' => $grade,
-            'feedback' => review::feedback_html($result, (float) $instance->grade, $grade),
+            'feedback' => review::feedback_html($result, (float) $instance->grade, $grade, $context),
             'resultjson' => json_encode(['tasks' => $result['tasks'], 'feedback' => $result['feedback']]),
             'metadatajson' => json_encode($result['metadata'] + ['condensedchars' => \core_text::strlen($content['text'])]),
             'timeevaluated' => time(),
